@@ -1,3 +1,29 @@
+# Project Specific Variables
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl*
+
+
+remove_branch.sh
+generate_tag.sh
+promote_to_master.sh
+promote_to_qa.sh
+remove_tag.sh
+**/ssh_keys/*
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+crash.log
+sample_system.tfvars
+sample_backend.tf
+
+
 # General
 .DS_Store
 .AppleDouble
