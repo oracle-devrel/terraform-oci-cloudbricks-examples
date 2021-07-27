@@ -20,6 +20,8 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 crash.log
+sample_system.tfvars
+sample_backend.tf
 
 
 # General

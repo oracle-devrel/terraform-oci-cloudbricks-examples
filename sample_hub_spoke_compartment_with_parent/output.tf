@@ -1,8 +1,9 @@
-/* output.tf 
-Author: DALQUINT - denny.alquinta@oracle.com
-Purpose: The following script defines the output for system created
-Copyright (c) 2017, 2020, Oracle and/or its affiliates. All rights reserved. 
-*/
+# Copyright (c) 2021 Oracle and/or its affiliates.
+# All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
+# output.tf
+#
+# Purpose: The following script defines the output for system created
+
 
 output "hub01comp" {
   description = "hub01comp Data"

@@ -8,6 +8,7 @@
 
 echo 'Sourcing environment variables'
 source setEnv.sh
+retry_attempts=5
 
 if [ "$#" -ne 1 ]; then
     echo "Missing system to create. Usage: ./provisionInfra.sh SYSTEMNAME"
@@ -30,13 +31,17 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
         echo "--- Deleting temporal lingering files"
         tf_lock=.terraform.lock.hcl
         tf_dir=.terraform
+        lpg_config_dir=lpg_routes_config
         if [[ -f $tf_lock ]]; then
             rm $tf_lock
         fi  
         if [[ -d $tf_dir ]]; then
             rm -rf $tf_dir
         fi  
-        for (( k=1; k<=5; k++ ))
+        if [[ -d $lpg_config_dir ]]; then
+            rm -rf $tf_dir
+        fi  
+        for (( k=1; k<=$retry_attempts; k++ ))
         do  
             
             echo "--- Executing terraform init (pass $k of 5)" 
@@ -50,7 +55,7 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
             sleep 10
         done
 
-                for (( k=1; k<=5; k++ ))
+                for (( k=1; k<=$retry_attempts; k++ ))
         do  
             
             echo "--- Executing terraform validate (pass $k of 5)"        
@@ -65,7 +70,7 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
             sleep 10
         done
 
-                for (( k=1; k<=5; k++ ))
+                for (( k=1; k<=$retry_attempts; k++ ))
         do  
             
         echo "--- Executing terraform apply (pass $k of 5)" 

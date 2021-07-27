@@ -23,12 +23,16 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
         echo "--- Deleting temporal lingering files"
         tf_lock=.terraform.lock.hcl
         tf_dir=.terraform
+        lpg_config_dir=lpg_routes_config
         if [[ -f $tf_lock ]]; then
             rm $tf_lock
         fi  
         if [[ -d $tf_dir ]]; then
             rm -rf $tf_dir
         fi  
+        if [[ -d $lpg_config_dir ]]; then
+            rm -rf $tf_dir
+        fi   
 
         echo "--- Validating Infrastructure" 
         terraform init  

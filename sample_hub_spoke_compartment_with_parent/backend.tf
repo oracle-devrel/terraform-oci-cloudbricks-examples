@@ -1,7 +1,9 @@
-/* backend.tf
-Author: DALQUINT - denny.alquinta@oracle.com
-Purpose: Handles the storage of tfstate file in backend bucket
-Copyright (c) 2017, 2021, Oracle and/or its affiliates. All rights reserved. */
+# Copyright (c) 2021 Oracle and/or its affiliates.
+# All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
+# backend.tf
+#
+# Purpose: Handles the storage of tfstate file in backend bucket
+
 
 terraform {
   backend "s3" {

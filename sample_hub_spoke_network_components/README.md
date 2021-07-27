@@ -1,47 +1,50 @@
-# suraocife/demoenv01
+# OCI Cloud Bricks: Sample HUB and SPOKE Network Artifacts
 
-The following [README.md](README.md) file describes the project related to provision end-to-end ***WebLogic Server 12.2.1.4*** Domains within Oracle Cloud Infrastructure. This provisions the infrastructure and later triggers the ansible playbooks related to Domain Configuration. 
+[![License: UPL](https://img.shields.io/badge/license-UPL-green)](https://img.shields.io/badge/license-UPL-green) [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=oracle-devrel_terraform-oci-cloudbricks-examples)](https://sonarcloud.io/dashboard?id=oracle-devrel_terraform-oci-cloudbricks-examples)
 
-------
+## Introduction
+The following system builds a Sample Network Structure reflecting a HUB and SPOKE with the following reference architecture: 
+![Reference Architecture](./images/Bricks_Architectures-Network_Sample.png)
 
-## Structure
+## Getting Started
+For details in how the Oracle CloudBricks Framework works, refer to the [following file](../README.md)
 
-The following is the structure of the project: 
+### Prerequisites
+- A Pre-Created Object Storage Bucket to store tfstate files
+- a Pre-Installed Executor with CLI installed. For instructions in how to install CLI, go to the [following link](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm)
+- A Pre-Configured .oci/config file with API Keys. For details in how to do this step, go to the [following link](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm). File should look similar to this: 
+  ```shell
+[DEFAULT]
+user=ocid1.user.oc1..aaaaaaaafoobarfoobarfoobar
+fingerprint=9a:9e:13:cf:94:6e:2c:b9:54:D1:60:0d:e4:14:8b:5e
+tenancy=ocid1.tenancy.oc1..aaaaaaaaoqdyfoobarfoobarfoobar
+region=re-region-1
+key_file=/full/path/to/api/key/my_api_key.pem
+  ```
 
-| Item                           | Description                                                  |
-| ------------------------------ | ------------------------------------------------------------ |
-| [lbaas_certs](lbaas_certs)     | Certificates related to Public Load Balancer. This includes 3 files: `ca_certifcate.crt`: crt file that contains the Certificate Authority Cert. `private_key.pem`: Private Key related to public cert. `public_cert.crt`: Public Certificate. |
-| [ssh_keys](ssh_keys)           | SSH Keys associated to compute instances. This includes 2 files: `surapoc_ssh_id_rsa`: Private SSH Key. `surapoc_ssh_id_rsa.pub`: Public SSH Key |
-| [backend.tf](backend.tf)       | *Terraform* configuration file that contains the coordinates to store `.tfstate` file inside a particular bucket, using the *AWS S3 Compatibility API*. See [file structure and contents](##File Structure and Contents) section for more details. |
-| [main.tf](main.tf)             | Main *Terraform* orchestration file. This contains the entire definition of the modules used in the provisioning process of the system. See [file structure and contents](##File Structure and Contents) section for more details. |
-| [output.tf](output.tf)         | Output *Terraform* configuration file, which content feeds the *Terraform / Ansible* Integration. **This file must not be touched**. See [file structure and contents](##File Structure and Contents) section for more details. |
-| [provider.tf](provider.tf)     | Includes the default provider variables to connect to *Oracle Cloud Infrastructure*. These values are for this case, defined in the project variables. See [file structure and contents](##File Structure and Contents) section for more details. |
-| [README.md](README.md)         | This File                                                    |
-| [system.tfvars](system.tfvars) | *Terraform* variable file that contains all the variable provisioning for this system. See [file structure and contents](##File Structure and Contents) section for more details. |
-| [variables.tf](variables.tf)   | *Terraform* configuration file that contains all the variable declarations for this system. This file will include as many variables are used inside [main.tf](main.tf) file. See [file structure and contents](##File Structure and Contents) section for more details. |
+- A Pre-Configured .aws/credentials file with values from pre-created Customer Secret Keys. File should look similar to this: 
+  ```shell
+[default]
+aws_access_key_id=202ad26f6546c71cc8990c821eece00a6b543ssa21231
+aws_secret_access_key=xgYpRAiel5Yxrc9G67MGddaskjdhalsdiujlewiH3NxX4ZMe4=
+  ```
 
-------
+For instructions in how to create Customer Secret Keys, go to the [following link](https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcredentials.htm#To4)
 
-## File Structure and Contents
+## Components
+The following system contains the following components: 
 
+### [backend.tf](./backend.tf)
 
-
-## backend.tf
-
-This file contains the definition that allows OCI via the *AWS S3 Compatibility API* to interact with a bucket and remotely store the system's [tfstate](https://www.terraform.io/docs/state/index.html) file. You may access the sample `backend.tf` file [here](backend.tf) and the following is the generic content of it:
+This file defines the S3 compatibility API integration to store .tfstate file into an OCI Bucket. It's content is the following: 
 
 ```go
-/* backend.tf
-Author: DALQUINT - denny.alquinta@oracle.com
-Purpose: Handles the storage of tfstate file in backend bucket
-Copyright (c) 2017, 2021, Oracle and/or its affiliates. All rights reserved. */
-
 terraform {
   backend "s3" {
-    bucket   = "NAME_OF_THE_BUCKET"
-    key      = "STRUCTURE/FOR/BUCKET/DIRECTORY/SYSTEM.tfstate"
-    region   = "REGION"
-    endpoint = "https://TENANCY_NAMESPACE_NAME.compat.objectstorage.REGION.oraclecloud.com"
+    bucket   = "Precreated_bucket_to_store_tfstate_files_name"
+    key      = "Samples/sample_hub_spoke_compartment_with_parent.tfstate"
+    region   = "re-region-1"
+    endpoint = "https://Tenancy_ObjectStorage_namespace.compat.objectstorage.re-region-1.oraclecloud.com"
 
     skip_region_validation      = true
     skip_credentials_validation = true
@@ -51,335 +54,377 @@ terraform {
 }
 ```
 
-For this case, the file content is: 
+*Considerations*
 
-| Property | Value                                                        | Comments                                                     |
-| -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| bucket   | tfstate_bucket                                               | This may be any bucket of your choice. When creating bucket, make sure versioning is enabled and that the bucket is private |
-| key      | Environments/WLS/demoenv01.tfstate                           | This may be any structure. When concatenating a path, this will generate an inner structure inside bucket for ease of navigation. This files must never be erased unless there is an inconsistency between the code and the system status. This **name must be unique** per each system is created. This file is the corner stone of Terraform Infrastructure Status, so **must not be tampered.** To neglect this step, will compromise the infrastructure unicity and status, hence will potentially risk to corrupt the infrastructure. |
-| region   | us-ashburn-1                                                 | This value will depend on which region the tenancy is currently subscribed and where the infrastructure is being created |
-| endpoint | https://id82vjamxpqo.compat.objectstorage.us-ashburn-1.oraclecloud.com | This is the concatenation of the tenancy namespace which can be found under Administration > Tenancy Details and the region where the tenancy is subscribed and infrastructure is being created. |
-
+- The `bucket` variable, requires the display name of the bucket where tfstate files will be stored
+- The `key` variable, supports a structure of your choice, by providing `/`as separators. Name of the file should always be `system_name.tfstate`
+- The `region` variable contains the name id of the region where the system is being deployed at
+- The `endpoint` variable contains the concatenation of the tenancy namespace and the region as depicted on above example. For instructions in how to determine the Tenancy Object Storage namespace, refer to the [following documentation](https://docs.oracle.com/en-us/iaas/Content/Object/Tasks/understandingnamespaces.htm)
+- The rest of *variables* require to be set as is. **Do not change nor update these values**
 
 
-## main.tf
+### [datasource.tf](./datasource.tf)
+This file defines the datasources required for internal tracking lookup on Open Source Project. Do not alter this file
 
-The following file is the main module orchestrator of the system. This will pull all the required backend modules stored on corresponding *OCIBE* projects and will pull them into `.terraform` local directory for usage. You may access the sample main.tf file [here](main.tf) and the following is the generic content of it:
-
-
+### [main.tf](./main.tf) 
+This file defines the main orchestration of module. The following structure is expected
 
 ```go
-/* main.tf
-Author: Denny Alquinta – denny.alquinta@oracle.com 
-Purpose: Defines all the components related to environment
-Copyright (c) 2017, 2020, Oracle and/or its affiliates. All rights reserved. */
-
-module "admin_compute" {
-  source = "git::YOUR_REPOSITORY_SSH_OR_HTTPS_URI/suracompute.git?ref=RELEASE_TAG"
-  ######################################## COMMON VARIABLES ######################################
-  region                      = var.region
-  private_key_path            = var.private_key_path
-  public_network_subnet_name  = var.public_network_subnet_name
-  private_network_subnet_name = var.private_network_subnet_name
-  ######################################## COMMON VARIABLES ######################################
+module "ModuleName" {
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.0"
+    providers = {
+    oci.home = oci.home
+  }
+  ######################################## PROVIDER SPECIFIC VARIABLES ######################################
+  tenancy_ocid     = var.tenancy_ocid
+  region           = var.region
+  user_ocid        = var.user_ocid
+  fingerprint      = var.fingerprint
+  private_key_path = var.private_key_path
+  ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-  ssh_public_key                          = var.admin_ssh_public_key
-  ssh_private_key                         = var.admin_ssh_private_key
-  ssh_public_is_path                      = var.admin_ssh_public_is_path
-  ssh_private_is_path                     = var.admin_ssh_private_is_path
-  compute_availability_domain_list        = var.admin_compute_availability_domain_list
-  fault_domain_name                       = var.admin_fault_domain_name
-  bkp_policy_boot_volume                  = var.admin_bkp_policy_boot_volume
-  linux_compute_instance_compartment_name = var.admin_linux_compute_instance_compartment_name
-  linux_compute_network_compartment_name  = var.admin_linux_compute_network_compartment_name
-  vcn_display_name                        = var.admin_vcn_display_name
-  num_instances                           = var.admin_num_instances
-  compute_display_name_base               = var.admin_compute_display_name_base
-  instance_image_ocid                     = var.admin_instance_image_ocid
-  instance_shape                          = var.admin_instance_shape
-  is_compute_private                      = var.admin_is_compute_private
-}
-
-module "managed_compute_cluster" {
-  source = "git::YOUR_REPOSITORY_SSH_OR_HTTPS_URI/suracompute.git?ref=RELEASE_TAG"
-  ######################################## COMMON VARIABLES ######################################
-  region                      = var.region
-  private_key_path            = var.private_key_path
-  public_network_subnet_name  = var.public_network_subnet_name
-  private_network_subnet_name = var.private_network_subnet_name
-  ######################################## COMMON VARIABLES ######################################
+  vcn_network_compartment_name        = var.ModuleName_vcn_network_compartment_name
+  vcn_cidr_blocks                     = var.ModuleName_vcn_cidr_blocks
+  private_subnet_cidr_block_map       = var.ModuleName_private_subnet_cidr_block_map
+  public_subnet_cidr_block_map        = var.ModuleName_public_subnet_cidr_block_map
+  vcn_display_name                    = var.ModuleName_vcn_display_name
+  dhcp_options_display_name           = var.ModuleName_dhcp_options_display_name
+  custom_search_domain                = var.ModuleName_custom_search_domain
+  private_route_table_display_name    = var.ModuleName_private_route_table_display_name
+  public_route_table_display_name     = var.ModuleName_public_route_table_display_name
+  private_security_list_display_name  = var.ModuleName_private_security_list_display_name
+  public_security_list_display_name   = var.ModuleName_public_security_list_display_name
+  service_gateway_display_name        = var.ModuleName_service_gateway_display_name
+  nat_gateway_display_name            = var.ModuleName_nat_gateway_display_name
+  internet_gateway_display_name       = var.ModuleName_internet_gateway_display_name
+  lpg_count                           = var.ModuleName_lpg_count
+  lpg_display_name_base               = var.ModuleName_lpg_display_name_base
+  peered_vcn_network_compartment_name = var.ModuleName_peered_vcn_network_compartment_name
+  peered_lpg_display_name             = var.ModuleName_peered_lpg_display_name
+  is_spoke                            = var.ModuleName_is_spoke
   ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-  ssh_public_key                          = var.managed_ssh_public_key
-  ssh_private_key                         = var.managed_ssh_private_key
-  ssh_public_is_path                      = var.managed_ssh_public_is_path
-  ssh_private_is_path                     = var.managed_ssh_private_is_path
-  compute_availability_domain_list        = var.managed_compute_availability_domain_list
-  fault_domain_name                       = var.managed_fault_domain_name
-  bkp_policy_boot_volume                  = var.managed_bkp_policy_boot_volume
-  linux_compute_instance_compartment_name = var.managed_linux_compute_instance_compartment_name
-  linux_compute_network_compartment_name  = var.managed_linux_compute_network_compartment_name
-  vcn_display_name                        = var.managed_vcn_display_name
-  num_instances                           = var.managed_num_instances
-  compute_display_name_base               = var.managed_compute_display_name_base
-  instance_image_ocid                     = var.managed_instance_image_ocid
-  instance_shape                          = var.managed_instance_shape
-  is_compute_private                      = var.managed_is_compute_private
-}
-
-module "nfs" {
-  source                         = "git::YOUR_REPOSITORY_SSH_OR_HTTPS_URI/surafss.git?ref=RELEASE_TAG"
-  ######################################## COMMON VARIABLES ######################################
-  region                      = var.region
-  private_key_path            = var.private_key_path
-  public_network_subnet_name  = var.public_network_subnet_name
-  private_network_subnet_name = var.private_network_subnet_name
-  ######################################## COMMON VARIABLES ######################################
-  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################  
-  ssh_public_key                 = var.nfs_ssh_public_key
-  ssh_private_key                = var.nfs_ssh_private_key
-  ssh_public_is_path             = var.nfs_ssh_public_is_path
-  ssh_private_is_path            = var.nfs_ssh_private_is_path
-  vcn_display_name               = var.nfs_vcn_display_name
-  fss_availability_domain_number = var.nfs_fss_availability_domain_number
-  mt_availability_domain_number  = var.nfs_mt_availability_domain_number
-  num_of_fss                     = var.nfs_num_of_fss
-  mt_compartment_name            = var.nfs_mt_compartment_name
-  export_path_base               = var.nfs_export_path_base
-  fss_display_name_base          = var.nfs_fss_display_name_base
-  fss_instance_compartment_name  = var.nfs_fss_instance_compartment_name
-  fss_network_compartment_name   = var.nfs_fss_network_compartment_name
-  mount_target_name              = var.nfs_mount_target_name
-}
-
-module "loadbalancer" {
-  source = "git::YOUR_REPOSITORY_SSH_OR_HTTPS_URI/suralbaas.git?ref=RELEASE_TAG"
-  ######################################## COMMON VARIABLES ######################################
-  region                      = var.region
-  private_key_path            = var.private_key_path
-  public_network_subnet_name  = var.public_network_subnet_name
-  private_network_subnet_name = var.private_network_subnet_name
-  ######################################## COMMON VARIABLES ######################################
-  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-  ssh_public_key                  = var.loadbalancer_ssh_public_key
-  ssh_private_key                 = var.loadbalancer_ssh_private_key
-  ssh_public_is_path              = var.loadbalancer_ssh_public_is_path
-  ssh_private_is_path             = var.loadbalancer_ssh_private_is_path
-  lbaas_instance_compartment_name = var.loadbalancer_lbaas_instance_compartment_name
-  lbaas_network_compartment_name  = var.loadbalancer_lbaas_network_compartment_name
-  vcn_display_name                = var.loadbalancer_vcn_display_name
-  lbaas_display_name              = var.loadbalancer_lbaas_display_name
-  lbaas_shape_min_bw_mbps         = var.loadbalancer_lbaas_shape_min_bw_mbps
-  lbaas_shape_max_bw_mbps         = var.loadbalancer_lbaas_shape_max_bw_mbps
-  is_private                      = var.loadbalancer_is_private
-  nsg_name                        = var.loadbalancer_nsg_name
-}
-
-module "backendset" {
-  source = "git::YOUR_REPOSITORY_SSH_OR_HTTPS_URI/suralbaasbes.git?ref=RELEASE_TAG"
-  ######################################## COMMON VARIABLES ######################################
-  region                      = var.region
-  private_key_path            = var.private_key_path
-  public_network_subnet_name  = var.public_network_subnet_name
-  private_network_subnet_name = var.private_network_subnet_name
-  ######################################## COMMON VARIABLES ######################################
-  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-  ssh_public_key                      = var.backendset_ssh_public_key
-  ssh_private_key                     = var.backendset_ssh_private_key
-  ssh_public_is_path                  = var.backendset_ssh_public_is_path
-  ssh_private_is_path                 = var.backendset_ssh_private_is_path
-  balanced_artifact                   = module.managed_compute_cluster.instance
-  load_balancer_id                    = module.loadbalancer.lbaas_instance.id
-  vcn_display_name                    = var.backendset_vcn_display_name
-  balancing_protocol                  = var.backendset_balancing_protocol
-  lbaas_backend_set_name              = var.backendset_lbaas_backend_set_name
-  lbaas_bes_check_protocol            = var.backendset_lbaas_bes_check_protocol
-  lbaas_bes_checkport                 = var.backendset_lbaas_bes_checkport
-  lbaas_path_to_routeset_name         = var.backendset_lbaas_path_to_routeset_name
-  lbaas_bes_instance_compartment_name = var.backendset_lbaas_bes_instance_compartment_name
-  lbaas_bes_network_compartment_name  = var.backendset_lbaas_bes_network_compartment_name
-  lbaas_bes_listen_port               = var.backendset_lbaas_bes_listen_port
-  lbaas_bes_listen_protocol           = var.backendset_lbaas_bes_listen_protocol
-  backend_default_balancing_port      = var.backendset_backend_default_balancing_port
-  ms_per_machine                      = var.ms_per_machine
-  lbaas_cert_is_path                  = var.backendset_lbaas_cert_is_path
-  lbaas_pvt_key_is_path               = var.backendset_lbaas_pvt_key_is_path
-  lbaas_pub_cert_is_path              = var.backendset_lbaas_pub_cert_is_path
-  lbaas_ca_cert                       = var.backendset_lbaas_ca_cert
-  certificate_passphrase              = var.backendset_certificate_passphrase
-  certificate_private_key             = var.backendset_certificate_private_key
-  lbaas_public_cert                   = var.backendset_lbaas_public_cert
-  certificate_name                    = var.backendset_certificate_name
-  verify_peer_certificate             = var.backend_verify_peer_certificate
 }
 ```
 
+*Considerations*
+- Whereas needed, apply variable and module overloading
+- For module specifics, refer to module documentation: 
+  - [terraform-oci-cloudbricks-network-artifacts](https://github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts/blob/main/README.md)
+- For variable usage, refer to section *Variable Documentation*
 
 
-This system is composed by 5 backend modules which are explained below: 
+### [output.tf](./output.tf)
+The following file defines the output of system, for future forward integration use with Configuration Management Tools
 
-| Module                  | Comments                                                     |
-| ----------------------- | ------------------------------------------------------------ |
-| admin_compute           | Uses `suracompute` backend module to generate the required computes to host the AdminServer of Domain. This typically is 1 |
-| managed_compute_cluster | Uses `suracompute` backend module to generate the required computes to host the managed servers of domain. This may vary from any value starting in 0. |
-| nfs                     | Uses `surafss` backend module to generate the required NFS v3 Filesystems required by the domain. |
-| loadbalancer            | Uses `suralbaas` backend module to generate the LBaaS Service which front ends the cluster |
-| backendset              | Uses `suralbaasbes` backend module to generate the backend set associated to the computes previously created and then attaches this to the corresponding LBaaS. |
+### [README.md](./README.md)
+This file
 
-> **IMPORTANT:** The sample file is completely linked to https://github.com private repositories of denny.alquinta@oracle.com ownership. All files must be properly updated to poll code from internal repositories. This repos as are private will not grant public access to anyone and where use exclusively as a PoC. 
+### [system.tfvars](./system.tfvars)
+The following file defines the specific variables customized using variable overloading. Please refer to backend brick module documentation for details in how to fill.
+For module specifics, refer to module documentation: 
+  - [terraform-oci-cloudbricks-network-artifacts](https://github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts/blob/main/README.md)
 
-## output.tf
+### [variables.tf](./variables.tf)
+The following file defines all the variables used in this system. For details on it's content, refer to section *Variable Documentation*
 
-This file contains the outputs required by the Terraform/Ansible integration to work properly. The values on each output entry are the ones that are later executed by get_hosts_vars.sh script to produce the output json files inside json_stage directory that later on are parsed and processed by get_hosts_vars.py to write the ansible_hosts and playbook.yaml files. You may access to the content of it [here](output.tf). 
+---
+## Variable Documentation
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.5 |
+| <a name="requirement_oci"></a> [oci](#requirement\_oci) | >= 4.36.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.36.0 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_artifact_hub01comp"></a> [artifact\_hub01comp](#module\_artifact\_hub01comp) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.0 |
+| <a name="module_artifact_spoke01comp"></a> [artifact\_spoke01comp](#module\_artifact\_spoke01comp) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.0 |
+| <a name="module_artifact_spoke02comp"></a> [artifact\_spoke02comp](#module\_artifact\_spoke02comp) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.0 |
+| <a name="module_hub01comp"></a> [hub01comp](#module\_hub01comp) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.0 |
+| <a name="module_mainbizcomp"></a> [mainbizcomp](#module\_mainbizcomp) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.0 |
+| <a name="module_network_hub01comp"></a> [network\_hub01comp](#module\_network\_hub01comp) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.0 |
+| <a name="module_network_spoke01comp"></a> [network\_spoke01comp](#module\_network\_spoke01comp) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.0 |
+| <a name="module_network_spoke02comp"></a> [network\_spoke02comp](#module\_network\_spoke02comp) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.0 |
+| <a name="module_spoke01comp"></a> [spoke01comp](#module\_spoke01comp) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.0 |
+| <a name="module_spoke02comp"></a> [spoke02comp](#module\_spoke02comp) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.0 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [oci_identity_region_subscriptions.home_region_subscriptions](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/data-sources/identity_region_subscriptions) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_artifact_hub01comp_compartment_description"></a> [artifact\_hub01comp\_compartment\_description](#input\_artifact\_hub01comp\_compartment\_description) | Compartment Description | `any` | n/a | yes |
+| <a name="input_artifact_hub01comp_compartment_name"></a> [artifact\_hub01comp\_compartment\_name](#input\_artifact\_hub01comp\_compartment\_name) | Compartment Display Name | `any` | n/a | yes |
+| <a name="input_artifact_hub01comp_enable_delete"></a> [artifact\_hub01comp\_enable\_delete](#input\_artifact\_hub01comp\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_artifact_spoke01comp_compartment_description"></a> [artifact\_spoke01comp\_compartment\_description](#input\_artifact\_spoke01comp\_compartment\_description) | Compartment Description | `any` | n/a | yes |
+| <a name="input_artifact_spoke01comp_compartment_name"></a> [artifact\_spoke01comp\_compartment\_name](#input\_artifact\_spoke01comp\_compartment\_name) | Compartment Display Name | `any` | n/a | yes |
+| <a name="input_artifact_spoke01comp_enable_delete"></a> [artifact\_spoke01comp\_enable\_delete](#input\_artifact\_spoke01comp\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_artifact_spoke02comp_compartment_description"></a> [artifact\_spoke02comp\_compartment\_description](#input\_artifact\_spoke02comp\_compartment\_description) | Compartment Description | `any` | n/a | yes |
+| <a name="input_artifact_spoke02comp_compartment_name"></a> [artifact\_spoke02comp\_compartment\_name](#input\_artifact\_spoke02comp\_compartment\_name) | Compartment Display Name | `any` | n/a | yes |
+| <a name="input_artifact_spoke02comp_enable_delete"></a> [artifact\_spoke02comp\_enable\_delete](#input\_artifact\_spoke02comp\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | API Key Fingerprint for user\_ocid derived from public API Key imported in OCI User config | `any` | n/a | yes |
+| <a name="input_hub01comp_compartment_description"></a> [hub01comp\_compartment\_description](#input\_hub01comp\_compartment\_description) | Enters a description of the compartment | `any` | n/a | yes |
+| <a name="input_hub01comp_compartment_name"></a> [hub01comp\_compartment\_name](#input\_hub01comp\_compartment\_name) | Defines the display name of compartment | `any` | n/a | yes |
+| <a name="input_hub01comp_enable_delete"></a> [hub01comp\_enable\_delete](#input\_hub01comp\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_mainbizcomp_compartment_description"></a> [mainbizcomp\_compartment\_description](#input\_mainbizcomp\_compartment\_description) | Enters a description of the compartment | `any` | n/a | yes |
+| <a name="input_mainbizcomp_compartment_name"></a> [mainbizcomp\_compartment\_name](#input\_mainbizcomp\_compartment\_name) | Defines the display name of compartment | `any` | n/a | yes |
+| <a name="input_mainbizcomp_enable_delete"></a> [mainbizcomp\_enable\_delete](#input\_mainbizcomp\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_mainbizcomp_is_root_parent"></a> [mainbizcomp\_is\_root\_parent](#input\_mainbizcomp\_is\_root\_parent) | The following variable describes if Root compartment is the parent of this | `any` | n/a | yes |
+| <a name="input_mainbizcomp_root_compartment_ocid"></a> [mainbizcomp\_root\_compartment\_ocid](#input\_mainbizcomp\_root\_compartment\_ocid) | Defines the OCID of the root compartment | `any` | n/a | yes |
+| <a name="input_network_hub01comp_compartment_description"></a> [network\_hub01comp\_compartment\_description](#input\_network\_hub01comp\_compartment\_description) | Compartment Description | `any` | n/a | yes |
+| <a name="input_network_hub01comp_compartment_name"></a> [network\_hub01comp\_compartment\_name](#input\_network\_hub01comp\_compartment\_name) | Compartment Display Name | `any` | n/a | yes |
+| <a name="input_network_hub01comp_enable_delete"></a> [network\_hub01comp\_enable\_delete](#input\_network\_hub01comp\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_network_spoke01comp_compartment_description"></a> [network\_spoke01comp\_compartment\_description](#input\_network\_spoke01comp\_compartment\_description) | Compartment Description | `any` | n/a | yes |
+| <a name="input_network_spoke01comp_compartment_name"></a> [network\_spoke01comp\_compartment\_name](#input\_network\_spoke01comp\_compartment\_name) | Compartment Display Name | `any` | n/a | yes |
+| <a name="input_network_spoke01comp_enable_delete"></a> [network\_spoke01comp\_enable\_delete](#input\_network\_spoke01comp\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_network_spoke02comp_compartment_description"></a> [network\_spoke02comp\_compartment\_description](#input\_network\_spoke02comp\_compartment\_description) | Compartment Description | `any` | n/a | yes |
+| <a name="input_network_spoke02comp_compartment_name"></a> [network\_spoke02comp\_compartment\_name](#input\_network\_spoke02comp\_compartment\_name) | Compartment Display Name | `any` | n/a | yes |
+| <a name="input_network_spoke02comp_enable_delete"></a> [network\_spoke02comp\_enable\_delete](#input\_network\_spoke02comp\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | Private Key Absolute path location where terraform is executed | `any` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | Target region where artifacts are going to be created | `any` | n/a | yes |
+| <a name="input_spoke01comp_compartment_description"></a> [spoke01comp\_compartment\_description](#input\_spoke01comp\_compartment\_description) | Enters a description of the compartment | `any` | n/a | yes |
+| <a name="input_spoke01comp_compartment_name"></a> [spoke01comp\_compartment\_name](#input\_spoke01comp\_compartment\_name) | Defines the display name of compartment | `any` | n/a | yes |
+| <a name="input_spoke01comp_enable_delete"></a> [spoke01comp\_enable\_delete](#input\_spoke01comp\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_spoke02comp_compartment_description"></a> [spoke02comp\_compartment\_description](#input\_spoke02comp\_compartment\_description) | Enters a description of the compartment | `any` | n/a | yes |
+| <a name="input_spoke02comp_compartment_name"></a> [spoke02comp\_compartment\_name](#input\_spoke02comp\_compartment\_name) | Defines the display name of compartment | `any` | n/a | yes |
+| <a name="input_spoke02comp_enable_delete"></a> [spoke02comp\_enable\_delete](#input\_spoke02comp\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_tenancy_ocid"></a> [tenancy\_ocid](#input\_tenancy\_ocid) | OCID of tenancy | `any` | n/a | yes |
+| <a name="input_user_ocid"></a> [user\_ocid](#input\_user\_ocid) | User OCID in tenancy. Currently hardcoded to user denny.alquinta@oracle.com | `any` | n/a | yes |
+
+## Outputs
+
+| Name | Description |
+[opc@dalquintdevhubscl sample_hub_spoke_network_components]$ terraform-docs markdown .
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.5 |
+| <a name="requirement_oci"></a> [oci](#requirement\_oci) | >= 4.36.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.36.0 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_hub01network"></a> [hub01network](#module\_hub01network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v1.0.0 |
+| <a name="module_lpg_route_pub_hub_to_spoke01"></a> [lpg\_route\_pub\_hub\_to\_spoke01](#module\_lpg\_route\_pub\_hub\_to\_spoke01) | git::ssh://git@github.com/oraclecloudbricks/lpg_config.git | v1.0 |
+| <a name="module_lpg_route_pub_hub_to_spoke02"></a> [lpg\_route\_pub\_hub\_to\_spoke02](#module\_lpg\_route\_pub\_hub\_to\_spoke02) | git::ssh://git@github.com/oraclecloudbricks/lpg_config.git | v1.0 |
+| <a name="module_lpg_route_pvt_hub_to_spoke01"></a> [lpg\_route\_pvt\_hub\_to\_spoke01](#module\_lpg\_route\_pvt\_hub\_to\_spoke01) | git::ssh://git@github.com/oraclecloudbricks/lpg_config.git | v1.0 |
+| <a name="module_lpg_route_pvt_hub_to_spoke02"></a> [lpg\_route\_pvt\_hub\_to\_spoke02](#module\_lpg\_route\_pvt\_hub\_to\_spoke02) | git::ssh://git@github.com/oraclecloudbricks/lpg_config.git | v1.0 |
+| <a name="module_spoke01network"></a> [spoke01network](#module\_spoke01network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v1.0.0 |
+| <a name="module_spoke02network"></a> [spoke02network](#module\_spoke02network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v1.0.0 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [oci_identity_region_subscriptions.home_region_subscriptions](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/data-sources/identity_region_subscriptions) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | API Key Fingerprint for user\_ocid derived from public API Key imported in OCI User config | `any` | n/a | yes |
+| <a name="input_hub01network_custom_search_domain"></a> [hub01network\_custom\_search\_domain](#input\_hub01network\_custom\_search\_domain) | A domain name where the custom option can be applied | `any` | n/a | yes |
+| <a name="input_hub01network_dhcp_options_display_name"></a> [hub01network\_dhcp\_options\_display\_name](#input\_hub01network\_dhcp\_options\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_hub01network_internet_gateway_display_name"></a> [hub01network\_internet\_gateway\_display\_name](#input\_hub01network\_internet\_gateway\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_hub01network_internet_gateway_enabled"></a> [hub01network\_internet\_gateway\_enabled](#input\_hub01network\_internet\_gateway\_enabled) | Describes if the Internet Gateway is enabled upon creation or not | `bool` | `true` | no |
+| <a name="input_hub01network_is_private_subnet_private"></a> [hub01network\_is\_private\_subnet\_private](#input\_hub01network\_is\_private\_subnet\_private) | Describes if the subnet is private or not | `bool` | `true` | no |
+| <a name="input_hub01network_is_public_subnet_private"></a> [hub01network\_is\_public\_subnet\_private](#input\_hub01network\_is\_public\_subnet\_private) | Describes if the subnet is private or not | `bool` | `false` | no |
+| <a name="input_hub01network_is_spoke"></a> [hub01network\_is\_spoke](#input\_hub01network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `true` | no |
+| <a name="input_hub01network_lpg_count"></a> [hub01network\_lpg\_count](#input\_hub01network\_lpg\_count) | Number of LPG to create | `number` | `1` | no |
+| <a name="input_hub01network_lpg_display_name_base"></a> [hub01network\_lpg\_display\_name\_base](#input\_hub01network\_lpg\_display\_name\_base) | Local Peering Gateway Display Name Base | `any` | n/a | yes |
+| <a name="input_hub01network_nat_gateway_display_name"></a> [hub01network\_nat\_gateway\_display\_name](#input\_hub01network\_nat\_gateway\_display\_name) | NAT Gateway Display Name | `any` | n/a | yes |
+| <a name="input_hub01network_peered_lpg_display_name"></a> [hub01network\_peered\_lpg\_display\_name](#input\_hub01network\_peered\_lpg\_display\_name) | Display name of peered network | `string` | `""` | no |
+| <a name="input_hub01network_peered_vcn_network_compartment_name"></a> [hub01network\_peered\_vcn\_network\_compartment\_name](#input\_hub01network\_peered\_vcn\_network\_compartment\_name) | Compartment name of origin VCN to peer | `string` | `""` | no |
+| <a name="input_hub01network_private_route_table_display_name"></a> [hub01network\_private\_route\_table\_display\_name](#input\_hub01network\_private\_route\_table\_display\_name) | Private Route Table Display Name. | `any` | n/a | yes |
+| <a name="input_hub01network_private_route_table_nat_route_rules_description"></a> [hub01network\_private\_route\_table\_nat\_route\_rules\_description](#input\_hub01network\_private\_route\_table\_nat\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"NAT Gateway default route"` | no |
+| <a name="input_hub01network_private_route_table_nat_route_rules_destination"></a> [hub01network\_private\_route\_table\_nat\_route\_rules\_destination](#input\_hub01network\_private\_route\_table\_nat\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_hub01network_private_route_table_nat_route_rules_destination_type"></a> [hub01network\_private\_route\_table\_nat\_route\_rules\_destination\_type](#input\_hub01network\_private\_route\_table\_nat\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_hub01network_private_route_table_svc_route_rules_description"></a> [hub01network\_private\_route\_table\_svc\_route\_rules\_description](#input\_hub01network\_private\_route\_table\_svc\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"Service Gateway default route"` | no |
+| <a name="input_hub01network_private_route_table_svc_route_rules_destination_type"></a> [hub01network\_private\_route\_table\_svc\_route\_rules\_destination\_type](#input\_hub01network\_private\_route\_table\_svc\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"SERVICE_CIDR_BLOCK"` | no |
+| <a name="input_hub01network_private_security_list_display_name"></a> [hub01network\_private\_security\_list\_display\_name](#input\_hub01network\_private\_security\_list\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_hub01network_private_security_list_egress_security_rules_description"></a> [hub01network\_private\_security\_list\_egress\_security\_rules\_description](#input\_hub01network\_private\_security\_list\_egress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All egress rule for all protocols and IP Addresses"` | no |
+| <a name="input_hub01network_private_security_list_egress_security_rules_destination"></a> [hub01network\_private\_security\_list\_egress\_security\_rules\_destination](#input\_hub01network\_private\_security\_list\_egress\_security\_rules\_destination) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet originating from the instance can go to. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_hub01network_private_security_list_egress_security_rules_destination_type"></a> [hub01network\_private\_security\_list\_egress\_security\_rules\_destination\_type](#input\_hub01network\_private\_security\_list\_egress\_security\_rules\_destination\_type) | Optional) (Updatable) Type of destination for the rule. The default is CIDR\_BLOCK | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_hub01network_private_security_list_egress_security_rules_protocol"></a> [hub01network\_private\_security\_list\_egress\_security\_rules\_protocol](#input\_hub01network\_private\_security\_list\_egress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_hub01network_private_security_list_egress_security_rules_stateless"></a> [hub01network\_private\_security\_list\_egress\_security\_rules\_stateless](#input\_hub01network\_private\_security\_list\_egress\_security\_rules\_stateless) | (Optional) (Updatable) A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if egress traffic allows TCP destination port 80, there should be an ingress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_hub01network_private_security_list_ingress_security_rules_description"></a> [hub01network\_private\_security\_list\_ingress\_security\_rules\_description](#input\_hub01network\_private\_security\_list\_ingress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All traffic in for private security List"` | no |
+| <a name="input_hub01network_private_security_list_ingress_security_rules_protocol"></a> [hub01network\_private\_security\_list\_ingress\_security\_rules\_protocol](#input\_hub01network\_private\_security\_list\_ingress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_hub01network_private_security_list_ingress_security_rules_source"></a> [hub01network\_private\_security\_list\_ingress\_security\_rules\_source](#input\_hub01network\_private\_security\_list\_ingress\_security\_rules\_source) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet coming into the instance can come from. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_hub01network_private_security_list_ingress_security_rules_source_type"></a> [hub01network\_private\_security\_list\_ingress\_security\_rules\_source\_type](#input\_hub01network\_private\_security\_list\_ingress\_security\_rules\_source\_type) | Type of source for the rule. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_hub01network_private_security_list_ingress_security_rules_stateless"></a> [hub01network\_private\_security\_list\_ingress\_security\_rules\_stateless](#input\_hub01network\_private\_security\_list\_ingress\_security\_rules\_stateless) | A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if ingress traffic allows TCP destination port 80, there should be an egress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_hub01network_private_subnet_cidr_block_map"></a> [hub01network\_private\_subnet\_cidr\_block\_map](#input\_hub01network\_private\_subnet\_cidr\_block\_map) | Map of CIDR Blocks associated to private subnets and it's corresponding names | `map(any)` | n/a | yes |
+| <a name="input_hub01network_public_route_table_display_name"></a> [hub01network\_public\_route\_table\_display\_name](#input\_hub01network\_public\_route\_table\_display\_name) | Public Route Table Display Name. | `any` | n/a | yes |
+| <a name="input_hub01network_public_route_table_inet_route_rules_description"></a> [hub01network\_public\_route\_table\_inet\_route\_rules\_description](#input\_hub01network\_public\_route\_table\_inet\_route\_rules\_description) | Description of Route Table Entry for Internet Gateway | `string` | `"Route entry for Internet Gateway"` | no |
+| <a name="input_hub01network_public_route_table_inet_route_rules_destination"></a> [hub01network\_public\_route\_table\_inet\_route\_rules\_destination](#input\_hub01network\_public\_route\_table\_inet\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_hub01network_public_route_table_inet_route_rules_destination_type"></a> [hub01network\_public\_route\_table\_inet\_route\_rules\_destination\_type](#input\_hub01network\_public\_route\_table\_inet\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_hub01network_public_route_table_svc_route_rules_description"></a> [hub01network\_public\_route\_table\_svc\_route\_rules\_description](#input\_hub01network\_public\_route\_table\_svc\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"Service Gateway default route"` | no |
+| <a name="input_hub01network_public_route_table_svc_route_rules_destination_type"></a> [hub01network\_public\_route\_table\_svc\_route\_rules\_destination\_type](#input\_hub01network\_public\_route\_table\_svc\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"SERVICE_CIDR_BLOCK"` | no |
+| <a name="input_hub01network_public_security_list_display_name"></a> [hub01network\_public\_security\_list\_display\_name](#input\_hub01network\_public\_security\_list\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_hub01network_public_security_list_egress_security_rules_description"></a> [hub01network\_public\_security\_list\_egress\_security\_rules\_description](#input\_hub01network\_public\_security\_list\_egress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All egress rule for all protocols and IP Addresses"` | no |
+| <a name="input_hub01network_public_security_list_egress_security_rules_destination"></a> [hub01network\_public\_security\_list\_egress\_security\_rules\_destination](#input\_hub01network\_public\_security\_list\_egress\_security\_rules\_destination) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet originating from the instance can go to. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_hub01network_public_security_list_egress_security_rules_destination_type"></a> [hub01network\_public\_security\_list\_egress\_security\_rules\_destination\_type](#input\_hub01network\_public\_security\_list\_egress\_security\_rules\_destination\_type) | Optional) (Updatable) Type of destination for the rule. The default is CIDR\_BLOCK | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_hub01network_public_security_list_egress_security_rules_protocol"></a> [hub01network\_public\_security\_list\_egress\_security\_rules\_protocol](#input\_hub01network\_public\_security\_list\_egress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_hub01network_public_security_list_egress_security_rules_stateless"></a> [hub01network\_public\_security\_list\_egress\_security\_rules\_stateless](#input\_hub01network\_public\_security\_list\_egress\_security\_rules\_stateless) | (Optional) (Updatable) A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if egress traffic allows TCP destination port 80, there should be an ingress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_hub01network_public_security_list_ingress_security_rules_description"></a> [hub01network\_public\_security\_list\_ingress\_security\_rules\_description](#input\_hub01network\_public\_security\_list\_ingress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All traffic in for Public Security List"` | no |
+| <a name="input_hub01network_public_security_list_ingress_security_rules_protocol"></a> [hub01network\_public\_security\_list\_ingress\_security\_rules\_protocol](#input\_hub01network\_public\_security\_list\_ingress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_hub01network_public_security_list_ingress_security_rules_source"></a> [hub01network\_public\_security\_list\_ingress\_security\_rules\_source](#input\_hub01network\_public\_security\_list\_ingress\_security\_rules\_source) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet coming into the instance can come from. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_hub01network_public_security_list_ingress_security_rules_source_type"></a> [hub01network\_public\_security\_list\_ingress\_security\_rules\_source\_type](#input\_hub01network\_public\_security\_list\_ingress\_security\_rules\_source\_type) | Type of source for the rule. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_hub01network_public_security_list_ingress_security_rules_stateless"></a> [hub01network\_public\_security\_list\_ingress\_security\_rules\_stateless](#input\_hub01network\_public\_security\_list\_ingress\_security\_rules\_stateless) | A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if ingress traffic allows TCP destination port 80, there should be an egress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_hub01network_public_subnet_cidr_block_map"></a> [hub01network\_public\_subnet\_cidr\_block\_map](#input\_hub01network\_public\_subnet\_cidr\_block\_map) | Map of CIDR Blocks associated to private subnets and it's corresponding names | `map(any)` | n/a | yes |
+| <a name="input_hub01network_service_gateway_display_name"></a> [hub01network\_service\_gateway\_display\_name](#input\_hub01network\_service\_gateway\_display\_name) | Service Gateway Display Name | `any` | n/a | yes |
+| <a name="input_hub01network_vcn_cidr_blocks"></a> [hub01network\_vcn\_cidr\_blocks](#input\_hub01network\_vcn\_cidr\_blocks) | The list of one or more IPv4 CIDR blocks for the VCN | `any` | n/a | yes |
+| <a name="input_hub01network_vcn_display_name"></a> [hub01network\_vcn\_display\_name](#input\_hub01network\_vcn\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_hub01network_vcn_network_compartment_name"></a> [hub01network\_vcn\_network\_compartment\_name](#input\_hub01network\_vcn\_network\_compartment\_name) | Name of the compartment where the VCN will be created | `any` | n/a | yes |
+| <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | Private Key Absolute path location where terraform is executed | `any` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | Target region where artifacts are going to be created | `any` | n/a | yes |
+| <a name="input_spoke01network_custom_search_domain"></a> [spoke01network\_custom\_search\_domain](#input\_spoke01network\_custom\_search\_domain) | A domain name where the custom option can be applied | `any` | n/a | yes |
+| <a name="input_spoke01network_dhcp_options_display_name"></a> [spoke01network\_dhcp\_options\_display\_name](#input\_spoke01network\_dhcp\_options\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_spoke01network_internet_gateway_display_name"></a> [spoke01network\_internet\_gateway\_display\_name](#input\_spoke01network\_internet\_gateway\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_spoke01network_internet_gateway_enabled"></a> [spoke01network\_internet\_gateway\_enabled](#input\_spoke01network\_internet\_gateway\_enabled) | Describes if the Internet Gateway is enabled upon creation or not | `bool` | `true` | no |
+| <a name="input_spoke01network_is_private_subnet_private"></a> [spoke01network\_is\_private\_subnet\_private](#input\_spoke01network\_is\_private\_subnet\_private) | Describes if the subnet is private or not | `bool` | `true` | no |
+| <a name="input_spoke01network_is_public_subnet_private"></a> [spoke01network\_is\_public\_subnet\_private](#input\_spoke01network\_is\_public\_subnet\_private) | Describes if the subnet is private or not | `bool` | `false` | no |
+| <a name="input_spoke01network_is_spoke"></a> [spoke01network\_is\_spoke](#input\_spoke01network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `true` | no |
+| <a name="input_spoke01network_lpg_count"></a> [spoke01network\_lpg\_count](#input\_spoke01network\_lpg\_count) | Number of LPG to create | `number` | `1` | no |
+| <a name="input_spoke01network_lpg_display_name_base"></a> [spoke01network\_lpg\_display\_name\_base](#input\_spoke01network\_lpg\_display\_name\_base) | Local Peering Gateway Display Name Base | `any` | n/a | yes |
+| <a name="input_spoke01network_nat_gateway_display_name"></a> [spoke01network\_nat\_gateway\_display\_name](#input\_spoke01network\_nat\_gateway\_display\_name) | NAT Gateway Display Name | `any` | n/a | yes |
+| <a name="input_spoke01network_peered_lpg_display_name"></a> [spoke01network\_peered\_lpg\_display\_name](#input\_spoke01network\_peered\_lpg\_display\_name) | Display name of peered network | `string` | `""` | no |
+| <a name="input_spoke01network_peered_vcn_network_compartment_name"></a> [spoke01network\_peered\_vcn\_network\_compartment\_name](#input\_spoke01network\_peered\_vcn\_network\_compartment\_name) | Compartment name of origin VCN to peer | `string` | `""` | no |
+| <a name="input_spoke01network_private_route_table_display_name"></a> [spoke01network\_private\_route\_table\_display\_name](#input\_spoke01network\_private\_route\_table\_display\_name) | Private Route Table Display Name. | `any` | n/a | yes |
+| <a name="input_spoke01network_private_route_table_nat_route_rules_description"></a> [spoke01network\_private\_route\_table\_nat\_route\_rules\_description](#input\_spoke01network\_private\_route\_table\_nat\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"NAT Gateway default route"` | no |
+| <a name="input_spoke01network_private_route_table_nat_route_rules_destination"></a> [spoke01network\_private\_route\_table\_nat\_route\_rules\_destination](#input\_spoke01network\_private\_route\_table\_nat\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke01network_private_route_table_nat_route_rules_destination_type"></a> [spoke01network\_private\_route\_table\_nat\_route\_rules\_destination\_type](#input\_spoke01network\_private\_route\_table\_nat\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke01network_private_route_table_svc_route_rules_description"></a> [spoke01network\_private\_route\_table\_svc\_route\_rules\_description](#input\_spoke01network\_private\_route\_table\_svc\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"Service Gateway default route"` | no |
+| <a name="input_spoke01network_private_route_table_svc_route_rules_destination_type"></a> [spoke01network\_private\_route\_table\_svc\_route\_rules\_destination\_type](#input\_spoke01network\_private\_route\_table\_svc\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"SERVICE_CIDR_BLOCK"` | no |
+| <a name="input_spoke01network_private_security_list_display_name"></a> [spoke01network\_private\_security\_list\_display\_name](#input\_spoke01network\_private\_security\_list\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_spoke01network_private_security_list_egress_security_rules_description"></a> [spoke01network\_private\_security\_list\_egress\_security\_rules\_description](#input\_spoke01network\_private\_security\_list\_egress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All egress rule for all protocols and IP Addresses"` | no |
+| <a name="input_spoke01network_private_security_list_egress_security_rules_destination"></a> [spoke01network\_private\_security\_list\_egress\_security\_rules\_destination](#input\_spoke01network\_private\_security\_list\_egress\_security\_rules\_destination) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet originating from the instance can go to. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke01network_private_security_list_egress_security_rules_destination_type"></a> [spoke01network\_private\_security\_list\_egress\_security\_rules\_destination\_type](#input\_spoke01network\_private\_security\_list\_egress\_security\_rules\_destination\_type) | Optional) (Updatable) Type of destination for the rule. The default is CIDR\_BLOCK | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke01network_private_security_list_egress_security_rules_protocol"></a> [spoke01network\_private\_security\_list\_egress\_security\_rules\_protocol](#input\_spoke01network\_private\_security\_list\_egress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_spoke01network_private_security_list_egress_security_rules_stateless"></a> [spoke01network\_private\_security\_list\_egress\_security\_rules\_stateless](#input\_spoke01network\_private\_security\_list\_egress\_security\_rules\_stateless) | (Optional) (Updatable) A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if egress traffic allows TCP destination port 80, there should be an ingress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_spoke01network_private_security_list_ingress_security_rules_description"></a> [spoke01network\_private\_security\_list\_ingress\_security\_rules\_description](#input\_spoke01network\_private\_security\_list\_ingress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All traffic in for private security List"` | no |
+| <a name="input_spoke01network_private_security_list_ingress_security_rules_protocol"></a> [spoke01network\_private\_security\_list\_ingress\_security\_rules\_protocol](#input\_spoke01network\_private\_security\_list\_ingress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_spoke01network_private_security_list_ingress_security_rules_source"></a> [spoke01network\_private\_security\_list\_ingress\_security\_rules\_source](#input\_spoke01network\_private\_security\_list\_ingress\_security\_rules\_source) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet coming into the instance can come from. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke01network_private_security_list_ingress_security_rules_source_type"></a> [spoke01network\_private\_security\_list\_ingress\_security\_rules\_source\_type](#input\_spoke01network\_private\_security\_list\_ingress\_security\_rules\_source\_type) | Type of source for the rule. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke01network_private_security_list_ingress_security_rules_stateless"></a> [spoke01network\_private\_security\_list\_ingress\_security\_rules\_stateless](#input\_spoke01network\_private\_security\_list\_ingress\_security\_rules\_stateless) | A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if ingress traffic allows TCP destination port 80, there should be an egress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_spoke01network_private_subnet_cidr_block_map"></a> [spoke01network\_private\_subnet\_cidr\_block\_map](#input\_spoke01network\_private\_subnet\_cidr\_block\_map) | Map of CIDR Blocks associated to private subnets and it's corresponding names | `map(any)` | n/a | yes |
+| <a name="input_spoke01network_public_route_table_display_name"></a> [spoke01network\_public\_route\_table\_display\_name](#input\_spoke01network\_public\_route\_table\_display\_name) | Public Route Table Display Name. | `any` | n/a | yes |
+| <a name="input_spoke01network_public_route_table_inet_route_rules_description"></a> [spoke01network\_public\_route\_table\_inet\_route\_rules\_description](#input\_spoke01network\_public\_route\_table\_inet\_route\_rules\_description) | Description of Route Table Entry for Internet Gateway | `string` | `"Route entry for Internet Gateway"` | no |
+| <a name="input_spoke01network_public_route_table_inet_route_rules_destination"></a> [spoke01network\_public\_route\_table\_inet\_route\_rules\_destination](#input\_spoke01network\_public\_route\_table\_inet\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke01network_public_route_table_inet_route_rules_destination_type"></a> [spoke01network\_public\_route\_table\_inet\_route\_rules\_destination\_type](#input\_spoke01network\_public\_route\_table\_inet\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke01network_public_route_table_svc_route_rules_description"></a> [spoke01network\_public\_route\_table\_svc\_route\_rules\_description](#input\_spoke01network\_public\_route\_table\_svc\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"Service Gateway default route"` | no |
+| <a name="input_spoke01network_public_route_table_svc_route_rules_destination_type"></a> [spoke01network\_public\_route\_table\_svc\_route\_rules\_destination\_type](#input\_spoke01network\_public\_route\_table\_svc\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"SERVICE_CIDR_BLOCK"` | no |
+| <a name="input_spoke01network_public_security_list_display_name"></a> [spoke01network\_public\_security\_list\_display\_name](#input\_spoke01network\_public\_security\_list\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_spoke01network_public_security_list_egress_security_rules_description"></a> [spoke01network\_public\_security\_list\_egress\_security\_rules\_description](#input\_spoke01network\_public\_security\_list\_egress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All egress rule for all protocols and IP Addresses"` | no |
+| <a name="input_spoke01network_public_security_list_egress_security_rules_destination"></a> [spoke01network\_public\_security\_list\_egress\_security\_rules\_destination](#input\_spoke01network\_public\_security\_list\_egress\_security\_rules\_destination) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet originating from the instance can go to. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke01network_public_security_list_egress_security_rules_destination_type"></a> [spoke01network\_public\_security\_list\_egress\_security\_rules\_destination\_type](#input\_spoke01network\_public\_security\_list\_egress\_security\_rules\_destination\_type) | Optional) (Updatable) Type of destination for the rule. The default is CIDR\_BLOCK | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke01network_public_security_list_egress_security_rules_protocol"></a> [spoke01network\_public\_security\_list\_egress\_security\_rules\_protocol](#input\_spoke01network\_public\_security\_list\_egress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_spoke01network_public_security_list_egress_security_rules_stateless"></a> [spoke01network\_public\_security\_list\_egress\_security\_rules\_stateless](#input\_spoke01network\_public\_security\_list\_egress\_security\_rules\_stateless) | (Optional) (Updatable) A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if egress traffic allows TCP destination port 80, there should be an ingress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_spoke01network_public_security_list_ingress_security_rules_description"></a> [spoke01network\_public\_security\_list\_ingress\_security\_rules\_description](#input\_spoke01network\_public\_security\_list\_ingress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All traffic in for Public Security List"` | no |
+| <a name="input_spoke01network_public_security_list_ingress_security_rules_protocol"></a> [spoke01network\_public\_security\_list\_ingress\_security\_rules\_protocol](#input\_spoke01network\_public\_security\_list\_ingress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_spoke01network_public_security_list_ingress_security_rules_source"></a> [spoke01network\_public\_security\_list\_ingress\_security\_rules\_source](#input\_spoke01network\_public\_security\_list\_ingress\_security\_rules\_source) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet coming into the instance can come from. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke01network_public_security_list_ingress_security_rules_source_type"></a> [spoke01network\_public\_security\_list\_ingress\_security\_rules\_source\_type](#input\_spoke01network\_public\_security\_list\_ingress\_security\_rules\_source\_type) | Type of source for the rule. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke01network_public_security_list_ingress_security_rules_stateless"></a> [spoke01network\_public\_security\_list\_ingress\_security\_rules\_stateless](#input\_spoke01network\_public\_security\_list\_ingress\_security\_rules\_stateless) | A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if ingress traffic allows TCP destination port 80, there should be an egress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_spoke01network_public_subnet_cidr_block_map"></a> [spoke01network\_public\_subnet\_cidr\_block\_map](#input\_spoke01network\_public\_subnet\_cidr\_block\_map) | Map of CIDR Blocks associated to private subnets and it's corresponding names | `map(any)` | n/a | yes |
+| <a name="input_spoke01network_service_gateway_display_name"></a> [spoke01network\_service\_gateway\_display\_name](#input\_spoke01network\_service\_gateway\_display\_name) | Service Gateway Display Name | `any` | n/a | yes |
+| <a name="input_spoke01network_vcn_cidr_blocks"></a> [spoke01network\_vcn\_cidr\_blocks](#input\_spoke01network\_vcn\_cidr\_blocks) | The list of one or more IPv4 CIDR blocks for the VCN | `any` | n/a | yes |
+| <a name="input_spoke01network_vcn_display_name"></a> [spoke01network\_vcn\_display\_name](#input\_spoke01network\_vcn\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_spoke01network_vcn_network_compartment_name"></a> [spoke01network\_vcn\_network\_compartment\_name](#input\_spoke01network\_vcn\_network\_compartment\_name) | Name of the compartment where the VCN will be created | `any` | n/a | yes |
+| <a name="input_spoke02network_custom_search_domain"></a> [spoke02network\_custom\_search\_domain](#input\_spoke02network\_custom\_search\_domain) | A domain name where the custom option can be applied | `any` | n/a | yes |
+| <a name="input_spoke02network_dhcp_options_display_name"></a> [spoke02network\_dhcp\_options\_display\_name](#input\_spoke02network\_dhcp\_options\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_spoke02network_internet_gateway_display_name"></a> [spoke02network\_internet\_gateway\_display\_name](#input\_spoke02network\_internet\_gateway\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_spoke02network_internet_gateway_enabled"></a> [spoke02network\_internet\_gateway\_enabled](#input\_spoke02network\_internet\_gateway\_enabled) | Describes if the Internet Gateway is enabled upon creation or not | `bool` | `true` | no |
+| <a name="input_spoke02network_is_private_subnet_private"></a> [spoke02network\_is\_private\_subnet\_private](#input\_spoke02network\_is\_private\_subnet\_private) | Describes if the subnet is private or not | `bool` | `true` | no |
+| <a name="input_spoke02network_is_public_subnet_private"></a> [spoke02network\_is\_public\_subnet\_private](#input\_spoke02network\_is\_public\_subnet\_private) | Describes if the subnet is private or not | `bool` | `false` | no |
+| <a name="input_spoke02network_is_spoke"></a> [spoke02network\_is\_spoke](#input\_spoke02network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `true` | no |
+| <a name="input_spoke02network_lpg_count"></a> [spoke02network\_lpg\_count](#input\_spoke02network\_lpg\_count) | Number of LPG to create | `number` | `1` | no |
+| <a name="input_spoke02network_lpg_display_name_base"></a> [spoke02network\_lpg\_display\_name\_base](#input\_spoke02network\_lpg\_display\_name\_base) | Local Peering Gateway Display Name Base | `any` | n/a | yes |
+| <a name="input_spoke02network_nat_gateway_display_name"></a> [spoke02network\_nat\_gateway\_display\_name](#input\_spoke02network\_nat\_gateway\_display\_name) | NAT Gateway Display Name | `any` | n/a | yes |
+| <a name="input_spoke02network_peered_lpg_display_name"></a> [spoke02network\_peered\_lpg\_display\_name](#input\_spoke02network\_peered\_lpg\_display\_name) | Display name of peered network | `string` | `""` | no |
+| <a name="input_spoke02network_peered_vcn_network_compartment_name"></a> [spoke02network\_peered\_vcn\_network\_compartment\_name](#input\_spoke02network\_peered\_vcn\_network\_compartment\_name) | Compartment name of origin VCN to peer | `string` | `""` | no |
+| <a name="input_spoke02network_private_route_table_display_name"></a> [spoke02network\_private\_route\_table\_display\_name](#input\_spoke02network\_private\_route\_table\_display\_name) | Private Route Table Display Name. | `any` | n/a | yes |
+| <a name="input_spoke02network_private_route_table_nat_route_rules_description"></a> [spoke02network\_private\_route\_table\_nat\_route\_rules\_description](#input\_spoke02network\_private\_route\_table\_nat\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"NAT Gateway default route"` | no |
+| <a name="input_spoke02network_private_route_table_nat_route_rules_destination"></a> [spoke02network\_private\_route\_table\_nat\_route\_rules\_destination](#input\_spoke02network\_private\_route\_table\_nat\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke02network_private_route_table_nat_route_rules_destination_type"></a> [spoke02network\_private\_route\_table\_nat\_route\_rules\_destination\_type](#input\_spoke02network\_private\_route\_table\_nat\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke02network_private_route_table_svc_route_rules_description"></a> [spoke02network\_private\_route\_table\_svc\_route\_rules\_description](#input\_spoke02network\_private\_route\_table\_svc\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"Service Gateway default route"` | no |
+| <a name="input_spoke02network_private_route_table_svc_route_rules_destination_type"></a> [spoke02network\_private\_route\_table\_svc\_route\_rules\_destination\_type](#input\_spoke02network\_private\_route\_table\_svc\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"SERVICE_CIDR_BLOCK"` | no |
+| <a name="input_spoke02network_private_security_list_display_name"></a> [spoke02network\_private\_security\_list\_display\_name](#input\_spoke02network\_private\_security\_list\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_spoke02network_private_security_list_egress_security_rules_description"></a> [spoke02network\_private\_security\_list\_egress\_security\_rules\_description](#input\_spoke02network\_private\_security\_list\_egress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All egress rule for all protocols and IP Addresses"` | no |
+| <a name="input_spoke02network_private_security_list_egress_security_rules_destination"></a> [spoke02network\_private\_security\_list\_egress\_security\_rules\_destination](#input\_spoke02network\_private\_security\_list\_egress\_security\_rules\_destination) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet originating from the instance can go to. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke02network_private_security_list_egress_security_rules_destination_type"></a> [spoke02network\_private\_security\_list\_egress\_security\_rules\_destination\_type](#input\_spoke02network\_private\_security\_list\_egress\_security\_rules\_destination\_type) | Optional) (Updatable) Type of destination for the rule. The default is CIDR\_BLOCK | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke02network_private_security_list_egress_security_rules_protocol"></a> [spoke02network\_private\_security\_list\_egress\_security\_rules\_protocol](#input\_spoke02network\_private\_security\_list\_egress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_spoke02network_private_security_list_egress_security_rules_stateless"></a> [spoke02network\_private\_security\_list\_egress\_security\_rules\_stateless](#input\_spoke02network\_private\_security\_list\_egress\_security\_rules\_stateless) | (Optional) (Updatable) A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if egress traffic allows TCP destination port 80, there should be an ingress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_spoke02network_private_security_list_ingress_security_rules_description"></a> [spoke02network\_private\_security\_list\_ingress\_security\_rules\_description](#input\_spoke02network\_private\_security\_list\_ingress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All traffic in for private security List"` | no |
+| <a name="input_spoke02network_private_security_list_ingress_security_rules_protocol"></a> [spoke02network\_private\_security\_list\_ingress\_security\_rules\_protocol](#input\_spoke02network\_private\_security\_list\_ingress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_spoke02network_private_security_list_ingress_security_rules_source"></a> [spoke02network\_private\_security\_list\_ingress\_security\_rules\_source](#input\_spoke02network\_private\_security\_list\_ingress\_security\_rules\_source) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet coming into the instance can come from. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke02network_private_security_list_ingress_security_rules_source_type"></a> [spoke02network\_private\_security\_list\_ingress\_security\_rules\_source\_type](#input\_spoke02network\_private\_security\_list\_ingress\_security\_rules\_source\_type) | Type of source for the rule. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke02network_private_security_list_ingress_security_rules_stateless"></a> [spoke02network\_private\_security\_list\_ingress\_security\_rules\_stateless](#input\_spoke02network\_private\_security\_list\_ingress\_security\_rules\_stateless) | A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if ingress traffic allows TCP destination port 80, there should be an egress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_spoke02network_private_subnet_cidr_block_map"></a> [spoke02network\_private\_subnet\_cidr\_block\_map](#input\_spoke02network\_private\_subnet\_cidr\_block\_map) | Map of CIDR Blocks associated to private subnets and it's corresponding names | `map(any)` | n/a | yes |
+| <a name="input_spoke02network_public_route_table_display_name"></a> [spoke02network\_public\_route\_table\_display\_name](#input\_spoke02network\_public\_route\_table\_display\_name) | Public Route Table Display Name. | `any` | n/a | yes |
+| <a name="input_spoke02network_public_route_table_inet_route_rules_description"></a> [spoke02network\_public\_route\_table\_inet\_route\_rules\_description](#input\_spoke02network\_public\_route\_table\_inet\_route\_rules\_description) | Description of Route Table Entry for Internet Gateway | `string` | `"Route entry for Internet Gateway"` | no |
+| <a name="input_spoke02network_public_route_table_inet_route_rules_destination"></a> [spoke02network\_public\_route\_table\_inet\_route\_rules\_destination](#input\_spoke02network\_public\_route\_table\_inet\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke02network_public_route_table_inet_route_rules_destination_type"></a> [spoke02network\_public\_route\_table\_inet\_route\_rules\_destination\_type](#input\_spoke02network\_public\_route\_table\_inet\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke02network_public_route_table_svc_route_rules_description"></a> [spoke02network\_public\_route\_table\_svc\_route\_rules\_description](#input\_spoke02network\_public\_route\_table\_svc\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"Service Gateway default route"` | no |
+| <a name="input_spoke02network_public_route_table_svc_route_rules_destination_type"></a> [spoke02network\_public\_route\_table\_svc\_route\_rules\_destination\_type](#input\_spoke02network\_public\_route\_table\_svc\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"SERVICE_CIDR_BLOCK"` | no |
+| <a name="input_spoke02network_public_security_list_display_name"></a> [spoke02network\_public\_security\_list\_display\_name](#input\_spoke02network\_public\_security\_list\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_spoke02network_public_security_list_egress_security_rules_description"></a> [spoke02network\_public\_security\_list\_egress\_security\_rules\_description](#input\_spoke02network\_public\_security\_list\_egress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All egress rule for all protocols and IP Addresses"` | no |
+| <a name="input_spoke02network_public_security_list_egress_security_rules_destination"></a> [spoke02network\_public\_security\_list\_egress\_security\_rules\_destination](#input\_spoke02network\_public\_security\_list\_egress\_security\_rules\_destination) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet originating from the instance can go to. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke02network_public_security_list_egress_security_rules_destination_type"></a> [spoke02network\_public\_security\_list\_egress\_security\_rules\_destination\_type](#input\_spoke02network\_public\_security\_list\_egress\_security\_rules\_destination\_type) | Optional) (Updatable) Type of destination for the rule. The default is CIDR\_BLOCK | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke02network_public_security_list_egress_security_rules_protocol"></a> [spoke02network\_public\_security\_list\_egress\_security\_rules\_protocol](#input\_spoke02network\_public\_security\_list\_egress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_spoke02network_public_security_list_egress_security_rules_stateless"></a> [spoke02network\_public\_security\_list\_egress\_security\_rules\_stateless](#input\_spoke02network\_public\_security\_list\_egress\_security\_rules\_stateless) | (Optional) (Updatable) A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if egress traffic allows TCP destination port 80, there should be an ingress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_spoke02network_public_security_list_ingress_security_rules_description"></a> [spoke02network\_public\_security\_list\_ingress\_security\_rules\_description](#input\_spoke02network\_public\_security\_list\_ingress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All traffic in for Public Security List"` | no |
+| <a name="input_spoke02network_public_security_list_ingress_security_rules_protocol"></a> [spoke02network\_public\_security\_list\_ingress\_security\_rules\_protocol](#input\_spoke02network\_public\_security\_list\_ingress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_spoke02network_public_security_list_ingress_security_rules_source"></a> [spoke02network\_public\_security\_list\_ingress\_security\_rules\_source](#input\_spoke02network\_public\_security\_list\_ingress\_security\_rules\_source) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet coming into the instance can come from. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_spoke02network_public_security_list_ingress_security_rules_source_type"></a> [spoke02network\_public\_security\_list\_ingress\_security\_rules\_source\_type](#input\_spoke02network\_public\_security\_list\_ingress\_security\_rules\_source\_type) | Type of source for the rule. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_spoke02network_public_security_list_ingress_security_rules_stateless"></a> [spoke02network\_public\_security\_list\_ingress\_security\_rules\_stateless](#input\_spoke02network\_public\_security\_list\_ingress\_security\_rules\_stateless) | A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if ingress traffic allows TCP destination port 80, there should be an egress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_spoke02network_public_subnet_cidr_block_map"></a> [spoke02network\_public\_subnet\_cidr\_block\_map](#input\_spoke02network\_public\_subnet\_cidr\_block\_map) | Map of CIDR Blocks associated to private subnets and it's corresponding names | `map(any)` | n/a | yes |
+| <a name="input_spoke02network_service_gateway_display_name"></a> [spoke02network\_service\_gateway\_display\_name](#input\_spoke02network\_service\_gateway\_display\_name) | Service Gateway Display Name | `any` | n/a | yes |
+| <a name="input_spoke02network_vcn_cidr_blocks"></a> [spoke02network\_vcn\_cidr\_blocks](#input\_spoke02network\_vcn\_cidr\_blocks) | The list of one or more IPv4 CIDR blocks for the VCN | `any` | n/a | yes |
+| <a name="input_spoke02network_vcn_display_name"></a> [spoke02network\_vcn\_display\_name](#input\_spoke02network\_vcn\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_spoke02network_vcn_network_compartment_name"></a> [spoke02network\_vcn\_network\_compartment\_name](#input\_spoke02network\_vcn\_network\_compartment\_name) | Name of the compartment where the VCN will be created | `any` | n/a | yes |
+| <a name="input_tenancy_ocid"></a> [tenancy\_ocid](#input\_tenancy\_ocid) | OCID of tenancy | `any` | n/a | yes |
+| <a name="input_user_ocid"></a> [user\_ocid](#input\_user\_ocid) | User OCID in tenancy. Currently hardcoded to user denny.alquinta@oracle.com | `any` | n/a | yes |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_lpg_hub01"></a> [lpg\_hub01](#output\_lpg\_hub01) | Output of HUB01 LPGs |
+| <a name="output_lpg_spoke01"></a> [lpg\_spoke01](#output\_lpg\_spoke01) | Output of SPOKE01 LPGs |
+| <a name="output_lpg_spoke02"></a> [lpg\_spoke02](#output\_lpg\_spoke02) | Output of SPOKE02 LPGs |
+| <a name="output_network_hub01"></a> [network\_hub01](#output\_network\_hub01) | VCN of HUB01 |
+| <a name="output_network_spoke01"></a> [network\_spoke01](#output\_network\_spoke01) | VCN of SPOKE01 |
+| <a name="output_network_spoke02"></a> [network\_spoke02](#output\_network\_spoke02) | VCN of SPOKE02 |
 
 
+## Contributing
+This project is open source.  Please submit your contributions by forking this repository and submitting a pull request!  Oracle appreciates any contributions that are made by the open source community.
 
-## provider.tf
+## License
+Copyright (c) 2021 Oracle and/or its affiliates.
 
-This file contains the provider configuration, needed to connect to OCI. The values associated in this project are hardcoded to user denny.alquinta@oracle.com and should be properly updated to a service user. 
+Licensed under the Universal Permissive License (UPL), Version 1.0.
 
-
-
-## system.tfvars
-
-Along with [main.tf](main.tf) this is the second main pivotal file for system creation. This file contains the exact value of each variable referenced in [main.tf](main.tf). You may access the content of it [here](system.tfvars). The following is an explanation of each value:
-
-**Variables for module: General Domain configuration
-
-| Property         | Value                                                        |
-| ---------------- | ------------------------------------------------------------ |
-| wls_domain_name  | Name that gets passed to ansible to configure the domain. This value represents the domain name across the entire domain configuration. This can be any string value |
-| wls_cluster_name | Name that gets passed to ansible as WLS Cluster Name. Each domain only supports a single cluster. This can be any string value |
-| ms_per_machine   | Number that represents the amount of managed servers that will be created per each compute that belongs to the cluster. If this value is set to 2, it means that each compute that composes the cluster will host 2 managed servers. This value must be calculated in function of the amount of memory available for the compute shape chosen. Consider that each managed server currently is configured with 4GB of Heapsize, applying best practices on Garbage Collection Management |
-
-
-
-**Variables for module: admin_compute** 
-
-| Property                                      | Value                                                        |
-| --------------------------------------------- | ------------------------------------------------------------ |
-| admin_ssh_public_key                          | This is the full path of the SSH Public Key associated to the hosts. This file was created in API Key Management and AWS S3 Compatibility API Integration section in the following [README.md](../README.md) file. Refer to it for details on it's location |
-| admin_ssh_private_key                         | This is the full path of the SSH Private Key associated to the hosts. This file was created in API Key Management and AWS S3 Compatibility API Integration section in the following [README.md](../README.md) file. Refer to it for details on it's location |
-| admin_ssh_public_is_path                      | Determines if the SSH Public Key is stored on a file or in a variable. This value should **always** be **set** to **true** |
-| admin_ssh_private_is_path                     | Determines if the SSH Private Key is stored on a file or in a variable. This value should **always** be **set** to **true** |
-| admin_compute_availability_domain_list        | A collection list of Availability Domain Names, where the computes will be stored at. If tenancy region only contains a single Availability Domain, this collection list should include a single value. Pairing in Fault Domains is automatically done by the provider |
-| admin_fault_domain_name                       | Value that contains an overload value in case you want to assign the AdminServer Compute to a specific Fault Domain. By default **should be left** **blank**. |
-| admin_bkp_policy_boot_volume                  | Backup policy associated to the Admin Server compute boot volume. This may be bronze, silver or gold or any custom policy value associated to the compute. |
-| admin_linux_compute_instance_compartment_name | Name of the compartment where Admin Compute artifact should be created |
-| admin_linux_compute_network_compartment_name  | Name of the compartment where the Network definition for Admin Compute artifact is located at |
-| admin_vcn_display_name                        | Name of the VCN where the Admin Compute artifact should be created |
-| admin_num_instances                           | Amount of compute instances related to the Admin Server. This value should **always** be **set** to **1** |
-| admin_compute_display_name_base               | Base name from where the Admin Server name will start to iterate. Expected behavior is BASENAMEXX where XX varies from 01 to n |
-| admin_instance_image_ocid                     | OCID related to the golden image prebaked with WLS installation with corresponding patches. Current Image holds an [OFA](https://docs.oracle.com/en/database/oracle/oracle-database/12.2/ssdbi/optimal-flexible-architecture-file-path-examples.html#GUID-BB3EE4F7-50F4-4A2D-8A0D-96B7CC44029B) installation with latest PSU available (WLS PSU 201001) |
-| admin_instance_shape                          | Shape selected for Admin Server Compute. For details on shapes refer to the following [link](https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm). |
-| admin_is_compute_private                      | Flag that determines if the compute should be created in a public or private subnet. If value is set to true, this will be created in whatever subnet is selected as private_network_subnet_name in [commons.tfvars](../commons.tfvars) file. If value is set to false, then it'll be created in whatever subnet is selected as public_network_subnet_name in [commons.tfvars](../commons.tfvars) file. |
-
-
-
-**Variables for module: managed_compute_cluster** 
-
-| Property                                        | Value                                                        |
-| ----------------------------------------------- | ------------------------------------------------------------ |
-| managed_ssh_public_key                          | This is the full path of the SSH Public Key associated to the hosts. This file was created in API Key Management and AWS S3 Compatibility API Integration section in the following [README.md](../README.md) file. Refer to it for details on it's location |
-| managed_ssh_private_key                         | This is the full path of the SSH Private Key associated to the hosts. This file was created in API Key Management and AWS S3 Compatibility API Integration section in the following [README.md](../README.md) file. Refer to it for details on it's location |
-| managed_ssh_public_is_path                      | Determines if the SSH Public Key is stored on a file or in a variable. This value should **always** be **set** to **true** |
-| managed_ssh_private_is_path                     | Determines if the SSH Private Key is stored on a file or in a variable. This value should **always** be **set** to **true** |
-| managed_compute_availability_domain_list        | A collection list of Availability Domain Names, where the computes will be stored at. If tenancy region only contains a single Availability Domain, this collection list should include a single value. Pairing in Fault Domains is automatically done by the provider |
-| managed_fault_domain_name                       | Value that contains an overload value in case you want to assign the AdminServer Compute to a specific Fault Domain. By default **should be left** **blank**. |
-| managed_bkp_policy_boot_volume                  | Backup policy associated to the Managed Server compute boot volume. This may be bronze, silver or gold or any custom policy value associated to the compute. |
-| managed_linux_compute_instance_compartment_name | Name of the compartment where ManagedCompute artifact should be created |
-| managed_linux_compute_network_compartment_name  | Name of the compartment where the Network definition for Managed Compute artifact are located at |
-| managed_vcn_display_name                        | Name of the VCN where the Managed Compute artifact should be created |
-| managed_num_instances                           | Amount of compute instances related to the Managed Server. This value should **always** be **set** to a value greater to **1** |
-| managed_compute_display_name_base               | Base name from where the Managed Server name will start to iterate. Expected behavior is BASENAMEXX where XX varies from 01 to n |
-| managed_instance_image_ocid                     | OCID related to the golden image prebaked with WLS installation with corresponding patches. Current Image holds an [OFA](https://docs.oracle.com/en/database/oracle/oracle-database/12.2/ssdbi/optimal-flexible-architecture-file-path-examples.html#GUID-BB3EE4F7-50F4-4A2D-8A0D-96B7CC44029B) installation with latest PSU available (WLS PSU 201001) |
-| managed_instance_shape                          | Shape selected for Managed Server Compute. For details on shapes refer to the following [link](https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm). |
-| managed_is_compute_private                      | Flag that determines if the compute should be created in a public or private subnet. If value is set to true, this will be created in whatever subnet is selected as private_network_subnet_name in [commons.tfvars](../commons.tfvars) file. If value is set to false, then it'll be created in whatever subnet is selected as public_network_subnet_name in [commons.tfvars](../commons.tfvars) file. |
-
-
-
-**Variables for module: nfs**
-
-| Property                    | Value                                                        |
-| --------------------------- | ------------------------------------------------------------ |
-| nfs_ssh_public_key      | This is the full path of the SSH Public Key associated to the hosts. This file was created in API Key Management and AWS S3 Compatibility API Integration section in the following [README.md](../README.md) file. Refer to it for details on it's location |
-| nfs_ssh_private_key     | This is the full path of the SSH Private Key associated to the hosts. This file was created in API Key Management and AWS S3 Compatibility API Integration section in the following [README.md](../README.md) file. Refer to it for details on it's location |
-| nfs_ssh_public_is_path  | Determines if the SSH Public Key is stored on a file or in a variable. This value should **always** be **set** to **true** |
-| nfs_ssh_private_is_path | Determines if the SSH Private Key is stored on a file or in a variable. This value should **always** be **set** to **true** |
-| nfs_vcn_display_name | Display name where the NFS Filesystems are located at. This is required to lookup for the mount point |
-| nfs_fss_availability_domain_number | Integer number indicating in which Availability Domain the NFS File Systems will be created. This needs to be the same as where the mount point is |
-| nfs_mt_availability_domain_number | Integer number indicating in which Availability Domain the NFS Mount Point is located at. |
-| nfs_num_of_fss | Integer number that indicates how many NFS File Systems should be created. This value should **always** be **set** to **3** |
-| nfs_mt_compartment_name | Name of the compartment where the NFS Mount Target was created |
-| nfs_export_path_base | Export path base, to name the NFS File Systems |
-| nfs_fss_display_name_base | Base display name for NFS File Systems |
-| nfs_fss_instance_compartment_name | Name of the compartment where FSS artifacts are created |
-| nfs_fss_network_compartment_name | Name of the compartment where the Network for FSS artifacts is at |
-| nfs_mount_target_name | Explicit name of the mount target related to the values above generated |
-
-
-
-**Variables for module: loadbalancer**
-
-| Property                | Value                                                        |
-| ----------------------- | ------------------------------------------------------------ |
-| loadbalancer_ssh_public_key      | This is the full path of the SSH Public Key associated to the hosts. This file was created in API Key Management and AWS S3 Compatibility API Integration section in the following [README.md](../README.md) file. Refer to it for details on it's location |
-| loadbalancer_ssh_private_key     | This is the full path of the SSH Private Key associated to the hosts. This file was created in API Key Management and AWS S3 Compatibility API Integration section in the following [README.md](../README.md) file. Refer to it for details on it's location |
-| loadbalancer_ssh_public_is_path  | Determines if the SSH Public Key is stored on a file or in a variable. This value should **always** be **set** to **true** |
-| loadbalancer_ssh_private_is_path | Determines if the SSH Private Key is stored on a file or in a variable. This value should **always** be **set** to **true** |
-| loadbalancer_lbaas_instance_compartment_name | Name of the compartment where the LBaaS artifact is created |
-| loadbalancer_lbaas_network_compartment_name | Name of the compartment where the network related to the LBaaS is |
-| loadbalancer_vcn_display_name | Display name of the VCN where the artifacts are created |
-| loadbalancer_lbaas_display_name | Display name for LBaaS |
-| loadbalancer_lbaas_shape_min_bw_mbps | Minimum bandwidth assigned to LBaaS |
-| loadbalancer_lbaas_shape_max_bw_mbps | Maximum bandwidth assigned to LBaaS |
-| loadbalancer_is_private | Boolean flag that determines if the LBaaS Listener is set to be created on Public or Private Network. |
-| loadbalancer_nsg_name | Name of the Network Security Group associated to the LBaaS |
-
-**Variables for module: backendset**
-
-| Property                         | Value                                                        |
-| -------------------------------- | ------------------------------------------------------------ |
-| backendset_ssh_public_key      | This is the full path of the SSH Public Key associated to the hosts. This file was created in API Key Management and AWS S3 Compatibility API Integration section in the following [README.md](../README.md) file. Refer to it for details on it's location |
-| backendset_ssh_private_key     | This is the full path of the SSH Private Key associated to the hosts. This file was created in API Key Management and AWS S3 Compatibility API Integration section in the following [README.md](../README.md) file. Refer to it for details on it's location |
-| backendset_ssh_public_is_path  | Determines if the SSH Public Key is stored on a file or in a variable. This value should **always** be **set** to **true** |
-| backendset_ssh_private_is_path | Determines if the SSH Private Key is stored on a file or in a variable. This value should **always** be **set** to **true** |
-| backendset_vcn_display_name | Display name of the VCN where the artifacts are created |
-| backendset_balancing_protocol | Balancing protocol to which the requests should be redirected on declared backend |
-| backendset_lbaas_backend_set_name | Name of the backend set |
-| backendset_lbaas_bes_check_protocol | Healthcheck protocol to be used to determine the health of the backend |
-| backendset_lbaas_bes_checkport | Healtchek port to be used to determine the health of the backend |
-| backendset_lbaas_path_to_routeset_name | Path to Routeset name |
-| backendset_lbaas_bes_instance_compartment_name | Compartment name where the artifact is created |
-| backendset_lbaas_bes_network_compartment_name | Compartment name where the network is |
-| backendset_lbaas_bes_listen_port | Listen Port for LBaaS Listener. Overload if required |
-| backendset_lbaas_bes_listen_protocol | Protocol for Listen Port. Overload if required |
-| backendset_ms_per_machine | Amount of managed servers to be created per each compute. This allows vertical scale up on domain |
-| backendset_certificate_private_key | Relative path to LBaaS Private Key certificate |
-| backendset_lbaas_public_cert | Relative path to LBaaS Public Certificate |
-| backendset_lbaas_certificate_name | Name of the Certificate |
-| backendset_lbaas_ca_cert | Relative path to LBaaS Certificate Authority CA |
-
-
-
-## variables.tf
-
-
-
-This file contains the combined variable sets for all the modules orchestrated for each modular component. Consult each individual module variable inside each backend README.md file. 
-
-You may access this file by clicking [here](variables.tf)
-
-
-
-
-
-
-
-------
-
-The following code is protected using Oracle Technology Network License Agreement. For more details, please refer to the project's OEM [LICENSE](LICENSE)  file.
-
-
-
-**Copyright (c) 2021, Oracle, Oracle Advanced Customer Services and/or its affiliates. All rights reserved.**
+See [LICENSE](LICENSE) for more details.
 

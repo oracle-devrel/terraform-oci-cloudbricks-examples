@@ -1,8 +1,9 @@
-/* system.tfvars
-Author: DALQUINT - denny.alquinta@oracle.com
-Purpose: The following script defines the system particular variables to provision environment
-Copyright (c) 2021, Oracle and/or its affiliates. All rights reserved. 
-*/
+# Copyright (c) 2021 Oracle and/or its affiliates.
+# All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
+# system.tfvars
+#
+# Purpose: The following script defines the system particular variables to provision environment
+
 
 ######################################## PROVIDER SPECIFIC VARIABLES ######################################
 tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaaoqdygmiidrabhv3y4hkr3rb3z6dpmgotvq2scffra6jt7rubresa"

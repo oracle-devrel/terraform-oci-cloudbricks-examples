@@ -1,8 +1,9 @@
-/* variables.tf 
-Author: DALQUINT - denny.alquinta@oracle.com
-Purpose: The following script declares all variables used in this backend repository
-Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved. 
-*/
+# Copyright (c) 2021 Oracle and/or its affiliates.
+# All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
+# variables.tf
+#
+# Purpose:The following script declares all variables used in this backend repository
+
 /********** Provider Variables NOT OVERLOADABLE **********/
 variable "region" {
   description = "Target region where artifacts are going to be created"

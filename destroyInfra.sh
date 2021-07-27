@@ -8,12 +8,13 @@
 
 echo 'Sourcing environment variables'
 source setEnv.sh
+retry_attempts=5
 
 if [ "$#" -ne 1 ]; then
-    echo "Missing system to create. Usage: ./provisionInfra.sh SYSTEMNAME"
+    echo "Missing system to create. Usage: ./destroyInfra.sh SYSTEMNAME"
 else
 echo "*******************************************************************************************  WARNING  *************************************************************************************************************************"
-echo "*   The following is a customer production infrastructure. Type 'yes' and hit enter, if you want to continue with the destruction of the environment. Neglecting something here may drop entire customer infrastructure       *"
+echo "*   The following is a customer production infrastructure. Type 'yes' and hit enter, if you want to continue with the destruction of the environment. Neglecting something here will drop entire customer infrastructure     *"
 echo "*******************************************************************************************  WARNING  *************************************************************************************************************************"
 read continue_with_process
 
@@ -30,13 +31,17 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
         echo "--- Deleting temporal lingering files"
         tf_lock=.terraform.lock.hcl
         tf_dir=.terraform
+        lpg_config_dir=lpg_routes_config
         if [[ -f $tf_lock ]]; then
             rm $tf_lock
         fi  
         if [[ -d $tf_dir ]]; then
             rm -rf $tf_dir
         fi  
-        for (( k=1; k<=5; k++ ))
+        if [[ -d $lpg_config_dir ]]; then
+            rm -rf $tf_dir
+        fi  
+        for (( k=1; k<=$retry_attempts; k++ ))
         do  
             
             echo "--- Executing terraform init (pass $k of 5)" 
@@ -50,7 +55,7 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
             sleep 10
         done
 
-                for (( k=1; k<=5; k++ ))
+                for (( k=1; k<=$retry_attempts; k++ ))
         do  
             
             echo "--- Executing terraform validate (pass $k of 5)"        
@@ -65,7 +70,7 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
             sleep 10
         done
 
-                for (( k=1; k<=5; k++ ))
+                for (( k=1; k<=$retry_attempts; k++ ))
         do  
             
         echo "--- Executing terraform destroy (pass $k of 5)" 

@@ -1,7 +1,9 @@
-/* main.tf
-Author: Denny Alquinta – denny.alquinta@oracle.com 
-Purpose: Defines all the components related to environment
-Copyright (c) 2017, 2020, Oracle and/or its affiliates. All rights reserved. */
+# Copyright (c) 2021 Oracle and/or its affiliates.
+# All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
+# main.tf
+#
+# Purpose: Defines all the components related to environment
+
 
 module "mainbizcomp" {
 
