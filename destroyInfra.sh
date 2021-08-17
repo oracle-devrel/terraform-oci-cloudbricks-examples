@@ -13,9 +13,9 @@ retry_attempts=5
 if [ "$#" -ne 1 ]; then
     echo "Missing system to create. Usage: ./destroyInfra.sh SYSTEMNAME"
 else
-echo "*******************************************************************************************  WARNING  *************************************************************************************************************************"
-echo "*   The following is a customer production infrastructure. Type 'yes' and hit enter, if you want to continue with the destruction of the environment. Neglecting something here will drop entire customer infrastructure     *"
-echo "*******************************************************************************************  WARNING  *************************************************************************************************************************"
+echo "**************************************************************************  WARNING  *********************************************************************************"
+echo "*   The following script will provision infrastructure. Type 'yes' and hit enter, if you want to continue. Neglecting something here may drop entire infrastructure  *"
+echo "**************************************************************************  WARNING  *********************************************************************************"
 read continue_with_process
 
 if [ $continue_with_process == "yes" ]; then

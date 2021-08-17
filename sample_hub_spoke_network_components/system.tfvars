@@ -6,11 +6,11 @@
 
 
 ######################################## PROVIDER SPECIFIC VARIABLES ######################################
-region           = "foo-region-1"
-tenancy_ocid     = "ocid1.tenancy.oc1..abcdefg"
-user_ocid        = "ocid1.user.oc1..aaaaaaabcdefg"
-fingerprint      = "fo:oo:ba:ar:ba:ar"
-private_key_path = "/absolute/path/to/api/key/your_api_key.pem"
+tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaaoqdygmiidrabhv3y4hkr3rb3z6dpmgotvq2scffra6jt7rubresa"
+region           = "sa-santiago-1"
+user_ocid        = "ocid1.user.oc1..aaaaaaaafl42rhkw624h4os6n2ulcfxjjn2ylqsanhgtcph7j7owirzj6gya"
+fingerprint      = "9a:9e:13:cf:94:6e:2c:b9:54:d2:60:0d:e4:14:8b:5e"
+private_key_path = "/Users/dralquinta/OneDrive/DevOps/My_Keys/oci_api_key.pem"
 ######################################## PROVIDER SPECIFIC VARIABLES ######################################
 
 ######################################## HUB NETWORK SPECIFIC VARIABLES ######################################

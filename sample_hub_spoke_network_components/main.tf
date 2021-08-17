@@ -5,10 +5,7 @@
 # Purpose: Defines all the components related to environment
 
 module "hub01network" {
-  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.0"
-    providers = {
-    oci.home = oci.home
-  }
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.1"  
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -41,10 +38,7 @@ module "hub01network" {
 
 module "spoke01network" {
   depends_on = [module.hub01network]
-  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.0"
-    providers = {
-    oci.home = oci.home
-  }
+  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.1"  
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -78,10 +72,7 @@ module "spoke01network" {
 
 
 module "spoke02network" {
-  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.0"
-    providers = {
-    oci.home = oci.home
-  }
+  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.1"  
   depends_on = [module.hub01network]
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
@@ -119,10 +110,8 @@ module "lpg_route_pvt_hub_to_spoke01" {
     module.hub01network,
     module.spoke01network
   ]
-  source = "git::ssh://git@github.com/oraclecloudbricks/lpg_config.git?ref=v1.0"
-    providers = {
-    oci.home = oci.home
-  }
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config.git?ref=v1.0.1"
+    
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -149,7 +138,7 @@ module "lpg_route_pub_hub_to_spoke01" {
     module.hub01network,
     module.spoke01network
   ]
-  source = "git::ssh://git@github.com/oraclecloudbricks/lpg_config.git?ref=v1.0"
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config.git?ref=v1.0.1"
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -177,7 +166,7 @@ module "lpg_route_pvt_hub_to_spoke02" {
     module.hub01network,
     module.spoke02network
   ]
-  source = "git::ssh://git@github.com/oraclecloudbricks/lpg_config.git?ref=v1.0"
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config.git?ref=v1.0.1"
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -204,7 +193,7 @@ module "lpg_route_pub_hub_to_spoke02" {
     module.hub01network,
     module.spoke02network
   ]
-  source = "git::ssh://git@github.com/oraclecloudbricks/lpg_config.git?ref=v1.0"
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config.git?ref=v1.0.1"
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region

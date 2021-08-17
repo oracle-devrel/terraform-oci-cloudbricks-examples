@@ -7,7 +7,7 @@
 
 if [ "$#" -ne 2 ]; then
 
-echo "Missing arguments. Usage: ./setup_bastion.sh guid email"
+echo "Missing arguments. Usage: ./setup_bastion.sh github_user github_email"
 
 else
 
