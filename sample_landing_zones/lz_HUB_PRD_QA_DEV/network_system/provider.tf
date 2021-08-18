@@ -6,13 +6,13 @@
 
 terraform {
   required_version = ">= 0.13.5"
-      required_providers {
-      oci = {
-        source                = "hashicorp/oci"
-        version               = ">= 4.36.0"
-        configuration_aliases = [ oci.home ]
-      }
+  required_providers {
+    oci = {
+      source                = "hashicorp/oci"
+      version               = ">= 4.36.0"
+      configuration_aliases = [oci.home]
     }
+  }
 }
 
 provider "oci" {
