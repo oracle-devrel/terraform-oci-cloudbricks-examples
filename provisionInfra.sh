@@ -25,9 +25,6 @@ echo 'Executing with terrform version:' $(terraform --version)
 terraform --version
 echo $TERRAFORM_ARTIFACT_WORKSPACE
     if [[ -d $TERRAFORM_ARTIFACT_WORKSPACE ]]; then 
-
-        echo "=================== EXECUTING TERRAFORM ======================="
-        cd $TERRAFORM_ARTIFACT_WORKSPACE
         echo "--- Deleting temporal lingering files"
         tf_lock=.terraform.lock.hcl
         tf_dir=.terraform
@@ -40,7 +37,10 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
         fi  
         if [[ -d $lpg_config_dir ]]; then
             rm -rf $tf_dir
-        fi  
+        fi     
+
+        echo "=================== EXECUTING TERRAFORM ======================="
+        cd $TERRAFORM_ARTIFACT_WORKSPACE
         for (( k=1; k<=$retry_attempts; k++ ))
         do  
             
@@ -51,8 +51,8 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
                 break ; 
             fi
 
-            echo "--- Error in terraform init. Retrying terraform init in 10 seconds."
-            sleep 10
+            echo "--- Error in terraform init. Retrying terraform init in 20 seconds."
+            sleep 20
         done
 
                 for (( k=1; k<=$retry_attempts; k++ ))
@@ -66,8 +66,8 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
                 break ; 
             fi
 
-            echo "--- Error in terraform validate. Retrying terraform init in 10 seconds."
-            sleep 10
+            echo "--- Error in terraform validate. Retrying terraform init in 20 seconds."
+            sleep 20
         done
 
                 for (( k=1; k<=$retry_attempts; k++ ))
@@ -80,11 +80,23 @@ echo $TERRAFORM_ARTIFACT_WORKSPACE
                 break ; 
             fi
 
-            echo "--- Error in terraform apply. Retrying terraform init in 10 seconds."
-            sleep 10
+            echo "--- Error in terraform apply. Retrying terraform init in 20 seconds."
+            sleep 20
         done
 
-        
+        echo "--- Deleting temporal lingering files"
+        tf_lock=.terraform.lock.hcl
+        tf_dir=.terraform
+        lpg_config_dir=lpg_routes_config
+        if [[ -f $tf_lock ]]; then
+            rm $tf_lock
+        fi  
+        if [[ -d $tf_dir ]]; then
+            rm -rf $tf_dir
+        fi  
+        if [[ -d $lpg_config_dir ]]; then
+            rm -rf $tf_dir
+        fi     
     else 
         echo 'System does not exist. Try again'
     fi
