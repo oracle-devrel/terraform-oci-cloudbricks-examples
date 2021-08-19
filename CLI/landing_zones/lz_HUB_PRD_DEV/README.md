@@ -28,8 +28,8 @@ key_file=/full/path/to/api/key/my_api_key.pem
 
 ```shell
 [default]
-aws_access_key_id=202ad26f6546c71cc8990c821eece00a6b543ssa21231
-aws_secret_access_key=xgYpRAiel5Yxrc9G67MGddaskjdhalsdiujlewiH3NxX4ZMe4=
+aws_access_key_id=202ad26f6546c71cc8990c821eece00a6b543ssa8847821231
+aws_secret_access_key=xgYpRA111441iel5Yxrc9G67MGddaskjdhalsdiujlewiH3NxX4ZMe4=
 ```
 
 For instructions in how to create Customer Secret Keys, go to the [following link](https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcredentials.htm#To4)
@@ -244,7 +244,7 @@ This file defines the S3 compatibility API integration to store .tfstate file in
 terraform {
   backend "s3" {
     bucket   = "Precreated_bucket_to_store_tfstate_files_name"
-    key      = "Samples/sample_hub_spoke_compartment_with_parent.tfstate"
+    key      = "Samples/system_name.tfstate"
     region   = "re-region-1"
     endpoint = "https://Tenancy_ObjectStorage_namespace.compat.objectstorage.re-region-1.oraclecloud.com"
 
