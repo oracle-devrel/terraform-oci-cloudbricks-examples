@@ -13,21 +13,23 @@ For details in how the Oracle CloudBricks Framework works, refer to the [followi
 - A Pre-Created Object Storage Bucket to store tfstate files
 - a Pre-Installed Executor with CLI installed. For instructions in how to install CLI, go to the [following link](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm)
 - A Pre-Configured .oci/config file with API Keys. For details in how to do this step, go to the [following link](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm). File should look similar to this: 
-  ```shell
+  
+```shell
 [DEFAULT]
 user=ocid1.user.oc1..aaaaaaaafoobarfoobarfoobar
 fingerprint=9a:9e:13:cf:94:6e:2c:b9:54:D1:60:0d:e4:14:8b:5e
 tenancy=ocid1.tenancy.oc1..aaaaaaaaoqdyfoobarfoobarfoobar
 region=re-region-1
 key_file=/full/path/to/api/key/my_api_key.pem
-  ```
+```
 
 - A Pre-Configured .aws/credentials file with values from pre-created Customer Secret Keys. File should look similar to this: 
-  ```shell
+
+```shell
 [default]
 aws_access_key_id=202ad26f6546c71cc8990c821eece00a6b543ssa21231
 aws_secret_access_key=xgYpRAiel5Yxrc9G67MGddaskjdhalsdiujlewiH3NxX4ZMe4=
-  ```
+```
 
 For instructions in how to create Customer Secret Keys, go to the [following link](https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcredentials.htm#To4)
 
