@@ -14,7 +14,7 @@ private_key_path = "/foo/bar/path/oci_api_key.pem"
 ######################################## PROVIDER SPECIFIC VARIABLES ######################################
 ######################################## mainbizcomp SPECIFIC VARIABLES ######################################
 mainbizcomp_is_root_parent          = true
-mainbizcomp_root_compartment_ocid   = "ocid1.tenancy.oc1..aaaaaaaaoqdygmiidrabhv3y4hkr3rb3z6dpmgotvq2scffra6jt7rubresa"
+mainbizcomp_root_compartment_ocid   = "ocid1.tenancy.oc1..foobar"
 mainbizcomp_compartment_name        = "MAIN_COMPARTMENT_01"
 mainbizcomp_compartment_description = "Terraform created Main Business Compartment"
 mainbizcomp_enable_delete           = true
