@@ -11,8 +11,33 @@ For initial understanding of methodology and framework, refer to the [following 
 This documentation is still under construction. Stay tunned for more details
 
 ### Prerequisites
-- A small /30 VCN with a single subnet to provision initial bastion server
+- A small /30 VCN with a single subnet to provision initial bastion server. You can use the quickstart guide as instructed next:
+
+    
+    - Go to Hamburger Menu > Networking > Virtual Cloud Networks
+        ![Image_01](./images/Pivot_Setup_01.png)
+    - Go to Root compartment on the left part of the screen
+    - Click on *Start VCN Wizard*
+        ![Image_02](./images/Pivot_Setup_02.png)
+    - Select *Create VCN with Internet Connectivity* and then hit on *Start VCN Wizard*
+        ![Image_03](./images/Pivot_Setup_03.png)
+    - Fill the required fields with the following information: 
+      - VCN Name: Initial_Setup
+      - Compartment: root
+      - VCN CIDR Block: 192.168.0.0/25
+      - Public Subnet CIDR Block: 192.168.0.0/25
+      - Private Subnet CIDR Block: 192.168.0.64/26
+      - Click on Next
+        ![Image_04](./images/Pivot_Setup_04.png)
+      - Click on *Create*
+        ![Image_05](./images/Pivot_Setup_05.png)
+- Once VCN is created, create a simple compute using latest Oracle Linux Image
+  - Machine should: 
+    - Have Public IP
+    - Locate it on root compartment
 - Run script [setup_bastion.sh](setup_bastion.sh) to set up your development staging environment
+- Clone this repository under path: /home/opc/REPOS/OCIFE
+- Update each corresponding `system.tfvar` file inside each system, accordingly to your need.
 - For system specific re-requisites check each individual `README.md`
   
 
