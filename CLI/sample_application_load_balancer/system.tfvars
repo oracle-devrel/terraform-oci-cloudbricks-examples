@@ -13,31 +13,6 @@ fingerprint      = "ea:56:d4:d8:36:58:a8:1c:8f:a1:3a:59:68:82:f6:f8"
 private_key_path = "/home/opc/.ssh/id_rsa"
 ######################################## PROVIDER SPECIFIC VARIABLES ######################################
 
-######################################## COMPUTE01 SPECIFIC VARIABLES ######################################
-compute01_ssh_public_key                   = "./ssh_keys/auto_ssh_id_rsa.pub"
-compute01_ssh_private_key                  = "./ssh_keys/auto_ssh_id_rsa"
-compute01_ssh_public_is_path               = true
-compute01_ssh_private_is_path              = true
-compute01_compute_availability_domain_list = ["oDQF:uk-london-1-AD-1", "oDQF:uk-london-1-AD-2", "oDQF:uk-london-1-AD-3"]
-
-compute01_network_subnet_name                     = "cloudbricks-public-subnet"
-compute01_assign_public_ip_flag                   = true
-compute01_fault_domain_name                       = ["FAULT-DOMAIN-1", "FAULT-DOMAIN-2", "FAULT-DOMAIN-3"]
-compute01_bkp_policy_boot_volume                  = "gold"
-compute01_linux_compute_instance_compartment_name = "CloudBricks_Artifacts"
-compute01_linux_compute_network_compartment_name  = "CloudBricks"
-compute01_vcn_display_name                        = "cloudbricks-vcn"
-compute01_num_instances                           = 1
-compute01_is_nsg_required                         = true
-compute01_compute_nsg_name                        = "NSG_PUBLIC_ACCESS"
-compute01_compute_display_name_base               = "felnxmachine"
-compute01_instance_image_ocid                     = "	ocid1.image.oc1.uk-london-1.aaaaaaaahbeggsuyplosadiuzd2rzj2btsqapkuyb35kvnoiwhohk3tgz4wq" #Image: Oracle-Autonomous-Linux-7.9-2021.07-0
-compute01_instance_shape                          = "VM.Standard.E4.Flex"
-compute01_is_flex_shape                           = true
-compute01_instance_shape_config_ocpus             = 1
-compute01_instance_shape_config_memory_in_gbs     = 16
-######################################## COMPUTE01 SPECIFIC VARIABLES ######################################
-
 ######################################## INSTANCEPOOL01 SPECIFIC VARIABLES ######################################
 instancepool01_compute_availability_domain_map = { "ad1" : "oDQF:uk-london-1-AD-1", "ad2" : "oDQF:uk-london-1-AD-2", "ad3" : "oDQF:uk-london-1-AD-3" }
 
@@ -53,7 +28,7 @@ instancepool01_instance_config_shape                   = "VM.Standard2.1"
 
 instancepool01_instance_display_name_base          = "feunitaryinstance"
 instancepool01_compute_display_name_base           = "feinstancepool"
-instancepool01_base_compute_image_ocid             = "ocid1.image.oc1.uk-london-1.aaaaaaaadtjcdq2b6tnnuxoge23chzvh4vzef4rn77yxqzkpkov4hqjkttna"
+instancepool01_base_compute_image_ocid             = "ocid1.image.oc1.uk-london-1.aaaaaaaaqdz574nxs7wk5fpv2shn6hrv7zz7l4ixj46okpudnpunrzpjmoqq"
 instancepool01_instance_configuration_display_name = "feinstnaceconfig"
 
 instancepool01_autoscaling_config_display_name = "feautoscalingconfig"
@@ -93,4 +68,5 @@ loadbalancer01_lbaas_shape_min_bw_mbps         = "100"
 loadbalancer01_lbaas_shape_max_bw_mbps         = "100"
 loadbalancer01_lb_nsg_name                     = "NSG_Public_Access"
 loadbalancer01_is_app_lbaas                    = true
+loadbalancer01_is_private                      = true
 ######################################## LOADBALANCER01 SPECIFIC VARIABLES ######################################

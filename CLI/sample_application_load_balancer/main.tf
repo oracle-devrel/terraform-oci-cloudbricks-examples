@@ -4,8 +4,61 @@
 #
 # Purpose: Defines all the components related to environment
 
+
+module "loadbalancer01" {
+  source = "/home/opc/REPOS/OCIBE/terraform-oci-cloudbricks-lbaas"
+  ######################################## PROVIDER SPECIFIC VARIABLES ######################################
+  tenancy_ocid     = var.tenancy_ocid
+  region           = var.region
+  user_ocid        = var.user_ocid
+  fingerprint      = var.fingerprint
+  private_key_path = var.private_key_path
+  ######################################## PROVIDER SPECIFIC VARIABLES ######################################
+  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
+  lbaas_instance_compartment_name = var.loadbalancer01_lbaas_instance_compartment_name
+  lbaas_network_compartment_name  = var.loadbalancer01_lbaas_network_compartment_name
+  vcn_display_name                = var.loadbalancer01_vcn_display_name
+  network_subnet_name             = var.loadbalancer01_network_subnet_name
+  lbaas_display_name              = var.loadbalancer01_lbaas_display_name
+  lbaas_shape                     = var.loadbalancer01_lbaas_shape
+  lbaas_shape_min_bw_mbps         = var.loadbalancer01_lbaas_shape_min_bw_mbps
+  lbaas_shape_max_bw_mbps         = var.loadbalancer01_lbaas_shape_max_bw_mbps
+  lb_nsg_name                     = var.loadbalancer01_lb_nsg_name
+  is_app_lbaas                    = var.loadbalancer01_is_app_lbaas
+  is_private                      = var.loadbalancer01_is_private
+  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
+}
+
+
+module "backendset01" {
+  source = "/home/opc/REPOS/OCIBE/terraform-oci-cloudbricks-lbaas-bes-single"
+  depends_on = [module.loadbalancer01]
+  ######################################## PROVIDER SPECIFIC VARIABLES ######################################
+  tenancy_ocid     = var.tenancy_ocid
+  region           = var.region
+  user_ocid        = var.user_ocid
+  fingerprint      = var.fingerprint
+  private_key_path = var.private_key_path
+  ######################################## PROVIDER SPECIFIC VARIABLES ######################################
+  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
+  lbaas_bes_single_instance_compartment_name = var.backendset01_lbaas_bes_single_instance_compartment_name
+  lbaas_bes_single_network_compartment_name  = var.backendset01_lbaas_bes_single_network_compartment_name
+  vcn_display_name                           = var.backendset01_vcn_display_name
+  network_subnet_name                        = var.backendset01_network_subnet_name
+  is_instancepool_bes                        = var.backendset01_is_instancepool_bes
+  backend_set_name                           = var.backendset01_backend_set_name
+  load_balancer_id                           = module.loadbalancer01.app_lbaas_instance[0].id
+  lbaas_policy                               = var.backendset01_lbaas_policy
+  checkport                                  = var.backendset01_checkport
+  check_protocol                             = var.backendset01_check_protocol
+  session_persistance_cookie_name            = var.backendset01_session_persistance_cookie_name
+  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
+}
+
+
 module "instancepool01" {
   source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-linux-compute-instance-pool.git?ref=v1.0.0"
+  depends_on = [module.backendset01]
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -45,52 +98,5 @@ module "instancepool01" {
   threshold_scale_in            = var.instancepool01_threshold_scale_in
   scaleout_step                 = var.instancepool01_scaleout_step
   scalein_step                  = var.instancepool01_scalein_step
-  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-}
-
-module "backendset01" {
-  source = "/home/opc/REPOS/OCIBE/terraform-oci-cloudbricks-lbaas-bes-single"
-  ######################################## PROVIDER SPECIFIC VARIABLES ######################################
-  tenancy_ocid     = var.tenancy_ocid
-  region           = var.region
-  user_ocid        = var.user_ocid
-  fingerprint      = var.fingerprint
-  private_key_path = var.private_key_path
-  ######################################## PROVIDER SPECIFIC VARIABLES ######################################
-  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-  lbaas_bes_single_instance_compartment_name = var.backendset01_lbaas_bes_single_instance_compartment_name
-  lbaas_bes_single_network_compartment_name  = var.backendset01_lbaas_bes_single_network_compartment_name
-  vcn_display_name                           = var.backendset01_vcn_display_name
-  network_subnet_name                        = var.backendset01_network_subnet_name
-  is_instancepool_bes                        = var.backendset01_is_instancepool_bes
-  backend_set_name                           = var.backendset01_backend_set_name
-  load_balancer_id                           = module.loadbalancer01.app_lbaas_instance[0].id
-  lbaas_policy                               = var.backendset01_lbaas_policy
-  checkport                                  = var.backendset01_checkport
-  check_protocol                             = var.backendset01_check_protocol
-  session_persistance_cookie_name            = var.backendset01_session_persistance_cookie_name
-  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-}
-
-module "loadbalancer01" {
-  source = "/home/opc/REPOS/OCIBE/terraform-oci-cloudbricks-lbaas"
-  ######################################## PROVIDER SPECIFIC VARIABLES ######################################
-  tenancy_ocid     = var.tenancy_ocid
-  region           = var.region
-  user_ocid        = var.user_ocid
-  fingerprint      = var.fingerprint
-  private_key_path = var.private_key_path
-  ######################################## PROVIDER SPECIFIC VARIABLES ######################################
-  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-  lbaas_instance_compartment_name = var.loadbalancer01_lbaas_instance_compartment_name
-  lbaas_network_compartment_name  = var.loadbalancer01_lbaas_network_compartment_name
-  vcn_display_name                = var.loadbalancer01_vcn_display_name
-  network_subnet_name             = var.loadbalancer01_network_subnet_name
-  lbaas_display_name              = var.loadbalancer01_lbaas_display_name
-  lbaas_shape                     = var.loadbalancer01_lbaas_shape
-  lbaas_shape_min_bw_mbps         = var.loadbalancer01_lbaas_shape_min_bw_mbps
-  lbaas_shape_max_bw_mbps         = var.loadbalancer01_lbaas_shape_max_bw_mbps
-  lb_nsg_name                     = var.loadbalancer01_lb_nsg_name
-  is_app_lbaas                    = var.loadbalancer01_is_app_lbaas
   ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
 }
