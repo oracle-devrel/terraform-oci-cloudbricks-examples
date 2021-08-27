@@ -8,7 +8,7 @@
 terraform {
   backend "s3" {
     bucket   = "tfstate_bucket"
-    key      = "Samples/sample_application_load_balancer.tfstate"
+    key      = "Samples/sample_instance_pool_load_balancer.tfstate"
     region   = "sa-santiago-1"
     endpoint = "https://idhkis4m3p5e.compat.objectstorage.sa-santiago-1.oraclecloud.com"
 
