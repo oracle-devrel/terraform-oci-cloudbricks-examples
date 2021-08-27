@@ -82,6 +82,7 @@ module "backendset01" {
   lbaas_policy                               = var.backendset01_lbaas_policy
   checkport                                  = var.backendset01_checkport
   check_protocol                             = var.backendset01_check_protocol
+  backend_port                               = var.backendset01_backend_port
   session_persistance_cookie_name            = var.backendset01_session_persistance_cookie_name
   listener_name                              = var.backendset01_listener_name
   listen_port                                = var.backendset01_listen_port

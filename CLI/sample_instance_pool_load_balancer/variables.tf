@@ -314,6 +314,10 @@ variable "backendset01_balanced_artifact" {
   default     = ""
 }
 
+variable "backendset01_backend_port" {
+  description = "The port used to interact with the backend instances"
+}
+
 variable "backendset01_listener_name" {
   description = "Name of the listener attached to the backend LBaaS and points to backends"
   default     = ""

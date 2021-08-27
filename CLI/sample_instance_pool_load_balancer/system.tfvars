@@ -54,6 +54,7 @@ backendset01_backend_set_name                           = "feunitarybessingle"
 backendset01_lbaas_policy                               = "ROUND_ROBIN"
 backendset01_checkport                                  = "22"
 backendset01_check_protocol                             = "TCP"
+backendset01_backend_port                               = "80"
 backendset01_session_persistance_cookie_name            = "COOKIE"
 ######################################## BACKENDSET01 SPECIFIC VARIABLES ######################################
 

@@ -49,6 +49,7 @@ backendset01_session_persistance_cookie_name            = "COOKIE"
 backendset01_listener_name                              = "feunitarylistener"
 backendset01_listen_port                                = "80"
 backendset01_listen_protocol                            = "HTTP"
+backendset01_backend_port                               = "80"
 ######################################## BACKENDSET01 SPECIFIC VARIABLES ######################################
 
 ######################################## LOADBALANCER01 SPECIFIC VARIABLES ######################################
