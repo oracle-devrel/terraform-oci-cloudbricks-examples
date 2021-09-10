@@ -6,7 +6,7 @@
 
 
 module "compute01" {
-  source = "git::ssh://git@github.com/oraclecloudbricks/linux_compute.git?ref=v1.0"
+  source = "git::ssh://git@github.com:oracle-devrel/terraform-oci-cloudbricks-linux-compute.git?ref=v1.0.1"
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -60,7 +60,7 @@ module "loadbalancer01" {
 
 
 module "backendset01" {
-  source     = "/home/opc/REPOS/OCIBE/terraform-oci-cloudbricks-lbaas-bes-single"
+  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas-bes-single.git?ref=v1.0.0"
   depends_on = [module.loadbalancer01]
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid

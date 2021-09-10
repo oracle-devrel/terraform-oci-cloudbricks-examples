@@ -31,7 +31,7 @@ module "loadbalancer01" {
 
 
 module "backendset01" {
-  source = "/home/opc/REPOS/OCIBE/terraform-oci-cloudbricks-lbaas-bes-single"
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas-bes-single.git?ref=v1.0.0"
   depends_on = [module.loadbalancer01]
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
