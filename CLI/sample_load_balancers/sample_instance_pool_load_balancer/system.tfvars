@@ -6,32 +6,32 @@
 
 
 ######################################## PROVIDER SPECIFIC VARIABLES ######################################
-region           = "uk-london-1"
-tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaaoqdygmiidrabhv3y4hkr3rb3z6dpmgotvq2scffra6jt7rubresa"
-user_ocid        = "ocid1.user.oc1..aaaaaaaaxc4jvxrvoyffcxoeeq4yzugcsalqhbh2yitkac2yu2jmg7vppera"
-fingerprint      = "ea:56:d4:d8:36:58:a8:1c:8f:a1:3a:59:68:82:f6:f8"
-private_key_path = "/home/opc/.ssh/id_rsa"
+tenancy_ocid     = "ocid1.tenancy.oc1..foobarbar"
+region           = "re-region-1"
+user_ocid        = "ocid1.user.oc1..foobarbar"
+fingerprint      = "fo:oo:ba:ar:ba:ar"
+private_key_path = "/foo/bar/path/oci_api_key.pem"
 ######################################## PROVIDER SPECIFIC VARIABLES ######################################
 
 ######################################## INSTANCEPOOL01 SPECIFIC VARIABLES ######################################
-instancepool01_compute_availability_domain_map = { "ad1" : "oDQF:uk-london-1-AD-1", "ad2" : "oDQF:uk-london-1-AD-2", "ad3" : "oDQF:uk-london-1-AD-3" }
+instancepool01_compute_availability_domain_map = { "ad1" : "aBCD:re-region-1-AD-1", "ad2" : "aBCD:re-region-1-AD-2", "ad3" : "aBCD:re-region-1-AD-3" }
 
-instancepool01_network_subnet_name                     = "cloudbricks-public-subnet"
+instancepool01_network_subnet_name                     = "MY_SUBNET"
 instancepool01_assign_public_ip_flag                   = true
 instancepool01_bkp_policy_boot_volume                  = "gold"
-instancepool01_linux_compute_instance_compartment_name = "CloudBricks_Artifacts"
-instancepool01_linux_compute_network_compartment_name  = "CloudBricks"
-instancepool01_vcn_display_name                        = "cloudbricks-vcn"
+instancepool01_linux_compute_instance_compartment_name = "MY_ARTIFACT_COMPARTMENT"
+instancepool01_linux_compute_network_compartment_name  = "MY_NETWORK_COMPARTMENT"
+instancepool01_vcn_display_name                        = "MY_VCN"
 instancepool01_is_load_balancer_required               = true
 instancepool01_pool_size                               = 2
 instancepool01_instance_config_shape                   = "VM.Standard2.1"
 
-instancepool01_instance_display_name_base          = "feunitaryinstance"
-instancepool01_compute_display_name_base           = "feinstancepool"
-instancepool01_base_compute_image_ocid             = "ocid1.image.oc1.uk-london-1.aaaaaaaaqdz574nxs7wk5fpv2shn6hrv7zz7l4ixj46okpudnpunrzpjmoqq"
-instancepool01_instance_configuration_display_name = "feinstnaceconfig"
+instancepool01_instance_display_name_base          = "instance"
+instancepool01_compute_display_name_base           = "instancepool"
+instancepool01_base_compute_image_ocid             = "ocid1.image.oc1.re-region-1.aaaaabcdefghijklmonoprstuvwxyz"
+instancepool01_instance_configuration_display_name = "instnaceconfig"
 
-instancepool01_autoscaling_config_display_name = "feautoscalingconfig"
+instancepool01_autoscaling_config_display_name = "autoscalingconfig"
 instancepool01_is_autoscaling_enabled          = true
 instancepool01_autoscaling_cooldown            = 300
 
@@ -45,12 +45,12 @@ instancepool01_scalein_step                  = 1
 ######################################## INSTANCEPOOL01 SPECIFIC VARIABLES ######################################
 
 ######################################## BACKENDSET01 SPECIFIC VARIABLES ######################################
-backendset01_lbaas_bes_single_instance_compartment_name = "CloudBricks_Artifacts"
-backendset01_lbaas_bes_single_network_compartment_name  = "CloudBricks"
-backendset01_network_subnet_name                        = "cloudbricks-public-subnet"
-backendset01_vcn_display_name                           = "cloudbricks-vcn"
+backendset01_lbaas_bes_single_instance_compartment_name = "MY_ARTIFACT_COMPARTMENT"
+backendset01_lbaas_bes_single_network_compartment_name  = "MY_NETWORK_COMPARTMENT"
+backendset01_network_subnet_name                        = "MY_SUBNET"
+backendset01_vcn_display_name                           = "MY_VCN"
 backendset01_is_instancepool_bes                        = true
-backendset01_backend_set_name                           = "feunitarybessingle"
+backendset01_backend_set_name                           = "bessingle"
 backendset01_lbaas_policy                               = "ROUND_ROBIN"
 backendset01_checkport                                  = "22"
 backendset01_check_protocol                             = "TCP"
@@ -59,15 +59,15 @@ backendset01_session_persistance_cookie_name            = "COOKIE"
 ######################################## BACKENDSET01 SPECIFIC VARIABLES ######################################
 
 ######################################## LOADBALANCER01 SPECIFIC VARIABLES ######################################
-loadbalancer01_lbaas_instance_compartment_name = "CloudBricks_Artifacts"
-loadbalancer01_lbaas_network_compartment_name  = "CloudBricks"
-loadbalancer01_network_subnet_name             = "cloudbricks-public-subnet"
-loadbalancer01_vcn_display_name                = "cloudbricks-vcn"
-loadbalancer01_lbaas_display_name              = "feunitarylbaas"
+loadbalancer01_lbaas_instance_compartment_name = "MY_ARTIFACT_COMPARTMENT"
+loadbalancer01_lbaas_network_compartment_name  = "MY_NETWORK_COMPARTMENT"
+loadbalancer01_network_subnet_name             = "MY_SUBNET"
+loadbalancer01_vcn_display_name                = "MY_VCN"
+loadbalancer01_lbaas_display_name              = "lbaas"
 loadbalancer01_lbaas_shape                     = "flexible"
 loadbalancer01_lbaas_shape_min_bw_mbps         = "100"
 loadbalancer01_lbaas_shape_max_bw_mbps         = "100"
-loadbalancer01_lb_nsg_name                     = "NSG_Public_Access"
+loadbalancer01_lb_nsg_name                     = "MY_NSG"
 loadbalancer01_is_app_lbaas                    = true
 loadbalancer01_is_private                      = true
 ######################################## LOADBALANCER01 SPECIFIC VARIABLES ######################################
