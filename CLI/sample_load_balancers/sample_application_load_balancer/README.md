@@ -5,7 +5,7 @@
 ## Introduction
 The following system builds a Sample Application Load Balancer and Backend Set. The backend set can be populated with any number of custom computes.
 
-<!-- ![ReferenceArchitecture](./images/) -->
+![Reference Architecture](./images/Bricks_Architectures-LBaaS-bes-single.jpg)
 
 ## Getting Started
 For details in how the Oracle CloudBricks Framework works, refer to the [following file](../../../README.md)

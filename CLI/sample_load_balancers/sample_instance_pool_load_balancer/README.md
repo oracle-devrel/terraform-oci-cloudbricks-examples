@@ -5,7 +5,7 @@
 ## Introduction
 The following system builds a Sample Application Load Balancer and Backend Set. The Backend Set is connected to instances within an Instance Pool.
 
-<!-- ![ReferenceArchitecture](./images/) -->
+![Reference Architecture](./images/Bricks_Architectures-LBaaS-bes-single.jpg)
 
 ## Getting Started
 For details in how the Oracle CloudBricks Framework works, refer to the [following file](../../../README.md)
