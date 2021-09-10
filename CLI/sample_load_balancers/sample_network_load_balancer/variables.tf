@@ -14,7 +14,7 @@ variable "tenancy_ocid" {
 }
 
 variable "user_ocid" {
-  description = "User OCID in tenancy. Currently hardcoded to user denny.alquinta@oracle.com"
+  description = "User OCID in tenancy."
 }
 
 variable "fingerprint" {
