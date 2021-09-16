@@ -9,7 +9,7 @@ terraform {
   backend "s3" {
     bucket   = "tfstate_bucket"
     key      = "Samples/sample_hub_spoke_network_components.tfstate"
-    region   = "sa-santiago-1"
+    region   = "re-region-1"
     endpoint = "https://Tenancy_ObjectStorage_namespace.compat.objectstorage.re-region-1.oraclecloud.com"
 
     skip_region_validation      = true
