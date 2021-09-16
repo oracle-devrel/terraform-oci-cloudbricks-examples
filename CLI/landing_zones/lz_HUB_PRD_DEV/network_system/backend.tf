@@ -10,7 +10,7 @@ terraform {
     bucket   = "tfstate_bucket"
     key      = "Samples/lz_HUB_PRD_DEV_network_system.tfstate"
     region   = "sa-santiago-1"
-    endpoint = "https://idhkis4m3p5e.compat.objectstorage.sa-santiago-1.oraclecloud.com"
+    endpoint = "https://Tenancy_ObjectStorage_namespace.compat.objectstorage.re-region-1.oraclecloud.com"
 
     skip_region_validation      = true
     skip_credentials_validation = true
