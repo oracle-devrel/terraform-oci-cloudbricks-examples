@@ -172,7 +172,7 @@ variable "instancepool01_is_autoscaling_enabled" {
 
 variable "instancepool01_autoscaling_cooldown" {
   description = "Sets the cooldown between autoscaling operations"
-  default = 300
+  default     = 300
 }
 
 variable "instancepool01_schedule_is_scalein_enabled" {

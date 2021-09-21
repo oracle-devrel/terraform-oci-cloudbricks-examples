@@ -31,7 +31,7 @@ module "loadbalancer01" {
 
 
 module "backendset01" {
-  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas-bes-single.git?ref=v1.0.0"
+  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas-bes-single.git?ref=v1.0.0"
   depends_on = [module.loadbalancer01]
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
@@ -58,7 +58,7 @@ module "backendset01" {
 
 
 module "instancepool01" {
-  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-linux-compute-instance-pool.git?ref=v1.0.0"
+  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-linux-compute-instance-pool.git?ref=v1.0.0"
   depends_on = [module.backendset01]
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
