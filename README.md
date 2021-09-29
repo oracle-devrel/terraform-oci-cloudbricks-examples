@@ -39,6 +39,8 @@ This documentation is still under construction. Stay tunned for more details
 - Clone this repository under path: /home/opc/REPOS/OCIFE
 - Update each corresponding `system.tfvar` file inside each system, accordingly to your need.
 - For system specific re-requisites check each individual `README.md`
+- In order to provision infrastructure a pre-configured S3 compatibility API setup must be in place
+- CLI pre-configured with pertaining user
   
 
 ## Important files
