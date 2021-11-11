@@ -22,6 +22,7 @@ override.tf.json
 crash.log
 sample_system.tfvars
 sample_backend.tf
+sample.tfvars
 lpg_routes_config
 
 
