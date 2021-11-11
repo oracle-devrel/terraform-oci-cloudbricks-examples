@@ -2,7 +2,7 @@
 # All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
 # variables.tf
 #
-# Purpose: The following script declares all variables used in this backend repository
+# Purpose: The following script declares all variables used in this frontend repository
 
 /********** Provider Variables NOT OVERLOADABLE **********/
 variable "region" {

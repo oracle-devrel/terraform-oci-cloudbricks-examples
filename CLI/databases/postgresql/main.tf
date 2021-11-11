@@ -6,8 +6,7 @@
 
 
 module "postgre01" {
-  #source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-postgresql?ref=v1.0.1"
-  source = "git::ssh://git@github.com/oraclecloudbricks/terraform-oci-cloudbricks-postgresql?ref=bug/3"
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-postgresql?ref=v1.0.4"
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
