@@ -15,11 +15,12 @@ promote_to_qa.sh
 remove_tag.sh
 **/ssh_keys/*
 
-# Certificates
+# Certificates and Wallet File
 *.crt*
 *.key*
 *.csr*
 *.srl*
+tde_wallet*
 
 override.tf
 override.tf.json
