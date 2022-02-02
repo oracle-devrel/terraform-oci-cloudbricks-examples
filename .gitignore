@@ -15,6 +15,12 @@ promote_to_qa.sh
 remove_tag.sh
 **/ssh_keys/*
 
+# Certificates
+*.crt*
+*.key*
+*.csr*
+*.srl*
+
 override.tf
 override.tf.json
 *_override.tf

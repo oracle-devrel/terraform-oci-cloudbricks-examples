@@ -3,7 +3,7 @@
 # All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
 # generate_self_signed-certs.sh 
 #
-# Purpose: Generate SSC folloowing this document: Oracle Cloud Infrastructure - How Create a SSL Certificate for a Load Balancer (Doc ID 2617046.1)
+# Purpose: Generate SSC following this document: Oracle Cloud Infrastructure - How Create a SSL Certificate for a Load Balancer (Doc ID 2617046.1)
 #          Self signed certificates are not production safe. Be sure to use a real certificate once you put this environment in production
 
 
