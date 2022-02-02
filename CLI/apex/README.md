@@ -108,7 +108,9 @@ module "ModuleName" {
 - For variable usage, refer to section *Variable Documentation*
 - This project contains a sample script that will generate sample certificates. This is located under `apex/certs/gen_certs.sh`. 
   - Directory `apex/certs` must include certificates in the following form: 
-    - LoadBalancerCertificate.cert 
+    - `LoadBalancerCertificate.cert`: The Certificate file attached to the Load Balancer 
+    - `CACertificate.key`: The Certificate Authority key file
+    - `LoadBalancerKey.key`: The Load Balancer Key file
 
 
 If using self signed certificates, the following is the output of script execution: 
