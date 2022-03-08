@@ -6,7 +6,7 @@
 
 
 module "compute01" {
-  source = "git::ssh://git@github.com:oracle-devrel/terraform-oci-cloudbricks-linux-compute.git?ref=v1.0.1"
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-linux-compute.git?ref=v1.0.1"
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
