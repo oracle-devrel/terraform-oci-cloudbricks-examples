@@ -4,8 +4,9 @@
 #
 # Purpose: Defines all the components related to environment
 
+
 module "hub01_network" {
-  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v2.0.0"
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v2.0.1"
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -34,9 +35,10 @@ module "hub01_network" {
   ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
 }
 
+
 module "prd01_network" {
   depends_on = [module.hub01_network]
-  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.1"
+  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v2.0.1"
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -68,7 +70,7 @@ module "prd01_network" {
 
 
 module "dev01_network" {
-  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.1"
+  source     = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v2.0.1"
   depends_on = [module.hub01_network]
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid

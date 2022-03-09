@@ -5,7 +5,7 @@
 ## Introduction
 The following collection of systems provision a full landing zone containing both compartment and network structure. The following is the reference architecture for both systems:
 
-![Reference Architecture](./images/Bricks_Architectures-lz_HUB_PRD_DEV.jpeg)
+![Reference Architecture](./images/Bricks_Architectures-lz_HUB_PRD_DEV.jpg)
 
 ## Getting Started
 For details in how the Oracle CloudBricks Framework works, refer to the [following file](../README.md)
@@ -38,7 +38,7 @@ For instructions in how to create Customer Secret Keys, go to the [following lin
 
 In order to create the systems, execute as follows: 
 
-0. Update the system's corresponding `system.tfvars`file to specific needs. Example included complies with reference architecture diagram
+0. Update the system's corresponding `system.tfvars` file to specific needs. Example included complies with reference architecture diagram
    - For Compartment System: 
 
 ```shell
@@ -148,13 +148,9 @@ hub01_network_public_security_list_display_name   = "hub01_pub_hub_sl"
 hub01_network_service_gateway_display_name        = "hub01_SVC_GW"
 hub01_network_nat_gateway_display_name            = "hub01_NAT_GW"
 hub01_network_internet_gateway_display_name       = "hub01_INET_GW"
-hub01_network_lpg_count                           = 2
-hub01_network_lpg_display_name_base               = "hub01_LPG"
-hub01_network_peered_vcn_network_compartment_name = ""
-hub01_network_peered_lpg_display_name             = ""
+hub01_network_drg_display_name                    = "hub01_DRG"
+hub01_network_peered_vcn_cidr_blocks              = ["11.0.0.0/16", "12.0.0.0/16"]
 hub01_network_is_spoke                            = false
-
-
 ######################################## HUB NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ######################################
 
 
@@ -173,10 +169,6 @@ prd01_network_public_security_list_display_name   = "prd01_pub_hub_sl"
 prd01_network_service_gateway_display_name        = "prd01_SVC_GW"
 prd01_network_nat_gateway_display_name            = "prd01_NAT_GW"
 prd01_network_internet_gateway_display_name       = "INET_GW"
-prd01_network_lpg_count                           = 1
-prd01_network_lpg_display_name_base               = "prd01_LPG"
-prd01_network_peered_vcn_network_compartment_name = "HUB01_NETWORK_01"
-prd01_network_peered_lpg_display_name             = "hub01_LPG01"
 prd01_network_is_spoke                            = true
 ######################################## prd01 NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ######################################
 
@@ -196,10 +188,6 @@ dev01_network_public_security_list_display_name   = "dev01_pub_hub_sl"
 dev01_network_service_gateway_display_name        = "dev01_SVC_GW"
 dev01_network_nat_gateway_display_name            = "dev01_NAT_GW"
 dev01_network_internet_gateway_display_name       = "dev01_INET_GW"
-dev01_network_lpg_count                           = 1
-dev01_network_lpg_display_name_base               = "dev01_LPG"
-dev01_network_peered_vcn_network_compartment_name = "HUB01_NETWORK_01"
-dev01_network_peered_lpg_display_name             = "hub01_LPG02"
 dev01_network_is_spoke                            = true
 ######################################## prd01 NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ###################
 
@@ -274,9 +262,9 @@ This file defines the main orchestration of module.
 For compartment System, the following structure is expected
 
 ```go
-module "ModuleName" {
-  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.0"
-    providers = {
+module "MoculeName" {
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git?ref=v1.0.1"
+  providers = {
     oci.home = oci.home
   }
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
@@ -286,35 +274,21 @@ module "ModuleName" {
   fingerprint      = var.fingerprint
   private_key_path = var.private_key_path
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
-  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-  vcn_network_compartment_name        = var.ModuleName_vcn_network_compartment_name
-  vcn_cidr_blocks                     = var.ModuleName_vcn_cidr_blocks
-  private_subnet_cidr_block_map       = var.ModuleName_private_subnet_cidr_block_map
-  public_subnet_cidr_block_map        = var.ModuleName_public_subnet_cidr_block_map
-  vcn_display_name                    = var.ModuleName_vcn_display_name
-  dhcp_options_display_name           = var.ModuleName_dhcp_options_display_name
-  custom_search_domain                = var.ModuleName_custom_search_domain
-  private_route_table_display_name    = var.ModuleName_private_route_table_display_name
-  public_route_table_display_name     = var.ModuleName_public_route_table_display_name
-  private_security_list_display_name  = var.ModuleName_private_security_list_display_name
-  public_security_list_display_name   = var.ModuleName_public_security_list_display_name
-  service_gateway_display_name        = var.ModuleName_service_gateway_display_name
-  nat_gateway_display_name            = var.ModuleName_nat_gateway_display_name
-  internet_gateway_display_name       = var.ModuleName_internet_gateway_display_name
-  lpg_count                           = var.ModuleName_lpg_count
-  lpg_display_name_base               = var.ModuleName_lpg_display_name_base
-  peered_vcn_network_compartment_name = var.ModuleName_peered_vcn_network_compartment_name
-  peered_lpg_display_name             = var.ModuleName_peered_lpg_display_name
-  is_spoke                            = var.ModuleName_is_spoke
-  ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
+  ######################################## COMPARTMENT SPECIFIC VARIABLES ######################################
+  is_root_parent          = var.ModuleName_is_root_parent
+  root_compartment_ocid   = var.ModuleName_root_compartment_ocid
+  compartment_name        = var.ModuleName_compartment_name
+  compartment_description = var.ModuleName_compartment_description
+  enable_delete           = var.ModuleName_enable_delete
+  ######################################## COMPARTMENT SPECIFIC VARIABLES ######################################
 }
 ```
 
 For Network System, the following structure is expected
 
 ```shell
-module "ModuleName_network" {
-  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v1.0.1"
+module "Hub_ModuleName" {
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v2.0.1"
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -323,34 +297,28 @@ module "ModuleName_network" {
   private_key_path = var.private_key_path
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-  vcn_network_compartment_name        = var.ModuleName_network_vcn_network_compartment_name
-  vcn_cidr_blocks                     = var.ModuleName_network_vcn_cidr_blocks
-  private_subnet_cidr_block_map       = var.ModuleName_network_private_subnet_cidr_block_map
-  public_subnet_cidr_block_map        = var.ModuleName_network_public_subnet_cidr_block_map
-  vcn_display_name                    = var.ModuleName_network_vcn_display_name
-  dhcp_options_display_name           = var.ModuleName_network_dhcp_options_display_name
-  custom_search_domain                = var.ModuleName_network_custom_search_domain
-  private_route_table_display_name    = var.ModuleName_network_private_route_table_display_name
-  public_route_table_display_name     = var.ModuleName_network_public_route_table_display_name
-  private_security_list_display_name  = var.ModuleName_network_private_security_list_display_name
-  public_security_list_display_name   = var.ModuleName_network_public_security_list_display_name
-  service_gateway_display_name        = var.ModuleName_network_service_gateway_display_name
-  nat_gateway_display_name            = var.ModuleName_network_nat_gateway_display_name
-  internet_gateway_display_name       = var.ModuleName_network_internet_gateway_display_name
-  lpg_count                           = var.ModuleName_network_lpg_count
-  lpg_display_name_base               = var.ModuleName_network_lpg_display_name_base
-  peered_vcn_network_compartment_name = var.ModuleName_network_peered_vcn_network_compartment_name
-  peered_lpg_display_name             = var.ModuleName_network_peered_lpg_display_name
-  is_spoke                            = var.ModuleName_network_is_spoke
+  vcn_network_compartment_name        = var.Hub_ModuleName_vcn_network_compartment_name
+  vcn_cidr_blocks                     = var.Hub_ModuleName_vcn_cidr_blocks
+  private_subnet_cidr_block_map       = var.Hub_ModuleName_private_subnet_cidr_block_map
+  public_subnet_cidr_block_map        = var.Hub_ModuleName_public_subnet_cidr_block_map
+  vcn_display_name                    = var.Hub_ModuleName_vcn_display_name
+  dhcp_options_display_name           = var.Hub_ModuleName_dhcp_options_display_name
+  custom_search_domain                = var.Hub_ModuleName_custom_search_domain
+  private_route_table_display_name    = var.Hub_ModuleName_private_route_table_display_name
+  public_route_table_display_name     = var.Hub_ModuleName_public_route_table_display_name
+  private_security_list_display_name  = var.Hub_ModuleName_private_security_list_display_name
+  public_security_list_display_name   = var.Hub_ModuleName_public_security_list_display_name
+  service_gateway_display_name        = var.Hub_ModuleName_service_gateway_display_name
+  nat_gateway_display_name            = var.Hub_ModuleName_nat_gateway_display_name
+  internet_gateway_display_name       = var.Hub_ModuleName_internet_gateway_display_name
+  drg_display_name                    = var.Hub_ModuleName_drg_display_name
+  peered_vcn_cidr_blocks              = var.Hub_ModuleName_peered_vcn_cidr_blocks
+  is_spoke                            = var.Hub_ModuleName_is_spoke
   ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
 }
 
-module "lpg_route_pub_hub_to_ModuleName" {
-  depends_on = [
-    module.hub01_network,
-    module.ModuleName_network
-  ]
-  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config.git?ref=v1.0.2"
+module "Spoke_ModuleName" {
+  source = "git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git?ref=v2.0.1"
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   tenancy_ocid     = var.tenancy_ocid
   region           = var.region
@@ -359,17 +327,24 @@ module "lpg_route_pub_hub_to_ModuleName" {
   private_key_path = var.private_key_path
   ######################################## PROVIDER SPECIFIC VARIABLES ######################################
   ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-  from_network_compartment_name = var.hub01_network_vcn_network_compartment_name
-  from_vcn_display_name         = var.hub01_network_vcn_display_name
-  from_route_table_display_name = var.hub01_network_public_route_table_display_name
-  from_lpg_display_name         = module.hub01_network.local_peering_gateways[0].display_name
-
-  to_vcn_display_name         = var.ModuleName_network_vcn_display_name
-  to_network_compartment_name = var.ModuleName_network_vcn_network_compartment_name
-  to_lpg_display_name         = module.ModuleName_network.local_peering_gateways[0].display_name
-  to_route_table_display_name = var.ModuleName_network_public_route_table_display_name
+  vcn_network_compartment_name        = var.Spoke_ModuleName_vcn_network_compartment_name
+  vcn_cidr_blocks                     = var.Spoke_ModuleName_vcn_cidr_blocks
+  private_subnet_cidr_block_map       = var.Spoke_ModuleName_private_subnet_cidr_block_map
+  public_subnet_cidr_block_map        = var.Spoke_ModuleName_public_subnet_cidr_block_map
+  vcn_display_name                    = var.Spoke_ModuleName_vcn_display_name
+  dhcp_options_display_name           = var.Spoke_ModuleName_dhcp_options_display_name
+  custom_search_domain                = var.Spoke_ModuleName_custom_search_domain
+  private_route_table_display_name    = var.Spoke_ModuleName_private_route_table_display_name
+  public_route_table_display_name     = var.Spoke_ModuleName_public_route_table_display_name
+  private_security_list_display_name  = var.Spoke_ModuleName_private_security_list_display_name
+  public_security_list_display_name   = var.Spoke_ModuleName_public_security_list_display_name
+  service_gateway_display_name        = var.Spoke_ModuleName_service_gateway_display_name
+  nat_gateway_display_name            = var.Spoke_ModuleName_nat_gateway_display_name
+  internet_gateway_display_name       = var.Spoke_ModuleName_internet_gateway_display_name
+  hub_vcn_compartment_name            = var.Hub_ModuleName_vcn_network_compartment_name
+  hub_vcn_display_name                = var.Hub_ModuleName_vcn_display_name
+  is_spoke                            = var.Spoke_ModuleName_is_spoke
   ######################################## ARTIFACT SPECIFIC VARIABLES ######################################
-
 }
 ```
 
@@ -379,17 +354,7 @@ module "lpg_route_pub_hub_to_ModuleName" {
 - For module specifics, refer to module documentation: 
   - [terraform-oci-cloudbricks-compartment](https://github.com/oracle-devrel/terraform-oci-cloudbricks-compartment/blob/main/README.md)
   - [terraform-oci-cloudbricks-network-artifacts](https://github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts/blob/main/README.md)  
-  - [terraform-oci-cloudbricks-lpg-config](https://github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config/blob/main/README.md)
 - For variable usage, refer to section *Variable Documentation*
-- When using module - [terraform-oci-cloudbricks-lpg-config](https://github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config) this will take as parameters runtime information of currently in creation resources. For each new VCN that's added as spoke, be sure to increase the number of variable 'from_lpg_display_name' in 1 as the following example: 
-  
-  ```shell
-  from_lpg_display_name         = module.hub01_network.local_peering_gateways[0].display_name
-  from_lpg_display_name         = module.hub01_network.local_peering_gateways[1].display_name
-  ...
-  from_lpg_display_name         = module.hub01_network.local_peering_gateways[N].display_name
-  ```
-- This progression can be observed in module orchestrator [main.tf](network_system/main.tf) in lines 126 and 181 for prd01 environment subnets
 
 ### [output.tf](./output.tf)
 The following file defines the output of system, for future forward integration use with Configuration Management Tools
@@ -401,17 +366,17 @@ This file
 The following file defines the specific variables customized using variable overloading. Please refer to backend brick module documentation for details in how to fill.
 For module specifics, refer to module documentation: 
   - [terraform-oci-cloudbricks-compartment](https://github.com/oracle-devrel/terraform-oci-cloudbricks-compartment/blob/main/README.md)
-  - [terraform-oci-cloudbricks-network-artifacts](https://github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts/blob/main/README.md)  
-  - [terraform-oci-cloudbricks-lpg-config](https://github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config/blob/main/README.md)
+  - [terraform-oci-cloudbricks-network-artifacts](https://github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts/blob/main/README.md)
 
 ### [variables.tf](./variables.tf)
 The following file defines all the variables used in this system. For details on it's content, refer to section *Variable Documentation*
 
 ---
+
 ## Variable Documentation
 
 ### Compartment System
-## Requirements
+# Requirements
 
 | Name | Version |
 |------|---------|
@@ -422,7 +387,7 @@ The following file defines all the variables used in this system. For details on
 
 | Name | Version |
 |------|---------|
-| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.40.0 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | >= 4.36.0 |
 
 ## Modules
 
@@ -498,6 +463,8 @@ The following file defines all the variables used in this system. For details on
 | <a name="output_prd01"></a> [prd01](#output\_prd01) | prd01 Data |
 | <a name="output_prd01_artifacts"></a> [prd01\_artifacts](#output\_prd01\_artifacts) | Artifact prd01 Data |
 | <a name="output_prd01_network"></a> [prd01\_network](#output\_prd01\_network) | Network prd01 Data |
+
+
 ### Network System
 ## Requirements
 
@@ -510,19 +477,15 @@ The following file defines all the variables used in this system. For details on
 
 | Name | Version |
 |------|---------|
-| <a name="provider_oci"></a> [oci](#provider\_oci) | >= 4.36.0 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.66.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_dev01_network"></a> [dev01\_network](#module\_dev01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v1.0.1 |
-| <a name="module_hub01_network"></a> [hub01\_network](#module\_hub01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v1.0.1 |
-| <a name="module_lpg_route_pub_hub_to_dev01"></a> [lpg\_route\_pub\_hub\_to\_dev01](#module\_lpg\_route\_pub\_hub\_to\_dev01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config.git | v1.0.1 |
-| <a name="module_lpg_route_pub_hub_to_prd01"></a> [lpg\_route\_pub\_hub\_to\_prd01](#module\_lpg\_route\_pub\_hub\_to\_prd01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config.git | v1.0.1 |
-| <a name="module_lpg_route_pvt_hub_to_dev01"></a> [lpg\_route\_pvt\_hub\_to\_dev01](#module\_lpg\_route\_pvt\_hub\_to\_dev01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config.git | v1.0.1 |
-| <a name="module_lpg_route_pvt_hub_to_prd01"></a> [lpg\_route\_pvt\_hub\_to\_prd01](#module\_lpg\_route\_pvt\_hub\_to\_prd01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lpg-config.git | v1.0.1 |
-| <a name="module_prd01_network"></a> [prd01\_network](#module\_prd01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v1.0.1 |
+| <a name="module_dev01_network"></a> [dev01\_network](#module\_dev01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v2.0.1 |
+| <a name="module_hub01_network"></a> [hub01\_network](#module\_hub01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v2.0.1 |
+| <a name="module_prd01_network"></a> [prd01\_network](#module\_prd01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v2.0.1 |
 
 ## Resources
 
@@ -541,11 +504,7 @@ The following file defines all the variables used in this system. For details on
 | <a name="input_dev01_network_is_private_subnet_private"></a> [dev01\_network\_is\_private\_subnet\_private](#input\_dev01\_network\_is\_private\_subnet\_private) | Describes if the subnet is private or not | `bool` | `true` | no |
 | <a name="input_dev01_network_is_public_subnet_private"></a> [dev01\_network\_is\_public\_subnet\_private](#input\_dev01\_network\_is\_public\_subnet\_private) | Describes if the subnet is private or not | `bool` | `false` | no |
 | <a name="input_dev01_network_is_spoke"></a> [dev01\_network\_is\_spoke](#input\_dev01\_network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `true` | no |
-| <a name="input_dev01_network_lpg_count"></a> [dev01\_network\_lpg\_count](#input\_dev01\_network\_lpg\_count) | Number of LPG to create | `number` | `1` | no |
-| <a name="input_dev01_network_lpg_display_name_base"></a> [dev01\_network\_lpg\_display\_name\_base](#input\_dev01\_network\_lpg\_display\_name\_base) | Local Peering Gateway Display Name Base | `any` | n/a | yes |
 | <a name="input_dev01_network_nat_gateway_display_name"></a> [dev01\_network\_nat\_gateway\_display\_name](#input\_dev01\_network\_nat\_gateway\_display\_name) | NAT Gateway Display Name | `any` | n/a | yes |
-| <a name="input_dev01_network_peered_lpg_display_name"></a> [dev01\_network\_peered\_lpg\_display\_name](#input\_dev01\_network\_peered\_lpg\_display\_name) | Display name of peered network | `string` | `""` | no |
-| <a name="input_dev01_network_peered_vcn_network_compartment_name"></a> [dev01\_network\_peered\_vcn\_network\_compartment\_name](#input\_dev01\_network\_peered\_vcn\_network\_compartment\_name) | Compartment name of origin VCN to peer | `string` | `""` | no |
 | <a name="input_dev01_network_private_route_table_display_name"></a> [dev01\_network\_private\_route\_table\_display\_name](#input\_dev01\_network\_private\_route\_table\_display\_name) | Private Route Table Display Name. | `any` | n/a | yes |
 | <a name="input_dev01_network_private_route_table_nat_route_rules_description"></a> [dev01\_network\_private\_route\_table\_nat\_route\_rules\_description](#input\_dev01\_network\_private\_route\_table\_nat\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"NAT Gateway default route"` | no |
 | <a name="input_dev01_network_private_route_table_nat_route_rules_destination"></a> [dev01\_network\_private\_route\_table\_nat\_route\_rules\_destination](#input\_dev01\_network\_private\_route\_table\_nat\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
@@ -589,16 +548,14 @@ The following file defines all the variables used in this system. For details on
 | <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | API Key Fingerprint for user\_ocid derived from public API Key imported in OCI User config | `any` | n/a | yes |
 | <a name="input_hub01_network_custom_search_domain"></a> [hub01\_network\_custom\_search\_domain](#input\_hub01\_network\_custom\_search\_domain) | A domain name where the custom option can be applied | `any` | n/a | yes |
 | <a name="input_hub01_network_dhcp_options_display_name"></a> [hub01\_network\_dhcp\_options\_display\_name](#input\_hub01\_network\_dhcp\_options\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_hub01_network_drg_display_name"></a> [hub01\_network\_drg\_display\_name](#input\_hub01\_network\_drg\_display\_name) | Dynamic Routing Gateway Display Name | `any` | n/a | yes |
 | <a name="input_hub01_network_internet_gateway_display_name"></a> [hub01\_network\_internet\_gateway\_display\_name](#input\_hub01\_network\_internet\_gateway\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
 | <a name="input_hub01_network_internet_gateway_enabled"></a> [hub01\_network\_internet\_gateway\_enabled](#input\_hub01\_network\_internet\_gateway\_enabled) | Describes if the Internet Gateway is enabled upon creation or not | `bool` | `true` | no |
 | <a name="input_hub01_network_is_private_subnet_private"></a> [hub01\_network\_is\_private\_subnet\_private](#input\_hub01\_network\_is\_private\_subnet\_private) | Describes if the subnet is private or not | `bool` | `true` | no |
 | <a name="input_hub01_network_is_public_subnet_private"></a> [hub01\_network\_is\_public\_subnet\_private](#input\_hub01\_network\_is\_public\_subnet\_private) | Describes if the subnet is private or not | `bool` | `false` | no |
-| <a name="input_hub01_network_is_spoke"></a> [hub01\_network\_is\_spoke](#input\_hub01\_network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `true` | no |
-| <a name="input_hub01_network_lpg_count"></a> [hub01\_network\_lpg\_count](#input\_hub01\_network\_lpg\_count) | Number of LPG to create | `number` | `1` | no |
-| <a name="input_hub01_network_lpg_display_name_base"></a> [hub01\_network\_lpg\_display\_name\_base](#input\_hub01\_network\_lpg\_display\_name\_base) | Local Peering Gateway Display Name Base | `any` | n/a | yes |
+| <a name="input_hub01_network_is_spoke"></a> [hub01\_network\_is\_spoke](#input\_hub01\_network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `false` | no |
 | <a name="input_hub01_network_nat_gateway_display_name"></a> [hub01\_network\_nat\_gateway\_display\_name](#input\_hub01\_network\_nat\_gateway\_display\_name) | NAT Gateway Display Name | `any` | n/a | yes |
-| <a name="input_hub01_network_peered_lpg_display_name"></a> [hub01\_network\_peered\_lpg\_display\_name](#input\_hub01\_network\_peered\_lpg\_display\_name) | Display name of peered network | `string` | `""` | no |
-| <a name="input_hub01_network_peered_vcn_network_compartment_name"></a> [hub01\_network\_peered\_vcn\_network\_compartment\_name](#input\_hub01\_network\_peered\_vcn\_network\_compartment\_name) | Compartment name of origin VCN to peer | `string` | `""` | no |
+| <a name="input_hub01_network_peered_vcn_cidr_blocks"></a> [hub01\_network\_peered\_vcn\_cidr\_blocks](#input\_hub01\_network\_peered\_vcn\_cidr\_blocks) | List of CIDR blocks of SPOKES | `any` | n/a | yes |
 | <a name="input_hub01_network_private_route_table_display_name"></a> [hub01\_network\_private\_route\_table\_display\_name](#input\_hub01\_network\_private\_route\_table\_display\_name) | Private Route Table Display Name. | `any` | n/a | yes |
 | <a name="input_hub01_network_private_route_table_nat_route_rules_description"></a> [hub01\_network\_private\_route\_table\_nat\_route\_rules\_description](#input\_hub01\_network\_private\_route\_table\_nat\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"NAT Gateway default route"` | no |
 | <a name="input_hub01_network_private_route_table_nat_route_rules_destination"></a> [hub01\_network\_private\_route\_table\_nat\_route\_rules\_destination](#input\_hub01\_network\_private\_route\_table\_nat\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
@@ -645,12 +602,8 @@ The following file defines all the variables used in this system. For details on
 | <a name="input_prd01_network_internet_gateway_enabled"></a> [prd01\_network\_internet\_gateway\_enabled](#input\_prd01\_network\_internet\_gateway\_enabled) | Describes if the Internet Gateway is enabled upon creation or not | `bool` | `true` | no |
 | <a name="input_prd01_network_is_private_subnet_private"></a> [prd01\_network\_is\_private\_subnet\_private](#input\_prd01\_network\_is\_private\_subnet\_private) | Describes if the subnet is private or not | `bool` | `true` | no |
 | <a name="input_prd01_network_is_public_subnet_private"></a> [prd01\_network\_is\_public\_subnet\_private](#input\_prd01\_network\_is\_public\_subnet\_private) | Describes if the subnet is private or not | `bool` | `false` | no |
-| <a name="input_prd01_network_is_spoke"></a> [prd01\_network\_is\_spoke](#input\_prd01\_network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `true` | no |
-| <a name="input_prd01_network_lpg_count"></a> [prd01\_network\_lpg\_count](#input\_prd01\_network\_lpg\_count) | Number of LPG to create | `number` | `1` | no |
-| <a name="input_prd01_network_lpg_display_name_base"></a> [prd01\_network\_lpg\_display\_name\_base](#input\_prd01\_network\_lpg\_display\_name\_base) | Local Peering Gateway Display Name Base | `any` | n/a | yes |
+| <a name="input_prd01_network_is_spoke"></a> [prd01\_network\_is\_spoke](#input\_prd01\_network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `false` | no |
 | <a name="input_prd01_network_nat_gateway_display_name"></a> [prd01\_network\_nat\_gateway\_display\_name](#input\_prd01\_network\_nat\_gateway\_display\_name) | NAT Gateway Display Name | `any` | n/a | yes |
-| <a name="input_prd01_network_peered_lpg_display_name"></a> [prd01\_network\_peered\_lpg\_display\_name](#input\_prd01\_network\_peered\_lpg\_display\_name) | Display name of peered network | `string` | `""` | no |
-| <a name="input_prd01_network_peered_vcn_network_compartment_name"></a> [prd01\_network\_peered\_vcn\_network\_compartment\_name](#input\_prd01\_network\_peered\_vcn\_network\_compartment\_name) | Compartment name of origin VCN to peer | `string` | `""` | no |
 | <a name="input_prd01_network_private_route_table_display_name"></a> [prd01\_network\_private\_route\_table\_display\_name](#input\_prd01\_network\_private\_route\_table\_display\_name) | Private Route Table Display Name. | `any` | n/a | yes |
 | <a name="input_prd01_network_private_route_table_nat_route_rules_description"></a> [prd01\_network\_private\_route\_table\_nat\_route\_rules\_description](#input\_prd01\_network\_private\_route\_table\_nat\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"NAT Gateway default route"` | no |
 | <a name="input_prd01_network_private_route_table_nat_route_rules_destination"></a> [prd01\_network\_private\_route\_table\_nat\_route\_rules\_destination](#input\_prd01\_network\_private\_route\_table\_nat\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
@@ -701,11 +654,11 @@ The following file defines all the variables used in this system. For details on
 | Name | Description |
 |------|-------------|
 | <a name="output_dev01_network"></a> [dev01\_network](#output\_dev01\_network) | VCN of dev01 |
+| <a name="output_hub01_drg"></a> [hub01\_drg](#output\_hub01\_drg) | Output of hub01 DRG |
 | <a name="output_hub01_network"></a> [hub01\_network](#output\_hub01\_network) | VCN of hub01 |
-| <a name="output_lpg_dev01"></a> [lpg\_dev01](#output\_lpg\_dev01) | Output of dev01 LPGs |
-| <a name="output_lpg_hub01"></a> [lpg\_hub01](#output\_lpg\_hub01) | Output of hub01 LPGs |
-| <a name="output_lpg_prd01"></a> [lpg\_prd01](#output\_lpg\_prd01) | Output of prd01 LPGs |
 | <a name="output_prd01_network"></a> [prd01\_network](#output\_prd01\_network) | VCN of prd01 |
+
+
 
 ## Contributing
 This project is open source.  Please submit your contributions by forking this repository and submitting a pull request!  Oracle appreciates any contributions that are made by the open source community.
