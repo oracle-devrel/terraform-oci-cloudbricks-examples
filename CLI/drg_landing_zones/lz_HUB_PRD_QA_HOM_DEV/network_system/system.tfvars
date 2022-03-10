@@ -13,7 +13,7 @@ fingerprint      = "fo:oo:ba:ar:ba:ar"
 private_key_path = "/foo/bar/path/oci_api_key.pem"
 ######################################## PROVIDER SPECIFIC VARIABLES ######################################
 
-######################################## HUB NETWORK SPECIFIC VARIABLES ######################################
+######################################## hub01 NETWORK SPECIFIC VARIABLES ######################################
 hub01_network_vcn_cidr_blocks                    = ["10.0.0.0/16"]
 hub01_network_private_subnet_cidr_block_map      = { "hub01_pvtsn01" : "10.0.0.0/23", "hub01_pvtsn02" : "10.0.2.0/23", "hub01_pvtsn03" : "10.0.4.0/23" }
 hub01_network_public_subnet_cidr_block_map       = { "hub01_pubsn01" : "10.0.6.0/23", "hub01_pubsn02" : "10.0.8.0/23", "hub01_pubsn03" : "10.0.10.0/23" }
@@ -31,7 +31,7 @@ hub01_network_internet_gateway_display_name      = "hub01_INET_GW"
 hub01_network_drg_display_name                   = "hub01_DRG"
 hub01_network_peered_vcn_cidr_blocks             = ["11.0.0.0/16", "12.0.0.0/16", "13.0.0.0/16", "14.0.0.0/16"]
 hub01_network_is_spoke                           = false
-######################################## HUB NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ######################################
+######################################## hub01 NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ######################################
 
 ######################################## prd01 NETWORK SPECIFIC VARIABLES ######################################
 prd01_network_vcn_cidr_blocks                    = ["11.0.0.0/16"]
