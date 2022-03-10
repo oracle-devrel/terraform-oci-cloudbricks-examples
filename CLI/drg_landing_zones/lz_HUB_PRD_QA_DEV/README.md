@@ -1,11 +1,11 @@
-# OCI Cloud Bricks: Sample Landing Zone - HUB PRD DEV
+# OCI Cloud Bricks: Sample Landing Zone - HUB PRD QA DEV
 
 [![License: UPL](https://img.shields.io/badge/license-UPL-green)](https://img.shields.io/badge/license-UPL-green) [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=oracle-devrel_terraform-oci-cloudbricks-examples)](https://sonarcloud.io/dashboard?id=oracle-devrel_terraform-oci-cloudbricks-examples)
 
 ## Introduction
 The following collection of systems provision a full landing zone containing both compartment and network structure. The following is the reference architecture for both systems:
 
-![Reference Architecture](./images/Bricks_Architectures-lz_HUB_PRD_DEV.jpg)
+![Reference Architecture](./images/Bricks_Architectures-lz_HUB_PRD_QA_DEV.jpg)
 
 ## Getting Started
 For details in how the Oracle CloudBricks Framework works, refer to the [following file](../README.md)
@@ -98,6 +98,22 @@ prd01_network_compartment_description = "Terraform created prd01 Network Compart
 prd01_network_enable_delete           = true
 ######################################## prd01 Network SPECIFIC VARIABLES ######################################
 
+######################################## qa01 SPECIFIC VARIABLES ######################################
+qa01_compartment_name        = "QA01_01"
+qa01_compartment_description = "Terraform created qa01 Compartment"
+qa01_enable_delete           = true
+######################################## qa01 SPECIFIC VARIABLES ######################################
+######################################## qa01 Artifact SPECIFIC VARIABLES ######################################
+qa01_artifacts_compartment_name        = "QA01_ARTIFACTS_01"
+qa01_artifacts_compartment_description = "Terraform created qa01 Artifact Compartment"
+qa01_artifacts_enable_delete           = true
+######################################## qa01 Artifact SPECIFIC VARIABLES ######################################
+######################################## qa01 Network SPECIFIC VARIABLES ######################################
+qa01_network_compartment_name        = "QA01_NETWORK_01"
+qa01_network_compartment_description = "Terraform created qa01 Network Compartment"
+qa01_network_enable_delete           = true
+######################################## qa01 Network SPECIFIC VARIABLES ######################################
+
 ######################################## dev01 SPECIFIC VARIABLES ######################################
 dev01_compartment_name        = "DEV01_01"
 dev01_compartment_description = "Terraform created dev01 Compartment"
@@ -134,71 +150,89 @@ private_key_path = "/foo/bar/path/oci_api_key.pem"
 ######################################## PROVIDER SPECIFIC VARIABLES ######################################
 
 ######################################## HUB NETWORK SPECIFIC VARIABLES ######################################
-hub01_network_vcn_cidr_blocks                     = ["10.0.0.0/16"]
-hub01_network_private_subnet_cidr_block_map       = { "hub01_pvtsn01" : "10.0.0.0/23", "hub01_pvtsn02" : "10.0.2.0/23", "hub01_pvtsn03" : "10.0.4.0/23" }
-hub01_network_public_subnet_cidr_block_map        = { "hub01_pubsn01" : "10.0.6.0/23", "hub01_pubsn02" : "10.0.8.0/23", "hub01_pubsn03" : "10.0.10.0/23" }
-hub01_network_vcn_display_name                    = "HUB01_VCN"
-hub01_network_vcn_network_compartment_name        = "HUB01_NETWORK_01"
-hub01_network_dhcp_options_display_name           = "hub01_DHCP_Options"
-hub01_network_custom_search_domain                = "test.com"
-hub01_network_private_route_table_display_name    = "hub01_pvt_hub_rt"
-hub01_network_public_route_table_display_name     = "hub01_pub_hub_rt"
-hub01_network_private_security_list_display_name  = "hub01_pvt_hub_sl"
-hub01_network_public_security_list_display_name   = "hub01_pub_hub_sl"
-hub01_network_service_gateway_display_name        = "hub01_SVC_GW"
-hub01_network_nat_gateway_display_name            = "hub01_NAT_GW"
-hub01_network_internet_gateway_display_name       = "hub01_INET_GW"
-hub01_network_drg_display_name                    = "hub01_DRG"
-hub01_network_peered_vcn_cidr_blocks              = ["11.0.0.0/16", "12.0.0.0/16"]
-hub01_network_is_spoke                            = false
+hub01_network_vcn_cidr_blocks                    = ["10.0.0.0/16"]
+hub01_network_private_subnet_cidr_block_map      = { "hub01_pvtsn01" : "10.0.0.0/23", "hub01_pvtsn02" : "10.0.2.0/23", "hub01_pvtsn03" : "10.0.4.0/23" }
+hub01_network_public_subnet_cidr_block_map       = { "hub01_pubsn01" : "10.0.6.0/23", "hub01_pubsn02" : "10.0.8.0/23", "hub01_pubsn03" : "10.0.10.0/23" }
+hub01_network_vcn_display_name                   = "HUB01_VCN"
+hub01_network_vcn_network_compartment_name       = "HUB01_NETWORK_01"
+hub01_network_dhcp_options_display_name          = "hub01_DHCP_Options"
+hub01_network_custom_search_domain               = "test.com"
+hub01_network_private_route_table_display_name   = "hub01_pvt_hub_rt"
+hub01_network_public_route_table_display_name    = "hub01_pub_hub_rt"
+hub01_network_private_security_list_display_name = "hub01_pvt_hub_sl"
+hub01_network_public_security_list_display_name  = "hub01_pub_hub_sl"
+hub01_network_service_gateway_display_name       = "hub01_SVC_GW"
+hub01_network_nat_gateway_display_name           = "hub01_NAT_GW"
+hub01_network_internet_gateway_display_name      = "hub01_INET_GW"
+hub01_network_drg_display_name                   = "hub01_DRG"
+hub01_network_peered_vcn_cidr_blocks             = ["11.0.0.0/16", "12.0.0.0/16", "13.0.0.0/16"]
+hub01_network_is_spoke                           = false
 ######################################## HUB NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ######################################
 
 
 ######################################## prd01 NETWORK SPECIFIC VARIABLES ######################################
-prd01_network_vcn_cidr_blocks                     = ["11.0.0.0/16"]
-prd01_network_private_subnet_cidr_block_map       = { "prd01_pvtsn01" : "11.0.0.0/23", "prd01_pvtsn02" : "11.0.2.0/23", "prd01_pvtsn03" : "11.0.4.0/23" }
-prd01_network_public_subnet_cidr_block_map        = { "prd01_pubsn01" : "11.0.6.0/23", "prd01_pubsn02" : "11.0.8.0/23", "prd01_pubsn03" : "11.0.10.0/23" }
-prd01_network_vcn_display_name                    = "PRD01_VCN"
-prd01_network_vcn_network_compartment_name        = "PRD01_NETWORK_01"
-prd01_network_dhcp_options_display_name           = "prd01_DHCP_Options"
-prd01_network_custom_search_domain                = "test.com"
-prd01_network_private_route_table_display_name    = "prd01_pvt_hub_rt"
-prd01_network_public_route_table_display_name     = "prd01_pub_hub_rt"
-prd01_network_private_security_list_display_name  = "prd01_pvt_hub_sl"
-prd01_network_public_security_list_display_name   = "prd01_pub_hub_sl"
-prd01_network_service_gateway_display_name        = "prd01_SVC_GW"
-prd01_network_nat_gateway_display_name            = "prd01_NAT_GW"
-prd01_network_internet_gateway_display_name       = "INET_GW"
-prd01_network_is_spoke                            = true
+prd01_network_vcn_cidr_blocks                    = ["11.0.0.0/16"]
+prd01_network_private_subnet_cidr_block_map      = { "prd01_pvtsn01" : "11.0.0.0/23", "prd01_pvtsn02" : "11.0.2.0/23", "prd01_pvtsn03" : "11.0.4.0/23" }
+prd01_network_public_subnet_cidr_block_map       = { "prd01_pubsn01" : "11.0.6.0/23", "prd01_pubsn02" : "11.0.8.0/23", "prd01_pubsn03" : "11.0.10.0/23" }
+prd01_network_vcn_display_name                   = "PRD01_VCN"
+prd01_network_vcn_network_compartment_name       = "PRD01_NETWORK_01"
+prd01_network_dhcp_options_display_name          = "prd01_DHCP_Options"
+prd01_network_custom_search_domain               = "test.com"
+prd01_network_private_route_table_display_name   = "prd01_pvt_hub_rt"
+prd01_network_public_route_table_display_name    = "prd01_pub_hub_rt"
+prd01_network_private_security_list_display_name = "prd01_pvt_hub_sl"
+prd01_network_public_security_list_display_name  = "prd01_pub_hub_sl"
+prd01_network_service_gateway_display_name       = "prd01_SVC_GW"
+prd01_network_nat_gateway_display_name           = "prd01_NAT_GW"
+prd01_network_internet_gateway_display_name      = "INET_GW"
+prd01_network_is_spoke                           = true
 ######################################## prd01 NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ######################################
 
 
-######################################## dev01 NETWORK SPECIFIC VARIABLES ######################################
-dev01_network_vcn_cidr_blocks                     = ["12.0.0.0/16"]
-dev01_network_private_subnet_cidr_block_map       = { "dev01_pvtsn01" : "12.0.0.0/23", "dev01_pvtsn02" : "12.0.2.0/23", "dev01_pvtsn03" : "12.0.4.0/23" }
-dev01_network_public_subnet_cidr_block_map        = { "dev01_pubsn01" : "12.0.6.0/23", "dev01_pubsn02" : "12.0.8.0/23", "dev01_pubsn03" : "12.0.10.0/23" }
-dev01_network_vcn_display_name                    = "DEV01_VCN"
-dev01_network_vcn_network_compartment_name        = "DEV01_NETWORK_01"
-dev01_network_dhcp_options_display_name           = "dev01_DHCP_Options"
-dev01_network_custom_search_domain                = "test.com"
-dev01_network_private_route_table_display_name    = "dev01_pvt_hub_rt"
-dev01_network_public_route_table_display_name     = "dev01_pub_hub_rt"
-dev01_network_private_security_list_display_name  = "dev01_pvt_hub_sl"
-dev01_network_public_security_list_display_name   = "dev01_pub_hub_sl"
-dev01_network_service_gateway_display_name        = "dev01_SVC_GW"
-dev01_network_nat_gateway_display_name            = "dev01_NAT_GW"
-dev01_network_internet_gateway_display_name       = "dev01_INET_GW"
-dev01_network_is_spoke                            = true
-######################################## dev01 NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ###################
+######################################## qa01 NETWORK SPECIFIC VARIABLES ######################################
+qa01_network_vcn_cidr_blocks                    = ["12.0.0.0/16"]
+qa01_network_private_subnet_cidr_block_map      = { "qa01_pvtsn01" : "12.0.0.0/23", "qa01_pvtsn02" : "12.0.2.0/23", "qa01_pvtsn03" : "12.0.4.0/23" }
+qa01_network_public_subnet_cidr_block_map       = { "qa01_pubsn01" : "12.0.6.0/23", "qa01_pubsn02" : "12.0.8.0/23", "qa01_pubsn03" : "12.0.10.0/23" }
+qa01_network_vcn_display_name                   = "QA01_VCN"
+qa01_network_vcn_network_compartment_name       = "QA01_NETWORK_01"
+qa01_network_dhcp_options_display_name          = "qa01_DHCP_Options"
+qa01_network_custom_search_domain               = "test.com"
+qa01_network_private_route_table_display_name   = "qa01_pvt_hub_rt"
+qa01_network_public_route_table_display_name    = "qa01_pub_hub_rt"
+qa01_network_private_security_list_display_name = "qa01_pvt_hub_sl"
+qa01_network_public_security_list_display_name  = "qa01_pub_hub_sl"
+qa01_network_service_gateway_display_name       = "qa01_SVC_GW"
+qa01_network_nat_gateway_display_name           = "qa01_NAT_GW"
+qa01_network_internet_gateway_display_name      = "INET_GW"
+qa01_network_is_spoke                           = true
+######################################## qa01 NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ######################################
 
+
+######################################## dev01 NETWORK SPECIFIC VARIABLES ######################################
+dev01_network_vcn_cidr_blocks                    = ["13.0.0.0/16"]
+dev01_network_private_subnet_cidr_block_map      = { "dev01_pvtsn01" : "13.0.0.0/23", "dev01_pvtsn02" : "13.0.2.0/23", "dev01_pvtsn03" : "13.0.4.0/23" }
+dev01_network_public_subnet_cidr_block_map       = { "dev01_pubsn01" : "13.0.6.0/23", "dev01_pubsn02" : "13.0.8.0/23", "dev01_pubsn03" : "13.0.10.0/23" }
+dev01_network_vcn_display_name                   = "DEV01_VCN"
+dev01_network_vcn_network_compartment_name       = "DEV01_NETWORK_01"
+dev01_network_dhcp_options_display_name          = "dev01_DHCP_Options"
+dev01_network_custom_search_domain               = "test.com"
+dev01_network_private_route_table_display_name   = "dev01_pvt_hub_rt"
+dev01_network_public_route_table_display_name    = "dev01_pub_hub_rt"
+dev01_network_private_security_list_display_name = "dev01_pvt_hub_sl"
+dev01_network_public_security_list_display_name  = "dev01_pub_hub_sl"
+dev01_network_service_gateway_display_name       = "dev01_SVC_GW"
+dev01_network_nat_gateway_display_name           = "dev01_NAT_GW"
+dev01_network_internet_gateway_display_name      = "dev01_INET_GW"
+dev01_network_is_spoke                           = true
+######################################## dev01 NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ###################
 ```
 
 1. Create Compartment System
-   - Run: `./provisionInfra.sh sample_landing_zones/lz_HUB_PRD_DEV/network_system/`
+   - Run: `./provisionInfra.sh sample_landing_zones/lz_HUB_PRD_QA_DEV/network_system/`
    - A dialog as follows will appear: 
 
 ```shell
-[opc@dalquintdevhubscl terraform-oci-cloudbricks-examples]$ ./provisionInfra.sh sample_landing_zones/lz_HUB_PRD_DEV/compartment_system/
+[opc@dalquintdevhubscl terraform-oci-cloudbricks-examples]$ ./provisionInfra.sh sample_landing_zones/lz_HUB_PRD_QA_DEV/compartment_system/
 Sourcing environment variables
 **************************************************************************  WARNING  *********************************************************************************
 *   The following script will provision infrastructure. Type 'yes' and hit enter, if you want to continue. Neglecting something here may drop entire infrastructure  *
@@ -208,11 +242,11 @@ Sourcing environment variables
    - Compartment System will initiate its creation
 
 2. Create Network System
-   - Run: `./provisionInfra.sh sample_landing_zones/lz_HUB_PRD_DEV/network_system/`
+   - Run: `./provisionInfra.sh sample_landing_zones/lz_HUB_PRD_QA_DEV/network_system/`
    - A dialog as follows will appear: 
 
 ```shell
-[opc@dalquintdevhubscl terraform-oci-cloudbricks-examples]$ ./provisionInfra.sh sample_landing_zones/lz_HUB_PRD_DEV/network_system/
+[opc@dalquintdevhubscl terraform-oci-cloudbricks-examples]$ ./provisionInfra.sh sample_landing_zones/lz_HUB_PRD_QA_DEV/network_system/
 Sourcing environment variables
 **************************************************************************  WARNING  *********************************************************************************
 *   The following script will provision infrastructure. Type 'yes' and hit enter, if you want to continue. Neglecting something here may drop entire infrastructure  *
@@ -376,7 +410,7 @@ The following file defines all the variables used in this system. For details on
 ## Variable Documentation
 
 ### Compartment System
-# Requirements
+## Requirements
 
 | Name | Version |
 |------|---------|
@@ -403,6 +437,9 @@ The following file defines all the variables used in this system. For details on
 | <a name="module_prd01"></a> [prd01](#module\_prd01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.1 |
 | <a name="module_prd01_artifacts"></a> [prd01\_artifacts](#module\_prd01\_artifacts) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.1 |
 | <a name="module_prd01_network"></a> [prd01\_network](#module\_prd01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.1 |
+| <a name="module_qa01"></a> [qa01](#module\_qa01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.1 |
+| <a name="module_qa01_artifacts"></a> [qa01\_artifacts](#module\_qa01\_artifacts) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.1 |
+| <a name="module_qa01_network"></a> [qa01\_network](#module\_qa01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-compartment.git | v1.0.1 |
 
 ## Resources
 
@@ -448,6 +485,15 @@ The following file defines all the variables used in this system. For details on
 | <a name="input_prd01_network_compartment_name"></a> [prd01\_network\_compartment\_name](#input\_prd01\_network\_compartment\_name) | Compartment Display Name | `any` | n/a | yes |
 | <a name="input_prd01_network_enable_delete"></a> [prd01\_network\_enable\_delete](#input\_prd01\_network\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | Private Key Absolute path location where terraform is executed | `any` | n/a | yes |
+| <a name="input_qa01_artifacts_compartment_description"></a> [qa01\_artifacts\_compartment\_description](#input\_qa01\_artifacts\_compartment\_description) | Compartment Description | `any` | n/a | yes |
+| <a name="input_qa01_artifacts_compartment_name"></a> [qa01\_artifacts\_compartment\_name](#input\_qa01\_artifacts\_compartment\_name) | Compartment Display Name | `any` | n/a | yes |
+| <a name="input_qa01_artifacts_enable_delete"></a> [qa01\_artifacts\_enable\_delete](#input\_qa01\_artifacts\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_qa01_compartment_description"></a> [qa01\_compartment\_description](#input\_qa01\_compartment\_description) | Enters a description of the compartment | `any` | n/a | yes |
+| <a name="input_qa01_compartment_name"></a> [qa01\_compartment\_name](#input\_qa01\_compartment\_name) | Defines the display name of compartment | `any` | n/a | yes |
+| <a name="input_qa01_enable_delete"></a> [qa01\_enable\_delete](#input\_qa01\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
+| <a name="input_qa01_network_compartment_description"></a> [qa01\_network\_compartment\_description](#input\_qa01\_network\_compartment\_description) | Compartment Description | `any` | n/a | yes |
+| <a name="input_qa01_network_compartment_name"></a> [qa01\_network\_compartment\_name](#input\_qa01\_network\_compartment\_name) | Compartment Display Name | `any` | n/a | yes |
+| <a name="input_qa01_network_enable_delete"></a> [qa01\_network\_enable\_delete](#input\_qa01\_network\_enable\_delete) | Defines if this compartment can be programatically deleted by terraform destroy | `any` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Target region where artifacts are going to be created | `any` | n/a | yes |
 | <a name="input_tenancy_ocid"></a> [tenancy\_ocid](#input\_tenancy\_ocid) | OCID of tenancy | `any` | n/a | yes |
 | <a name="input_user_ocid"></a> [user\_ocid](#input\_user\_ocid) | User OCID in tenancy. Currently hardcoded to user denny.alquinta@oracle.com | `any` | n/a | yes |
@@ -463,6 +509,9 @@ The following file defines all the variables used in this system. For details on
 | <a name="output_prd01"></a> [prd01](#output\_prd01) | prd01 Data |
 | <a name="output_prd01_artifacts"></a> [prd01\_artifacts](#output\_prd01\_artifacts) | Artifact prd01 Data |
 | <a name="output_prd01_network"></a> [prd01\_network](#output\_prd01\_network) | Network prd01 Data |
+| <a name="output_qa01"></a> [qa01](#output\_qa01) | qa01 Data |
+| <a name="output_qa01_artifacts"></a> [qa01\_artifacts](#output\_qa01\_artifacts) | Artifact prd01 Data |
+| <a name="output_qa01_network"></a> [qa01\_network](#output\_qa01\_network) | Network qa01 Data |
 
 
 ### Network System
@@ -477,7 +526,7 @@ The following file defines all the variables used in this system. For details on
 
 | Name | Version |
 |------|---------|
-| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.66.0 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.67.0 |
 
 ## Modules
 
@@ -486,6 +535,7 @@ The following file defines all the variables used in this system. For details on
 | <a name="module_dev01_network"></a> [dev01\_network](#module\_dev01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v2.0.1 |
 | <a name="module_hub01_network"></a> [hub01\_network](#module\_hub01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v2.0.1 |
 | <a name="module_prd01_network"></a> [prd01\_network](#module\_prd01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v2.0.1 |
+| <a name="module_qa01_network"></a> [qa01\_network](#module\_qa01\_network) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-network-artifacts.git | v2.0.1 |
 
 ## Resources
 
@@ -503,7 +553,7 @@ The following file defines all the variables used in this system. For details on
 | <a name="input_dev01_network_internet_gateway_enabled"></a> [dev01\_network\_internet\_gateway\_enabled](#input\_dev01\_network\_internet\_gateway\_enabled) | Describes if the Internet Gateway is enabled upon creation or not | `bool` | `true` | no |
 | <a name="input_dev01_network_is_private_subnet_private"></a> [dev01\_network\_is\_private\_subnet\_private](#input\_dev01\_network\_is\_private\_subnet\_private) | Describes if the subnet is private or not | `bool` | `true` | no |
 | <a name="input_dev01_network_is_public_subnet_private"></a> [dev01\_network\_is\_public\_subnet\_private](#input\_dev01\_network\_is\_public\_subnet\_private) | Describes if the subnet is private or not | `bool` | `false` | no |
-| <a name="input_dev01_network_is_spoke"></a> [dev01\_network\_is\_spoke](#input\_dev01\_network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `true` | no |
+| <a name="input_dev01_network_is_spoke"></a> [dev01\_network\_is\_spoke](#input\_dev01\_network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `false` | no |
 | <a name="input_dev01_network_nat_gateway_display_name"></a> [dev01\_network\_nat\_gateway\_display\_name](#input\_dev01\_network\_nat\_gateway\_display\_name) | NAT Gateway Display Name | `any` | n/a | yes |
 | <a name="input_dev01_network_private_route_table_display_name"></a> [dev01\_network\_private\_route\_table\_display\_name](#input\_dev01\_network\_private\_route\_table\_display\_name) | Private Route Table Display Name. | `any` | n/a | yes |
 | <a name="input_dev01_network_private_route_table_nat_route_rules_description"></a> [dev01\_network\_private\_route\_table\_nat\_route\_rules\_description](#input\_dev01\_network\_private\_route\_table\_nat\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"NAT Gateway default route"` | no |
@@ -645,6 +695,54 @@ The following file defines all the variables used in this system. For details on
 | <a name="input_prd01_network_vcn_display_name"></a> [prd01\_network\_vcn\_display\_name](#input\_prd01\_network\_vcn\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
 | <a name="input_prd01_network_vcn_network_compartment_name"></a> [prd01\_network\_vcn\_network\_compartment\_name](#input\_prd01\_network\_vcn\_network\_compartment\_name) | Name of the compartment where the VCN will be created | `any` | n/a | yes |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | Private Key Absolute path location where terraform is executed | `any` | n/a | yes |
+| <a name="input_qa01_network_custom_search_domain"></a> [qa01\_network\_custom\_search\_domain](#input\_qa01\_network\_custom\_search\_domain) | A domain name where the custom option can be applied | `any` | n/a | yes |
+| <a name="input_qa01_network_dhcp_options_display_name"></a> [qa01\_network\_dhcp\_options\_display\_name](#input\_qa01\_network\_dhcp\_options\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_qa01_network_internet_gateway_display_name"></a> [qa01\_network\_internet\_gateway\_display\_name](#input\_qa01\_network\_internet\_gateway\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_qa01_network_internet_gateway_enabled"></a> [qa01\_network\_internet\_gateway\_enabled](#input\_qa01\_network\_internet\_gateway\_enabled) | Describes if the Internet Gateway is enabled upon creation or not | `bool` | `true` | no |
+| <a name="input_qa01_network_is_private_subnet_private"></a> [qa01\_network\_is\_private\_subnet\_private](#input\_qa01\_network\_is\_private\_subnet\_private) | Describes if the subnet is private or not | `bool` | `true` | no |
+| <a name="input_qa01_network_is_public_subnet_private"></a> [qa01\_network\_is\_public\_subnet\_private](#input\_qa01\_network\_is\_public\_subnet\_private) | Describes if the subnet is private or not | `bool` | `false` | no |
+| <a name="input_qa01_network_is_spoke"></a> [qa01\_network\_is\_spoke](#input\_qa01\_network\_is\_spoke) | Boolean that describes if the compartment is a spoke or not | `bool` | `false` | no |
+| <a name="input_qa01_network_nat_gateway_display_name"></a> [qa01\_network\_nat\_gateway\_display\_name](#input\_qa01\_network\_nat\_gateway\_display\_name) | NAT Gateway Display Name | `any` | n/a | yes |
+| <a name="input_qa01_network_private_route_table_display_name"></a> [qa01\_network\_private\_route\_table\_display\_name](#input\_qa01\_network\_private\_route\_table\_display\_name) | Private Route Table Display Name. | `any` | n/a | yes |
+| <a name="input_qa01_network_private_route_table_nat_route_rules_description"></a> [qa01\_network\_private\_route\_table\_nat\_route\_rules\_description](#input\_qa01\_network\_private\_route\_table\_nat\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"NAT Gateway default route"` | no |
+| <a name="input_qa01_network_private_route_table_nat_route_rules_destination"></a> [qa01\_network\_private\_route\_table\_nat\_route\_rules\_destination](#input\_qa01\_network\_private\_route\_table\_nat\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_qa01_network_private_route_table_nat_route_rules_destination_type"></a> [qa01\_network\_private\_route\_table\_nat\_route\_rules\_destination\_type](#input\_qa01\_network\_private\_route\_table\_nat\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_qa01_network_private_route_table_svc_route_rules_description"></a> [qa01\_network\_private\_route\_table\_svc\_route\_rules\_description](#input\_qa01\_network\_private\_route\_table\_svc\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"Service Gateway default route"` | no |
+| <a name="input_qa01_network_private_route_table_svc_route_rules_destination_type"></a> [qa01\_network\_private\_route\_table\_svc\_route\_rules\_destination\_type](#input\_qa01\_network\_private\_route\_table\_svc\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"SERVICE_CIDR_BLOCK"` | no |
+| <a name="input_qa01_network_private_security_list_display_name"></a> [qa01\_network\_private\_security\_list\_display\_name](#input\_qa01\_network\_private\_security\_list\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_qa01_network_private_security_list_egress_security_rules_description"></a> [qa01\_network\_private\_security\_list\_egress\_security\_rules\_description](#input\_qa01\_network\_private\_security\_list\_egress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All egress rule for all protocols and IP Addresses"` | no |
+| <a name="input_qa01_network_private_security_list_egress_security_rules_destination"></a> [qa01\_network\_private\_security\_list\_egress\_security\_rules\_destination](#input\_qa01\_network\_private\_security\_list\_egress\_security\_rules\_destination) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet originating from the instance can go to. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_qa01_network_private_security_list_egress_security_rules_destination_type"></a> [qa01\_network\_private\_security\_list\_egress\_security\_rules\_destination\_type](#input\_qa01\_network\_private\_security\_list\_egress\_security\_rules\_destination\_type) | Optional) (Updatable) Type of destination for the rule. The default is CIDR\_BLOCK | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_qa01_network_private_security_list_egress_security_rules_protocol"></a> [qa01\_network\_private\_security\_list\_egress\_security\_rules\_protocol](#input\_qa01\_network\_private\_security\_list\_egress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_qa01_network_private_security_list_egress_security_rules_stateless"></a> [qa01\_network\_private\_security\_list\_egress\_security\_rules\_stateless](#input\_qa01\_network\_private\_security\_list\_egress\_security\_rules\_stateless) | (Optional) (Updatable) A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if egress traffic allows TCP destination port 80, there should be an ingress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_qa01_network_private_security_list_ingress_security_rules_description"></a> [qa01\_network\_private\_security\_list\_ingress\_security\_rules\_description](#input\_qa01\_network\_private\_security\_list\_ingress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All traffic in for private security List"` | no |
+| <a name="input_qa01_network_private_security_list_ingress_security_rules_protocol"></a> [qa01\_network\_private\_security\_list\_ingress\_security\_rules\_protocol](#input\_qa01\_network\_private\_security\_list\_ingress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_qa01_network_private_security_list_ingress_security_rules_source"></a> [qa01\_network\_private\_security\_list\_ingress\_security\_rules\_source](#input\_qa01\_network\_private\_security\_list\_ingress\_security\_rules\_source) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet coming into the instance can come from. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_qa01_network_private_security_list_ingress_security_rules_source_type"></a> [qa01\_network\_private\_security\_list\_ingress\_security\_rules\_source\_type](#input\_qa01\_network\_private\_security\_list\_ingress\_security\_rules\_source\_type) | Type of source for the rule. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_qa01_network_private_security_list_ingress_security_rules_stateless"></a> [qa01\_network\_private\_security\_list\_ingress\_security\_rules\_stateless](#input\_qa01\_network\_private\_security\_list\_ingress\_security\_rules\_stateless) | A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if ingress traffic allows TCP destination port 80, there should be an egress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_qa01_network_private_subnet_cidr_block_map"></a> [qa01\_network\_private\_subnet\_cidr\_block\_map](#input\_qa01\_network\_private\_subnet\_cidr\_block\_map) | Map of CIDR Blocks associated to private subnets and it's corresponding names | `map(any)` | n/a | yes |
+| <a name="input_qa01_network_public_route_table_display_name"></a> [qa01\_network\_public\_route\_table\_display\_name](#input\_qa01\_network\_public\_route\_table\_display\_name) | Public Route Table Display Name. | `any` | n/a | yes |
+| <a name="input_qa01_network_public_route_table_inet_route_rules_description"></a> [qa01\_network\_public\_route\_table\_inet\_route\_rules\_description](#input\_qa01\_network\_public\_route\_table\_inet\_route\_rules\_description) | Description of Route Table Entry for Internet Gateway | `string` | `"Route entry for Internet Gateway"` | no |
+| <a name="input_qa01_network_public_route_table_inet_route_rules_destination"></a> [qa01\_network\_public\_route\_table\_inet\_route\_rules\_destination](#input\_qa01\_network\_public\_route\_table\_inet\_route\_rules\_destination) | private\_route\_table\_route\_rules\_destination | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_qa01_network_public_route_table_inet_route_rules_destination_type"></a> [qa01\_network\_public\_route\_table\_inet\_route\_rules\_destination\_type](#input\_qa01\_network\_public\_route\_table\_inet\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_qa01_network_public_route_table_svc_route_rules_description"></a> [qa01\_network\_public\_route\_table\_svc\_route\_rules\_description](#input\_qa01\_network\_public\_route\_table\_svc\_route\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"Service Gateway default route"` | no |
+| <a name="input_qa01_network_public_route_table_svc_route_rules_destination_type"></a> [qa01\_network\_public\_route\_table\_svc\_route\_rules\_destination\_type](#input\_qa01\_network\_public\_route\_table\_svc\_route\_rules\_destination\_type) | (Optional) (Updatable) Type of destination for the rule. Required if you provide a destination. | `string` | `"SERVICE_CIDR_BLOCK"` | no |
+| <a name="input_qa01_network_public_security_list_display_name"></a> [qa01\_network\_public\_security\_list\_display\_name](#input\_qa01\_network\_public\_security\_list\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_qa01_network_public_security_list_egress_security_rules_description"></a> [qa01\_network\_public\_security\_list\_egress\_security\_rules\_description](#input\_qa01\_network\_public\_security\_list\_egress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All egress rule for all protocols and IP Addresses"` | no |
+| <a name="input_qa01_network_public_security_list_egress_security_rules_destination"></a> [qa01\_network\_public\_security\_list\_egress\_security\_rules\_destination](#input\_qa01\_network\_public\_security\_list\_egress\_security\_rules\_destination) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet originating from the instance can go to. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_qa01_network_public_security_list_egress_security_rules_destination_type"></a> [qa01\_network\_public\_security\_list\_egress\_security\_rules\_destination\_type](#input\_qa01\_network\_public\_security\_list\_egress\_security\_rules\_destination\_type) | Optional) (Updatable) Type of destination for the rule. The default is CIDR\_BLOCK | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_qa01_network_public_security_list_egress_security_rules_protocol"></a> [qa01\_network\_public\_security\_list\_egress\_security\_rules\_protocol](#input\_qa01\_network\_public\_security\_list\_egress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_qa01_network_public_security_list_egress_security_rules_stateless"></a> [qa01\_network\_public\_security\_list\_egress\_security\_rules\_stateless](#input\_qa01\_network\_public\_security\_list\_egress\_security\_rules\_stateless) | (Optional) (Updatable) A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if egress traffic allows TCP destination port 80, there should be an ingress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_qa01_network_public_security_list_ingress_security_rules_description"></a> [qa01\_network\_public\_security\_list\_ingress\_security\_rules\_description](#input\_qa01\_network\_public\_security\_list\_ingress\_security\_rules\_description) | (Optional) (Updatable) An optional description of your choice for the rule. | `string` | `"All traffic in for Public Security List"` | no |
+| <a name="input_qa01_network_public_security_list_ingress_security_rules_protocol"></a> [qa01\_network\_public\_security\_list\_ingress\_security\_rules\_protocol](#input\_qa01\_network\_public\_security\_list\_ingress\_security\_rules\_protocol) | (Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58). | `string` | `"all"` | no |
+| <a name="input_qa01_network_public_security_list_ingress_security_rules_source"></a> [qa01\_network\_public\_security\_list\_ingress\_security\_rules\_source](#input\_qa01\_network\_public\_security\_list\_ingress\_security\_rules\_source) | (Required) (Updatable) Conceptually, this is the range of IP addresses that a packet coming into the instance can come from. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_qa01_network_public_security_list_ingress_security_rules_source_type"></a> [qa01\_network\_public\_security\_list\_ingress\_security\_rules\_source\_type](#input\_qa01\_network\_public\_security\_list\_ingress\_security\_rules\_source\_type) | Type of source for the rule. | `string` | `"CIDR_BLOCK"` | no |
+| <a name="input_qa01_network_public_security_list_ingress_security_rules_stateless"></a> [qa01\_network\_public\_security\_list\_ingress\_security\_rules\_stateless](#input\_qa01\_network\_public\_security\_list\_ingress\_security\_rules\_stateless) | A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if ingress traffic allows TCP destination port 80, there should be an egress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic. | `bool` | `true` | no |
+| <a name="input_qa01_network_public_subnet_cidr_block_map"></a> [qa01\_network\_public\_subnet\_cidr\_block\_map](#input\_qa01\_network\_public\_subnet\_cidr\_block\_map) | Map of CIDR Blocks associated to private subnets and it's corresponding names | `map(any)` | n/a | yes |
+| <a name="input_qa01_network_service_gateway_display_name"></a> [qa01\_network\_service\_gateway\_display\_name](#input\_qa01\_network\_service\_gateway\_display\_name) | Service Gateway Display Name | `any` | n/a | yes |
+| <a name="input_qa01_network_vcn_cidr_blocks"></a> [qa01\_network\_vcn\_cidr\_blocks](#input\_qa01\_network\_vcn\_cidr\_blocks) | The list of one or more IPv4 CIDR blocks for the VCN | `any` | n/a | yes |
+| <a name="input_qa01_network_vcn_display_name"></a> [qa01\_network\_vcn\_display\_name](#input\_qa01\_network\_vcn\_display\_name) | (Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information. | `any` | n/a | yes |
+| <a name="input_qa01_network_vcn_network_compartment_name"></a> [qa01\_network\_vcn\_network\_compartment\_name](#input\_qa01\_network\_vcn\_network\_compartment\_name) | Name of the compartment where the VCN will be created | `any` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Target region where artifacts are going to be created | `any` | n/a | yes |
 | <a name="input_tenancy_ocid"></a> [tenancy\_ocid](#input\_tenancy\_ocid) | OCID of tenancy | `any` | n/a | yes |
 | <a name="input_user_ocid"></a> [user\_ocid](#input\_user\_ocid) | User OCID in tenancy. Currently hardcoded to user denny.alquinta@oracle.com | `any` | n/a | yes |
@@ -657,6 +755,7 @@ The following file defines all the variables used in this system. For details on
 | <a name="output_hub01_drg"></a> [hub01\_drg](#output\_hub01\_drg) | Output of hub01 DRG |
 | <a name="output_hub01_network"></a> [hub01\_network](#output\_hub01\_network) | VCN of hub01 |
 | <a name="output_prd01_network"></a> [prd01\_network](#output\_prd01\_network) | VCN of prd01 |
+| <a name="output_qa01_network"></a> [qa01\_network](#output\_qa01\_network) | VCN of qa01 |
 
 
 
