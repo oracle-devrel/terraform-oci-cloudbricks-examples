@@ -29,26 +29,6 @@ output "dev01_network" {
   value       = module.dev01_network.vcn
 }
 
-output "lpg_hub01" {
-  description = "Output of hub01 LPGs"
-  value       = module.hub01_network.local_peering_gateways
-}
-
-output "lpg_prd01" {
-  description = "Output of prd01 LPGs"
-  value       = module.prd01_network.local_peering_gateways
-}
-
-output "lpg_hom01" {
-  description = "Output of hom01 LPGs"
-  value       = module.hom01_network.local_peering_gateways
-}
-
-output "lpg_dev01" {
-  description = "Output of dev01 LPGs"
-  value       = module.dev01_network.local_peering_gateways
-}
-
 output "hub01_drg" {
   description = "Output of hub01 DRG"
   value       = module.hub01_network.dynamic_routing_gateway
