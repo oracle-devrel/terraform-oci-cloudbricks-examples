@@ -551,6 +551,274 @@ variable "prd01_network_is_spoke" {
 /************ Dynamic Routing VARIABLES **************/
 /************ prd01 NETWORK VARIABLES **************/
 
+/************ qa01 NETWORK VARIABLES **************/
+/********** VCN Variables **********/
+variable "qa01_network_vcn_cidr_blocks" {
+  description = "The list of one or more IPv4 CIDR blocks for the VCN"
+}
+
+variable "qa01_network_vcn_display_name" {
+  description = "(Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information."
+}
+
+variable "qa01_network_vcn_network_compartment_name" {
+  description = "Name of the compartment where the VCN will be created"
+}
+/********** VCN Variables **********/
+
+/********** DHCP Options Variables **********/
+variable "qa01_network_dhcp_options_display_name" {
+  description = "(Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information."
+}
+/********** DHCP Options Variables **********/
+
+/********** Private Security List Variables **********/
+variable "qa01_network_private_security_list_display_name" {
+  description = "(Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information."
+}
+
+variable "qa01_network_custom_search_domain" {
+  description = "A domain name where the custom option can be applied"
+
+}
+
+variable "qa01_network_private_security_list_egress_security_rules_destination" {
+  description = "(Required) (Updatable) Conceptually, this is the range of IP addresses that a packet originating from the instance can go to."
+  default     = "0.0.0.0/0"
+}
+
+variable "qa01_network_private_security_list_egress_security_rules_protocol" {
+  description = "(Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58)."
+  default     = "all"
+}
+
+variable "qa01_network_private_security_list_egress_security_rules_description" {
+  description = "(Optional) (Updatable) An optional description of your choice for the rule."
+  default     = "All egress rule for all protocols and IP Addresses"
+}
+
+variable "qa01_network_private_security_list_egress_security_rules_destination_type" {
+  description = "Optional) (Updatable) Type of destination for the rule. The default is CIDR_BLOCK"
+  default     = "CIDR_BLOCK"
+}
+
+variable "qa01_network_private_security_list_egress_security_rules_stateless" {
+  description = "(Optional) (Updatable) A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if egress traffic allows TCP destination port 80, there should be an ingress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic."
+  default     = true
+}
+
+variable "qa01_network_private_security_list_ingress_security_rules_protocol" {
+  description = "(Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58)."
+  default     = "all"
+}
+
+variable "qa01_network_private_security_list_ingress_security_rules_source" {
+  description = "(Required) (Updatable) Conceptually, this is the range of IP addresses that a packet coming into the instance can come from."
+  default     = "0.0.0.0/0"
+}
+
+variable "qa01_network_private_security_list_ingress_security_rules_description" {
+  description = "(Optional) (Updatable) An optional description of your choice for the rule."
+  default     = "All traffic in for private security List"
+}
+
+variable "qa01_network_private_security_list_ingress_security_rules_source_type" {
+  description = "Type of source for the rule."
+  default     = "CIDR_BLOCK"
+}
+
+variable "qa01_network_private_security_list_ingress_security_rules_stateless" {
+  description = " A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if ingress traffic allows TCP destination port 80, there should be an egress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic."
+  default     = true
+}
+
+/********** Private Security List Variables **********/
+
+/********** Public Security List Variables **********/
+variable "qa01_network_public_security_list_display_name" {
+  description = "(Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information."
+}
+
+variable "qa01_network_public_security_list_egress_security_rules_destination" {
+  description = "(Required) (Updatable) Conceptually, this is the range of IP addresses that a packet originating from the instance can go to."
+  default     = "0.0.0.0/0"
+}
+
+variable "qa01_network_public_security_list_egress_security_rules_protocol" {
+  description = "(Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58)."
+  default     = "all"
+}
+
+variable "qa01_network_public_security_list_egress_security_rules_description" {
+  description = "(Optional) (Updatable) An optional description of your choice for the rule."
+  default     = "All egress rule for all protocols and IP Addresses"
+}
+
+variable "qa01_network_public_security_list_egress_security_rules_destination_type" {
+  description = "Optional) (Updatable) Type of destination for the rule. The default is CIDR_BLOCK"
+  default     = "CIDR_BLOCK"
+}
+
+variable "qa01_network_public_security_list_egress_security_rules_stateless" {
+  description = "(Optional) (Updatable) A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if egress traffic allows TCP destination port 80, there should be an ingress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic."
+  default     = true
+}
+
+variable "qa01_network_public_security_list_ingress_security_rules_protocol" {
+  description = "(Required) (Updatable) The transport protocol. Specify either all or an IPv4 protocol number as defined in Protocol Numbers. Options are supported only for ICMP (1), TCP (6), UDP (17), and ICMPv6 (58)."
+  default     = "all"
+}
+
+variable "qa01_network_public_security_list_ingress_security_rules_source" {
+  description = "(Required) (Updatable) Conceptually, this is the range of IP addresses that a packet coming into the instance can come from."
+  default     = "0.0.0.0/0"
+}
+
+variable "qa01_network_public_security_list_ingress_security_rules_description" {
+  description = "(Optional) (Updatable) An optional description of your choice for the rule."
+  default     = "All traffic in for Public Security List"
+}
+
+variable "qa01_network_public_security_list_ingress_security_rules_source_type" {
+  description = "Type of source for the rule."
+  default     = "CIDR_BLOCK"
+}
+
+variable "qa01_network_public_security_list_ingress_security_rules_stateless" {
+  description = " A stateless rule allows traffic in one direction. Remember to add a corresponding stateless rule in the other direction if you need to support bidirectional traffic. For example, if ingress traffic allows TCP destination port 80, there should be an egress rule to allow TCP source port 80. Defaults to false, which means the rule is stateful and a corresponding rule is not necessary for bidirectional traffic."
+  default     = true
+}
+
+/********** Public Security List Variables **********/
+
+
+/********** Private Route Table Variables **********/
+variable "qa01_network_private_route_table_display_name" {
+  description = "Private Route Table Display Name."
+}
+/********** Private Route Table Variables **********/
+
+/********** Public Route Table Variables **********/
+variable "qa01_network_public_route_table_display_name" {
+  description = "Public Route Table Display Name."
+}
+/********** Public Route Table Variables **********/
+
+
+
+/********** Private Subnet Variables **********/
+variable "qa01_network_private_subnet_cidr_block_map" {
+  type        = map(any)
+  description = "Map of CIDR Blocks associated to private subnets and it's corresponding names"
+}
+
+variable "qa01_network_is_private_subnet_private" {
+  description = "Describes if the subnet is private or not"
+  default     = true
+}
+/********** Private Subnet Variables **********/
+
+/********** Public Subnet Variables **********/
+variable "qa01_network_public_subnet_cidr_block_map" {
+  type        = map(any)
+  description = "Map of CIDR Blocks associated to private subnets and it's corresponding names"
+}
+
+variable "qa01_network_is_public_subnet_private" {
+  description = "Describes if the subnet is private or not"
+  default     = false
+}
+/********** Public Subnet Variables **********/
+
+/********** NAT Gateway Variables **********/
+
+variable "qa01_network_nat_gateway_display_name" {
+  description = "NAT Gateway Display Name"
+}
+variable "qa01_network_private_route_table_nat_route_rules_description" {
+  description = "(Optional) (Updatable) An optional description of your choice for the rule."
+  default     = "NAT Gateway default route"
+}
+
+variable "qa01_network_private_route_table_nat_route_rules_destination" {
+  description = "private_route_table_route_rules_destination"
+  default     = "0.0.0.0/0"
+}
+
+variable "qa01_network_private_route_table_nat_route_rules_destination_type" {
+  description = "(Optional) (Updatable) Type of destination for the rule. Required if you provide a destination."
+  default     = "CIDR_BLOCK"
+}
+
+/********** NAT Gateway Variables **********/
+
+/********** Private Service Gateway Variables **********/
+variable "qa01_network_service_gateway_display_name" {
+  description = "Service Gateway Display Name"
+}
+
+
+variable "qa01_network_private_route_table_svc_route_rules_description" {
+  description = "(Optional) (Updatable) An optional description of your choice for the rule."
+  default     = "Service Gateway default route"
+}
+
+variable "qa01_network_private_route_table_svc_route_rules_destination_type" {
+  description = "(Optional) (Updatable) Type of destination for the rule. Required if you provide a destination."
+  default     = "SERVICE_CIDR_BLOCK"
+}
+/********** Private Service Gateway Variables **********/
+
+/********** Public Service Gateway Variables **********/
+
+variable "qa01_network_public_route_table_svc_route_rules_description" {
+  description = "(Optional) (Updatable) An optional description of your choice for the rule."
+  default     = "Service Gateway default route"
+}
+
+variable "qa01_network_public_route_table_svc_route_rules_destination_type" {
+  description = "(Optional) (Updatable) Type of destination for the rule. Required if you provide a destination."
+  default     = "SERVICE_CIDR_BLOCK"
+}
+/********** Public Service Gateway Variables **********/
+
+
+
+
+/********** Public Internet Gateway Variables **********/
+variable "qa01_network_internet_gateway_enabled" {
+  description = "Describes if the Internet Gateway is enabled upon creation or not"
+  default     = true
+}
+
+variable "qa01_network_internet_gateway_display_name" {
+  description = "(Optional) (Updatable) A user-friendly name. Does not have to be unique, and it's changeable. Avoid entering confidential information."
+}
+
+variable "qa01_network_public_route_table_inet_route_rules_description" {
+  description = "Description of Route Table Entry for Internet Gateway"
+  default     = "Route entry for Internet Gateway"
+}
+
+variable "qa01_network_public_route_table_inet_route_rules_destination" {
+  description = "private_route_table_route_rules_destination"
+  default     = "0.0.0.0/0"
+}
+
+variable "qa01_network_public_route_table_inet_route_rules_destination_type" {
+  description = "(Optional) (Updatable) Type of destination for the rule. Required if you provide a destination."
+  default     = "CIDR_BLOCK"
+}
+
+/********** Public Internet Gateway Variables **********/
+/********** Dynamic Routing Gateway Variables **********/
+variable "qa01_network_is_spoke" {
+  description = "Boolean that describes if the compartment is a spoke or not"
+  default     = false
+}
+/********** Dynamic Routing Gateway Variables **********/
+/************ qa01 NETWORK VARIABLES **************/
+
 /************ dev01 NETWORK VARIABLES **************/
 /********** VCN Variables **********/
 variable "dev01_network_vcn_cidr_blocks" {

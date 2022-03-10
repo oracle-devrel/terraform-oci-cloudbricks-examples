@@ -189,7 +189,7 @@ dev01_network_service_gateway_display_name        = "dev01_SVC_GW"
 dev01_network_nat_gateway_display_name            = "dev01_NAT_GW"
 dev01_network_internet_gateway_display_name       = "dev01_INET_GW"
 dev01_network_is_spoke                            = true
-######################################## prd01 NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ###################
+######################################## dev01 NETWORK SPECIFIC VARIABLES SPECIFIC VARIABLES ###################
 
 ```
 
