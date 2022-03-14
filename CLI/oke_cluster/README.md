@@ -165,34 +165,34 @@ The following file defines all the variables used in this system. For details on
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="oke01_instance_compartment_name"></a> [oke01\_instance\_compartment\_name](#input\_backendset01\_backend\_port) | Defines the compartment name where the infrastructure will be created. | `string` | `""` | yes |
-| <a name="oke01_network_compartment_name"></a> [oke01\_network\_compartment\_name](#input\_backendset01\_backend\_set\_is\_preserve\_source) | Defines the compartment where the Network is currently located. | `string` | n/a | yes |
-| <a name="oke01_vcn_display_name"></a> [oke01_vcn_display_name](#input\_backendset01\_backend\_set\_name) | Defines the display name of the VCN where the cluster will allocate LBaaS Ingress Controller components. | `any` | n/a | yes |
-| <a name="oke01_lbaas_network_subnet_name"></a> [oke01\_lbaas_network\_subnet\_name](#input\_backendset01\_balanced\_artifact) | Describes the display name of the subnet where LBaaS Components will be alocated by resource orchestrator. | `any` |  n/a | yes |
-| <a name="oke01_endpoint_subnet_name"></a> [oke01\_endpoint\_subnet\_name](#input\_backendset01\_certificate\_name) | Determines the subnet where the control plane API will be located at. | `string` | `""` | no |
-| <a name="oke01_endpoint_is_public_ip_enabled"></a> [oke01\_endpoint\_is\_public\_ip\_enabled](#input\_backendset01\_certificate\_passphrase) | Determines if OKE Control Plane is located on public or private subnet. | `any` | n/a | yes |
-| <a name="oke01_availability_domain_map"></a> [oke01\_availability\_domain\_map](#input\_backendset01\_certificate\_private\_key) | The name of the availability domain in which this node is placed. | `map(any)` | n/a | yes |
-| <a name="oke01_cluster_name"></a> [oke01\_cluster\_name](#input\_backendset01\_check\_protocol) | Defines the K8 Cluster Name | `any` | n/a | yes |
-| <a name="oke01_k8s_version"></a> [oke01\_k8s\_version](#input\_backendset01\_checkport) | Declares K8 Version| `any` | n/a | yes |
-| <a name="oke01_k8s_dashboard_enabled"></a> [oke01\_k8s\_dashboard\_enabled](#input\_backendset01\_is\_app\_bes) | Defines if Kubernetes Dashboard is enabled for cluster. | `bool` | `false` | no |
-| <a name="oke01_k8s_tiller_enabled"></a> [oke01\_k8s\_tiller\_enabled](#input\_backendset01\_is\_instancepool\_bes) | Defines if Helm (Tiller) is enabled in cluster. | `bool` | `false` | no |
-| <a name="node01_ssh_public_key"></a> [node01\_ssh\_public\_key](#input\_backendset01\_is\_network\_bes) | Defines SSH Public Key to be used in order to remotely connect to compute nodepool. | `string` | n/a | yes |
-| <a name="node01_ssh_private_key"></a> [node01\_ssh\_private\_key](#input\_backendset01\_lbaas\_bes\_single\_instance\_compartment\_name) | Private key to log into machine. | `any` | n/a | yes |
-| <a name="node01_ssh_public_is_path"></a> [node01\_ssh\_public\_is\_path](#input\_backendset01\_lbaas\_bes\_single\_network\_compartment\_name) | Describes if SSH Public Key is located on file or inside code. | `bool` | `false` | no |
-| <a name="node01_ssh_private_is_path"></a> [node01\_ssh\_private\_is\_path](#input\_backendset01\_lbaas\_ca\_cert) | Describes if SSH Private Key is located on file or inside code. | `bool` | `false` | no |
-| <a name="node01_oke_cluster_compartment_name"></a> [node01\_oke\_cluster\_compartment\_name](#input\_backendset01\_lbaas\_cert\_is\_path) | Defines the compartment name where the OKE cluster was created. | `string` | `""` | no |
-| <a name="node01_oke_network_compartment_name"></a> [node01\_oke\_network\_compartment\_name](#input\_backendset01\_lbaas\_policy) | Defines the compartment where the Network is currently located. | `any` | n/a | yes |
-| <a name="node01_oke_availability_domain_map"></a> [node01\_oke\_availability\_domain_map](#input\_backendset01\_lbaas\_pub\_cert\_is\_path) | The name of the availability domain in which this node is placed. | `map(any)` | n/a | yes |
-| <a name="node01_oke_cluster_name"></a> [node01\_oke\_cluster\_name](#input\_backendset01\_lbaas\_public\_cert) | OKE cluster display name. | `any` | n/a | yes |
-| <a name="node01_oke_nodepool_network_subnet_name"></a> [node01\_oke\_nodepool\_network\_subnet\_name](#input\_backendset01\_lbaas\_pvt\_key\_is\_path) | Defines the specific Subnet to be used for this resource. | `any` | n/a | yes |
-| <a name="node01_k8s_version"></a> [node01\_k8s\_version](#input\_backendset01\_listen\_port) | Declares K8 Version. | `any` | n/a | yes |
-| <a name="node01_node_pool_name"></a> [node01\_node\_pool\_name](#input\_backendset01\_listen\_protocol) | Node Pool Name for K8 Cluster. | `any` | n/a | yes |
-| <a name="node01_node_pool_shape"></a> [node01\_node\_pool\_shape](#input\_backendset01\_listener\_name) | 	Shape to be used in node pool members. | `any` | n/a | yes |
-| <a name="node01_is_flex_shape"></a> [node01\_is\_flex\_shape](#input\_backendset01\_network\_subnet\_name) | Boolean that describes if the shape is flex or not. | `bool` | `false` | no |
-| <a name="node01_nodepool_shape_config_ocpus"></a> [node01\_nodepool\_shape\_config\_ocpus](#input\_backendset01\_routing\_policy\_actions\_name) | (Updatable) The total number of OCPUs available to the nodepool. | `string` | `""` | no |
-| <a name="node01_nodepool_shape_config_memory_in_gbs"></a> [node01\_nodepool\_shape\_config\_memory\_in_gbs](#input\_backendset01\_routing\_policy\_condition\_language\_version) | (Updatable) The total amount of memory available to the nodepool, in gigabytes. | `string` | `""` | no |
-| <a name="node01_number_of_nodes"></a> [node01\_number\_of\_nodes](#input\_backendset01\_routing\_policy\_conditions) |Number of Nodes inside Node Pool | `any` | n/a | yes |
-| <a name="node01_k8s_label_map"></a> [node01\_k8s\_label\_map](#input\_backendset01\_routing\_policy\_name) | Define the list of Kubernetes Labels to apply in nodepool. | `map(any)` | n/a | yes |
+| <a name="input_oke01_instance_compartment_name"></a> [oke01\_instance\_compartment\_name](#input\_oke01\_instance\_compartment\_name) | Defines the compartment name where the infrastructure will be created. | `string` | `""` | yes |
+| <a name="input_oke01_network_compartment_name"></a> [oke01\_network\_compartment\_name](#input\_oke01\_network\_compartment\_name) | Defines the compartment where the Network is currently located. | `string` | n/a | yes |
+| <a name="input_oke01_vcn_display_name"></a> [oke01\_vcn\_display\_name](#input\_oke01\_vcn\_display\_nam) | Defines the display name of the VCN where the cluster will allocate LBaaS Ingress Controller components. | `any` | n/a | yes |
+| <a name="input_oke01_lbaas_network_subnet_name"></a> [oke01\_lbaas_network\_subnet\_name](#input\_oke01\_lbaas_network\_subnet\_name) | Describes the display name of the subnet where LBaaS Components will be alocated by resource orchestrator. | `any` |  n/a | yes |
+| <a name="input_oke01_endpoint_subnet_name"></a> [oke01\_endpoint\_subnet\_name](#input\_oke01\_endpoint\_subnet\_name) | Determines the subnet where the control plane API will be located at. | `string` | `""` | no |
+| <a name="input_oke01_endpoint_is_public_ip_enabled"></a> [oke01\_endpoint\_is\_public\_ip\_enabled](#input\_oke01\_endpoint\_is\_public\_ip\_enabled) | Determines if OKE Control Plane is located on public or private subnet. | `any` | n/a | yes |
+| <a name="input_oke01_availability_domain_map"></a> [oke01\_availability\_domain\_map](#input\_oke01\_availability\_domain\_map) | The name of the availability domain in which this node is placed. | `map(any)` | n/a | yes |
+| <a name="input_oke01_cluster_name"></a> [oke01\_cluster\_name](#input\_oke01\_cluster\_name) | Defines the K8 Cluster Name | `any` | n/a | yes |
+| <a name="input_oke01_k8s_version"></a> [oke01\_k8s\_version](#input\_oke01\_k8s\_version) | Declares K8 Version| `any` | n/a | yes |
+| <a name="input_oke01_k8s_dashboard_enabled"></a> [oke01\_k8s\_dashboard\_enabled](#input\_oke01\_k8s\_dashboard\_enabled) | Defines if Kubernetes Dashboard is enabled for cluster. | `bool` | `false` | no |
+| <a name="input_oke01_k8s_tiller_enabled"></a> [oke01\_k8s\_tiller\_enabled](#input\_oke01\_k8s\_tiller\_enabled) | Defines if Helm (Tiller) is enabled in cluster. | `bool` | `false` | no |
+| <a name="input_node01_ssh_public_key"></a> [node01\_ssh\_public\_key](#input\_node01\_ssh\_public\_key) | Defines SSH Public Key to be used in order to remotely connect to compute nodepool. | `string` | n/a | yes |
+| <a name="input_node01_ssh_private_key"></a> [node01\_ssh\_private\_key](#input\_node01\_ssh\_private\_key) | Private key to log into machine. | `any` | n/a | yes |
+| <a name="input_node01_ssh_public_is_path"></a> [node01\_ssh\_public\_is\_path](#input\_node01\_ssh\_public\_is\_path) | Describes if SSH Public Key is located on file or inside code. | `bool` | `false` | no |
+| <a name="input_node01_ssh_private_is_path"></a> [node01\_ssh\_private\_is\_path](#input\_node01_ssh_private_is_path) | Describes if SSH Private Key is located on file or inside code. | `bool` | `false` | no |
+| <a name="input_node01_oke_cluster_compartment_name"></a> [node01\_oke\_cluster\_compartment\_name](#input\_node01\_oke\_cluster\_compartment\_name) | Defines the compartment name where the OKE cluster was created. | `string` | `""` | no |
+| <a name="input_node01_oke_network_compartment_name"></a> [node01\_oke\_network\_compartment\_name](#input\_node01\_oke\_network\_compartment\_name) | Defines the compartment where the Network is currently located. | `any` | n/a | yes |
+| <a name="input_node01_oke_availability_domain_map"></a> [node01\_oke\_availability\_domain_map](#input\_node01\_oke\_availability\_domain_map) | The name of the availability domain in which this node is placed. | `map(any)` | n/a | yes |
+| <a name="input_node01_oke_cluster_name"></a> [node01\_oke\_cluster\_name](#input\_node01\_oke\_cluster\_name) | OKE cluster display name. | `any` | n/a | yes |
+| <a name="input_node01_oke_nodepool_network_subnet_name"></a> [node01\_oke\_nodepool\_network\_subnet\_name](#input\_node01\_oke\_nodepool\_network\_subnet\_name) | Defines the specific Subnet to be used for this resource. | `any` | n/a | yes |
+| <a name="input_node01_k8s_version"></a> [node01\_k8s\_version](#input\_node01\_k8s\_version) | Declares K8 Version. | `any` | n/a | yes |
+| <a name="input_node01_node_pool_name"></a> [node01\_node\_pool\_name](#input\_node01\_node\_pool\_name) | Node Pool Name for K8 Cluster. | `any` | n/a | yes |
+| <a name="input_node01_node_pool_shape"></a> [node01\_node\_pool\_shape](#input\_node01_node_pool_shape) | 	Shape to be used in node pool members. | `any` | n/a | yes |
+| <a name="input_node01_is_flex_shape"></a> [node01\_is\_flex\_shape](#input\_node01\_is\_flex\_shape) | Boolean that describes if the shape is flex or not. | `bool` | `false` | no |
+| <a name="input_node01_nodepool_shape_config_ocpus"></a> [node01\_nodepool\_shape\_config\_ocpus](#input\_node01_nodepool_shape_config_ocpus) | (Updatable) The total number of OCPUs available to the nodepool. | `string` | `""` | no |
+| <a name="input_node01_nodepool_shape_config_memory_in_gbs"></a> [node01\_nodepool\_shape\_config\_memory\_in_gbs](#input\_node01\_nodepool\_shape\_config\_memory\_in_gbs) | (Updatable) The total amount of memory available to the nodepool, in gigabytes. | `string` | `""` | no |
+| <a name="input_node01_number_of_nodes"></a> [node01\_number\_of\_nodes](#input\_node01\_number\_of\_nodes) |Number of Nodes inside Node Pool | `any` | n/a | yes |
+| <a name="input_node01_k8s_label_map"></a> [node01\_k8s\_label\_map](#input\_node01\_k8s\_label\_map) | Define the list of Kubernetes Labels to apply in nodepool. | `map(any)` | n/a | yes |
 
 ## Outputs
 
