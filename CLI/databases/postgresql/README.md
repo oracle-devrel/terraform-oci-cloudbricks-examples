@@ -144,13 +144,13 @@ The following file defines all the variables used in this system. For details on
 
 | Name | Version |
 |------|---------|
-| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.51.0 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.67.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_postgre01"></a> [postgre01](#module\_postgre01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-postgresql | v1.0.3 |
+| <a name="module_postgre01"></a> [postgre01](#module\_postgre01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-postgresql | v1.0.6 |
 
 ## Resources
 
