@@ -8,7 +8,7 @@ The following system builds an Oracle Kubernetes Engine Cluster with an Oracle K
 ![Reference Architecture](./images/Bricks_Architectures-oke_nodepool_ref_arch.jpg)
 
 ## Getting Started
-For details on how the Oracle CloudBricks Framework works, refer to the [following file](../../../README.md)
+For details on how the Oracle CloudBricks Framework works, refer to the [following file](../../README.md)
 
 ### Prerequisites
 - A Pre-Created Object Storage Bucket to store tfstate files
@@ -104,7 +104,8 @@ module "ModuleName" {
 *Considerations*
 - Whereas needed, apply variable and module overloading
 - For module specifics, refer to module documentation: 
-  - [terraform-oci-cloudbricks-lbaas-bes-single](https://github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas-bes-single/blob/main/README.md)
+  - [terraform-oci-cloudbricks-oke-cluster](https://github.com/oracle-devrel/terraform-oci-cloudbricks-oke-cluster/blob/main/README.md)
+  - [terraform-oci-cloudbricks-oke-nodepool](https://github.com/oracle-devrel/terraform-oci-cloudbricks-oke-nodepool/blob/main/README.md)
 - For variable usage, refer to section *Variable Documentation*
 
 ---
