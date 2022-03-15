@@ -1,14 +1,14 @@
-# OCI Cloud Bricks: Sample OKE Cluster and One Nodepool
+# OCI Cloud Bricks: Sample OKE Cluster
 
 [![License: UPL](https://img.shields.io/badge/license-UPL-green)](https://img.shields.io/badge/license-UPL-green) [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=oracle-devrel_terraform-oci-cloudbricks-examples)](https://sonarcloud.io/dashboard?id=oracle-devrel_terraform-oci-cloudbricks-examples)
 
 ## Introduction
-The following system builds an Oracle Kubernetes Engine Cluster with an Oracle Kubernetes Engine Nodepool associated to a particular compartment and subnets.
+The following system builds an Oracle Kubernetes Engine Cluster associated to a particular compartment and subnets.
 
-![Reference Architecture](./images/Bricks_Architectures-oke_nodepool_ref_arch.jpg)
+![Reference Architecture](./images/Bricks_Architectures-oke_cluster_ref_arch.jpg)
 
 ## Getting Started
-For details on how the Oracle CloudBricks Framework works, refer to the [following file](../../README.md)
+For details on how the Oracle CloudBricks Framework works, refer to the [following file](../../../README.md)
 
 ### Prerequisites
 - A Pre-Created Object Storage Bucket to store tfstate files
@@ -105,7 +105,7 @@ module "ModuleName" {
 - Whereas needed, apply variable and module overloading
 - For module specifics, refer to module documentation: 
   - [terraform-oci-cloudbricks-oke-cluster](https://github.com/oracle-devrel/terraform-oci-cloudbricks-oke-cluster/blob/main/README.md)
-  - [terraform-oci-cloudbricks-oke-nodepool](https://github.com/oracle-devrel/terraform-oci-cloudbricks-oke-nodepool/blob/main/README.md)
+ 
 - For variable usage, refer to section *Variable Documentation*
 
 ---
@@ -125,7 +125,6 @@ This file
 The following file defines the specific variables customized using variable overloading. Please refer to backend brick module documentation for details in how to fill.
 For module specifics, refer to module documentation: 
   - [terraform-oci-cloudbricks-oke-cluster](https://github.com/oracle-devrel/terraform-oci-cloudbricks-oke-cluster/blob/main/README.md)
-  - [terraform-oci-cloudbricks-oke-nodepool](https://github.com/oracle-devrel/terraform-oci-cloudbricks-oke-nodepool/blob/main/README.md)
 
 ---
 
@@ -146,13 +145,12 @@ The following file defines all the variables used in this system. For details on
 
 | Name | Version |
 |------|---------|
-| <a name="provider_oci"></a> [oci](#provider\_oci) | >= 4.36.0 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | 4.67.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_node01"></a> [node01](#module\_node01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-oke-nodepool.git | v1.0.2 |
 | <a name="module_oke01"></a> [oke01](#module\_oke01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-oke-cluster.git | v1.0.2 |
 
 ## Resources
@@ -166,27 +164,6 @@ The following file defines all the variables used in this system. For details on
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | API Key Fingerprint for user\_ocid derived from public API Key imported in OCI User config | `any` | n/a | yes |
-| <a name="input_node01_is_flex_shape"></a> [node01\_is\_flex\_shape](#input\_node01\_is\_flex\_shape) | Boolean that describes if the shape is flex or not | `bool` | `false` | no |
-| <a name="input_node01_k8s_label_map"></a> [node01\_k8s\_label\_map](#input\_node01\_k8s\_label\_map) | Define the list of Kubernetes Labels to apply in nodepool | `map(any)` | n/a | yes |
-| <a name="input_node01_k8s_version"></a> [node01\_k8s\_version](#input\_node01\_k8s\_version) | Declares K8 Version | `any` | n/a | yes |
-| <a name="input_node01_node_metadata"></a> [node01\_node\_metadata](#input\_node01\_node\_metadata) | A list of key/value pairs to add to each underlying Oracle Cloud Infrastructure nodepool in the node pool on launch. | `map(any)` | `{}` | no |
-| <a name="input_node01_node_pool_name"></a> [node01\_node\_pool\_name](#input\_node01\_node\_pool\_name) | Node Pool Name for K8 Cluster | `any` | n/a | yes |
-| <a name="input_node01_node_pool_shape"></a> [node01\_node\_pool\_shape](#input\_node01\_node\_pool\_shape) | Shape to be used in node pool members | `any` | n/a | yes |
-| <a name="input_node01_nodepool_shape_config_memory_in_gbs"></a> [node01\_nodepool\_shape\_config\_memory\_in\_gbs](#input\_node01\_nodepool\_shape\_config\_memory\_in\_gbs) | (Updatable) The total amount of memory available to the nodepool, in gigabytes. | `string` | `""` | no |
-| <a name="input_node01_nodepool_shape_config_ocpus"></a> [node01\_nodepool\_shape\_config\_ocpus](#input\_node01\_nodepool\_shape\_config\_ocpus) | (Updatable) The total number of OCPUs available to the nodepool. | `string` | `""` | no |
-| <a name="input_node01_number_of_nodes"></a> [node01\_number\_of\_nodes](#input\_node01\_number\_of\_nodes) | Number of Nodes inside Node Pool | `any` | n/a | yes |
-| <a name="input_node01_oke_availability_domain_map"></a> [node01\_oke\_availability\_domain\_map](#input\_node01\_oke\_availability\_domain\_map) | The name of the availability domain in which this node is placed | `map(any)` | n/a | yes |
-| <a name="input_node01_oke_cluster_compartment_id"></a> [node01\_oke\_cluster\_compartment\_id](#input\_node01\_oke\_cluster\_compartment\_id) | Defines the compartment OCID where the OKE cluster was created | `string` | `""` | no |
-| <a name="input_node01_oke_cluster_compartment_name"></a> [node01\_oke\_cluster\_compartment\_name](#input\_node01\_oke\_cluster\_compartment\_name) | Defines the compartment name where the OKE cluster was created | `string` | `""` | no |
-| <a name="input_node01_oke_cluster_name"></a> [node01\_oke\_cluster\_name](#input\_node01\_oke\_cluster\_name) | OKE cluster display name | `any` | n/a | yes |
-| <a name="input_node01_oke_network_compartment_name"></a> [node01\_oke\_network\_compartment\_name](#input\_node01\_oke\_network\_compartment\_name) | Defines the compartment where the Network is currently located | `any` | n/a | yes |
-| <a name="input_node01_oke_nodepool_compartment_name"></a> [node01\_oke\_nodepool\_compartment\_name](#input\_node01\_oke\_nodepool\_compartment\_name) | Defines the compartment name where the OKE nodepool is created | `string` | `""` | no |
-| <a name="input_node01_oke_nodepool_network_subnet_name"></a> [node01\_oke\_nodepool\_network\_subnet\_name](#input\_node01\_oke\_nodepool\_network\_subnet\_name) | Defines the specific Subnet to be used for this resource | `any` | n/a | yes |
-| <a name="input_node01_source_type"></a> [node01\_source\_type](#input\_node01\_source\_type) | The source type of this option. IMAGE means the OCID is of an image | `string` | `"IMAGE"` | no |
-| <a name="input_node01_ssh_private_is_path"></a> [node01\_ssh\_private\_is\_path](#input\_node01\_ssh\_private\_is\_path) | Describes if SSH Private Key is located on file or inside code | `bool` | `false` | no |
-| <a name="input_node01_ssh_private_key"></a> [node01\_ssh\_private\_key](#input\_node01\_ssh\_private\_key) | Private key to log into machine | `any` | n/a | yes |
-| <a name="input_node01_ssh_public_is_path"></a> [node01\_ssh\_public\_is\_path](#input\_node01\_ssh\_public\_is\_path) | Describes if SSH Public Key is located on file or inside code | `bool` | `false` | no |
-| <a name="input_node01_ssh_public_key"></a> [node01\_ssh\_public\_key](#input\_node01\_ssh\_public\_key) | Defines SSH Public Key to be used in order to remotely connect to compute nodepool | `string` | n/a | yes |
 | <a name="input_oke01_availability_domain_map"></a> [oke01\_availability\_domain\_map](#input\_oke01\_availability\_domain\_map) | The name of the availability domain in which this node is placed | `map(any)` | n/a | yes |
 | <a name="input_oke01_cluster_name"></a> [oke01\_cluster\_name](#input\_oke01\_cluster\_name) | Defines the K8 Cluster Name | `any` | n/a | yes |
 | <a name="input_oke01_endpoint_is_public_ip_enabled"></a> [oke01\_endpoint\_is\_public\_ip\_enabled](#input\_oke01\_endpoint\_is\_public\_ip\_enabled) | Determines if OKE Control Plane is located on public or private subnet | `any` | n/a | yes |
@@ -199,7 +176,6 @@ The following file defines all the variables used in this system. For details on
 | <a name="input_oke01_lbaas_network_subnet_name"></a> [oke01\_lbaas\_network\_subnet\_name](#input\_oke01\_lbaas\_network\_subnet\_name) | Describes the display name of the subnet where LBaaS Components will be alocated by resource orchestrator | `any` | n/a | yes |
 | <a name="input_oke01_network_compartment_name"></a> [oke01\_network\_compartment\_name](#input\_oke01\_network\_compartment\_name) | Defines the compartment where the Network is currently located | `any` | n/a | yes |
 | <a name="input_oke01_vcn_display_name"></a> [oke01\_vcn\_display\_name](#input\_oke01\_vcn\_display\_name) | Defines the display name of the VCN where cluster will allocate LBaaS Ingress Controller components | `any` | n/a | yes |
-| <a name="input_oke_nodepool_compartment_id"></a> [oke\_nodepool\_compartment\_id](#input\_oke\_nodepool\_compartment\_id) | Defines the compartment OCID where the OKE nodepool is created | `string` | `""` | no |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | Private Key Absolute path location where terraform is executed | `any` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Target region where artifacts are going to be created | `any` | n/a | yes |
 | <a name="input_tenancy_ocid"></a> [tenancy\_ocid](#input\_tenancy\_ocid) | OCID of tenancy | `any` | n/a | yes |
@@ -209,7 +185,6 @@ The following file defines all the variables used in this system. For details on
 
 | Name | Description |
 |------|-------------|
-| <a name="output_node01"></a> [node01](#output\_node01) | Node Pools configured inside OKE |
 | <a name="output_oke01"></a> [oke01](#output\_oke01) | Kubernettes Cluster |
 
 

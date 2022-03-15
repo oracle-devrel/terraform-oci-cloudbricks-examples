@@ -8,7 +8,7 @@
 terraform {
   backend "s3" {
     bucket   = "tfstate_bucket"
-    key      = "Samples/oke_cluster.tfstate"
+    key      = "Samples/oke_cluster_with_one_nodepool.tfstate"
     region   = "re-region-1"
     endpoint = "https://Tenancy_ObjectStorage_namespace.compat.objectstorage.re-region-1.oraclecloud.com"
 
