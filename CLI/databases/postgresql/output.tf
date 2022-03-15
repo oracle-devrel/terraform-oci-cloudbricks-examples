@@ -6,11 +6,10 @@
 
 output "MasterNode" {
   description = "Master Node Information"
-  sensitive = true
-  value = module.postgre01.PostgreSQL_Master
+  value       = module.postgre01.PostgreSQL_Master
 }
 
 output "Username" {
   description = "Username for PostgreSQL"
-  value = module.postgre01.PostgreSQL_Username
+  value       = module.postgre01.PostgreSQL_Username
 }

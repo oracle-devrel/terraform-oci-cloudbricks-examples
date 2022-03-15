@@ -32,9 +32,14 @@ postgre01_postgresql_master_name          = "MY_MASTER_INSTANCE_NAME"
 postgre01_postgresql_master_ad            = "aBCD:RE-REGION-1-AD-1"
 postgre01_postgresql_master_fd            = "FAULT-DOMAIN-1"
 postgre01_postgresql_master_shape         = "VM.Standard2.2"
+postgre01_postgresql_master_is_flex_shape = false
+postgre01_postgresql_master_ocpus         = ""
+postgre01_postgresql_master_memory_in_gb  = ""
 
-postgre01_postgresql_hotstandby_is_flex_shape = false
 postgre01_postgresql_hotstandby_shape         = "VM.Standard2.1"
+postgre01_postgresql_hotstandby_is_flex_shape = false
+postgre01_postgresql_hotstandby_ocpus         = ""
+postgre01_postgresql_hotstandby_memory_in_gb  = ""
 
 postgre01_postgresql_deploy_hotstandby1 = true
 postgre01_postgresql_standyby1_name     = "MY_HOTSTANDBY1_INSTANCE_NAME"
