@@ -122,8 +122,16 @@ This file
 
 ---
 
-### [system.tfvars](./system.tfvars)
-The following file defines the specific variables customized using variable overloading. Please refer to backend brick module documentation for details in how to fill.
+### [.tfvars](./system.tfvars)
+The following files define the specific variables customized using variable overloading:
+  - flex_CPU_autoscaling.tfvars
+  - flex_memory_autoscaling.tfvars
+  - flex_schedule_autoscaling.tfvars
+  - standard_CPU_autoscaling.tfvars
+  - standard_memory_autoscaling.tfvars
+  - standard_schedule_autoscaling.tfvars
+
+Please refer to backend brick module documentation for details in how to fill.
 For module specifics, refer to module documentation: 
   - [terraform-oci-cloudbricks-linux-compute-instance-pool](https://github.com/oracle-devrel/terraform-oci-cloudbricks-linux-compute-instance-pool/blob/main/README.md)
 
