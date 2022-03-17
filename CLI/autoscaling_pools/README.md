@@ -3,7 +3,8 @@
 [![License: UPL](https://img.shields.io/badge/license-UPL-green)](https://img.shields.io/badge/license-UPL-green) [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=oracle-devrel_terraform-oci-cloudbricks-examples)](https://sonarcloud.io/dashboard?id=oracle-devrel_terraform-oci-cloudbricks-examples)
 
 ## Introduction
-The following system builds a standalone linux compute instance pool with an autoscaling configuration of any kind (Flex/Standard/CPU/Memory/Schedule).
+The following system builds a standalone linux compute instance pool with an autoscaling configuration of any kind (Flex/Standard/CPU/Memory/Schedule).To apply one of the configurations implemented select the appropriate .tfvars file.
+
 
 ![Reference Architecture](./images/Bricks_Architectures-instance_pools.jpg)
 

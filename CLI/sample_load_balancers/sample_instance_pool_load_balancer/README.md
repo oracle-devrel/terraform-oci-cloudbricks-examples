@@ -3,7 +3,7 @@
 [![License: UPL](https://img.shields.io/badge/license-UPL-green)](https://img.shields.io/badge/license-UPL-green) [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=oracle-devrel_terraform-oci-cloudbricks-examples)](https://sonarcloud.io/dashboard?id=oracle-devrel_terraform-oci-cloudbricks-examples)
 
 ## Introduction
-The following system builds a Sample Application Load Balancer and Backend Set. The Backend Set is connected to instances within an Instance Pool with an autoscaling configuration of any kind (Flex/Standard/CPU/Memory/Schedule).
+The following system builds a Sample Application Load Balancer and Backend Set. The Backend Set is connected to an Instance Pool with an autoscaling configuration of any kind (Flex/Standard/CPU/Memory/Schedule). To apply one of the configurations implemented select the appropriate .tfvars file.
 
 ![Reference Architecture](./images/Bricks_Architectures-LBaaS_instance_pool.jpg)
 
@@ -106,7 +106,7 @@ module "ModuleName" {
 - For module specifics, refer to module documentation: 
   - [terraform-oci-cloudbricks-lbaas-bes-single](https://github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas-bes-single/blob/main/README.md)
   - [terraform-oci-cloudbricks-linux-compute-instance-pool](https://github.com/oracle-devrel/terraform-oci-cloudbricks-linux-compute-instance-pool/blob/main/README.md)
-  
+
 - For variable usage, refer to section *Variable Documentation*
 
 ---
