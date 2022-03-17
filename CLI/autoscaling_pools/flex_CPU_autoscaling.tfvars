@@ -29,8 +29,8 @@ instancepool01_instance_config_shape                        = "VM.Standard.E4.Fl
 instancepool01_instance_shape_config_ocpus                  = 2
 instancepool01_instance_shape_config_memory_in_gbs          = 32
 
-instancepool01_instance_display_name_base                   = "My_Instance_NEW"
-instancepool01_compute_display_name_base                    = "My_Instance_Pool_NEW"
+instancepool01_instance_display_name_base                   = "My_Instance"
+instancepool01_compute_display_name_base                    = "My_Instance_Pool"
 instancepool01_base_compute_image_ocid                      = "ocid1.image.oc1.re-region-1.aaaaaaaawxyz" 
 instancepool01_instance_configuration_display_name          = "My_Config_Name"
 
