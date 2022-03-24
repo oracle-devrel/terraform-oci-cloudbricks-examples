@@ -1,11 +1,11 @@
-# OCI Cloud Bricks: Multiple Sample Django instances with a File Sotorage System, Load Balancer and mySQL Database
+# OCI Cloud Bricks: Multiple Sample Django instances with a File Sotorage System, Load Balancer, and postgreSQL Database
 
 [![License: UPL](https://img.shields.io/badge/license-UPL-green)](https://img.shields.io/badge/license-UPL-green) [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=oracle-devrel_terraform-oci-cloudbricks-examples)](https://sonarcloud.io/dashboard?id=oracle-devrel_terraform-oci-cloudbricks-examples)
 
 ## Introduction
-The following system builds multiple Sample linux computes with a File Storage System, Load Balancer and a mySQL Database with the following reference architecture. Please note that a pre-set mount target is expected for this example to work. 
+The following system builds multiple Sample linux computes with a File Storage System, Load Balancer and a postgreSQL Database with the following reference architecture. Please note that a pre-set mount target is expected for this example to work. 
 
-![ReferenceArchitecture](./images/Bricks_Architectures-2instances_lbaas_fss_mySQL.jpg)
+![ReferenceArchitecture](./images/Bricks_Architectures-2instances_lbaas_fss_postgreSQL.jpg)
 
 ## Getting Started
 For details in how the Oracle CloudBricks Framework works, refer to the [following file](../../../README.md)
@@ -106,7 +106,7 @@ module "ModuleName" {
 - For module specifics, refer to module documentation: 
   - [terraform-oci-cloudbricks-linux-compute](https://github.com/oracle-devrel/terraform-oci-cloudbricks-linux-compute/blob/main/README.md)
   - [terraform-oci-cloudbricks-linux-fss](https://github.com/oracle-devrel/terraform-oci-cloudbricks-linux-fss/blob/main/README.md)
-  - [terraform-oci-cloudbricks-mysql-database](https://github.com/oracle-devrel/terraform-oci-cloudbricks-mysql-database/blob/main/README.md)
+  - [terraform-oci-cloudbricks-postgresql](https://github.com/oracle-devrel/terraform-oci-cloudbricks-postgresql/blob/main/README.md)
   - [terraform-oci-cloudbricks-remote-linux-executor](https://github.com/oracle-devrel/terraform-oci-cloudbricks-remote-linux-executor/blob/main/README.md)
   - [terraform-oci-cloudbricks-lbaas](https://github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas/blob/main/README.md)
   - [terraform-oci-cloudbricks-lbaas-bes-single](https://github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas-bes-single/blob/main/README.md)
@@ -130,7 +130,7 @@ The following file defines the specific variables customized using variable over
 For module specifics, refer to module documentation: 
   - [terraform-oci-cloudbricks-linux-compute](https://github.com/oracle-devrel/terraform-oci-cloudbricks-linux-compute/blob/main/README.md)
   - [terraform-oci-cloudbricks-linux-fss](https://github.com/oracle-devrel/terraform-oci-cloudbricks-linux-fss/blob/main/README.md)
-  - [terraform-oci-cloudbricks-mysql-database](https://github.com/oracle-devrel/terraform-oci-cloudbricks-mysql-database/blob/main/README.md)
+  - [terraform-oci-cloudbricks-postgresql](https://github.com/oracle-devrel/terraform-oci-cloudbricks-postgresql/blob/main/README.md)
   - [terraform-oci-cloudbricks-remote-linux-executor](https://github.com/oracle-devrel/terraform-oci-cloudbricks-remote-linux-executor/blob/main/README.md)
   - [terraform-oci-cloudbricks-lbaas](https://github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas/blob/main/README.md)
   - [terraform-oci-cloudbricks-lbaas-bes-single](https://github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas-bes-single/blob/main/README.md)
@@ -166,7 +166,7 @@ The following file defines all the variables used in this system. For details on
 | <a name="module_fssdisk01"></a> [fssdisk01](#module\_fssdisk01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-fss.git | v1.0.0 |
 | <a name="module_instance01"></a> [instance01](#module\_instance01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-linux-compute.git | v1.0.2 |
 | <a name="module_loadbalancer01"></a> [loadbalancer01](#module\_loadbalancer01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-lbaas.git | v1.0.0 |
-| <a name="module_mysql01"></a> [mysql01](#module\_mysql01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-mysql-database | v1.0.4.1 |
+| <a name="module_postgre01"></a> [postgre01](#module\_postgre01) | git::ssh://git@github.com/oracle-devrel/terraform-oci-cloudbricks-postgresql | v1.0.6 |
 
 ## Resources
 
@@ -274,34 +274,41 @@ The following file defines all the variables used in this system. For details on
 | <a name="input_loadbalancer01_network_subnet_name"></a> [loadbalancer01\_network\_subnet\_name](#input\_loadbalancer01\_network\_subnet\_name) | Defines the specific Subnet to be used for this resource | `any` | n/a | yes |
 | <a name="input_loadbalancer01_reserved_ip_id"></a> [loadbalancer01\_reserved\_ip\_id](#input\_loadbalancer01\_reserved\_ip\_id) | Resereved ip address OCID | `string` | `""` | no |
 | <a name="input_loadbalancer01_vcn_display_name"></a> [loadbalancer01\_vcn\_display\_name](#input\_loadbalancer01\_vcn\_display\_name) | VCN Display name to execute lookup | `any` | n/a | yes |
-| <a name="input_mysql01_mysql_db_system_admin_password"></a> [mysql01\_mysql\_db\_system\_admin\_password](#input\_mysql01\_mysql\_db\_system\_admin\_password) | (Required) The password for the administrative user. The password must be between 8 and 32 characters long, and must contain at least 1 numeric character, 1 lowercase character, 1 uppercase character, and 1 special (nonalphanumeric) character. | `any` | n/a | yes |
-| <a name="input_mysql01_mysql_db_system_admin_username"></a> [mysql01\_mysql\_db\_system\_admin\_username](#input\_mysql01\_mysql\_db\_system\_admin\_username) | (Required) The username for the administrative user. | `any` | n/a | yes |
-| <a name="input_mysql01_mysql_db_system_availability_domain"></a> [mysql01\_mysql\_db\_system\_availability\_domain](#input\_mysql01\_mysql\_db\_system\_availability\_domain) | (Required) The availability domain on which to deploy the Read/Write endpoint. This defines the preferred primary instance. In a failover scenario, the Read/Write endpoint is redirected to one of the other availability domains and the MySQL instance in that domain is promoted to the primary instance. This redirection does not affect the IP address of the DB System in any way. For a standalone DB System, this defines the availability domain in which the DB System is placed. | `any` | n/a | yes |
-| <a name="input_mysql01_mysql_db_system_backup_policy_is_enabled"></a> [mysql01\_mysql\_db\_system\_backup\_policy\_is\_enabled](#input\_mysql01\_mysql\_db\_system\_backup\_policy\_is\_enabled) | Boolean that defines if either backup is enabled or not | `bool` | `false` | no |
-| <a name="input_mysql01_mysql_db_system_backup_policy_retention_in_days"></a> [mysql01\_mysql\_db\_system\_backup\_policy\_retention\_in\_days](#input\_mysql01\_mysql\_db\_system\_backup\_policy\_retention\_in\_days) | The number of days automated backups are retained. | `string` | `""` | no |
-| <a name="input_mysql01_mysql_db_system_backup_policy_window_start_time"></a> [mysql01\_mysql\_db\_system\_backup\_policy\_window\_start\_time](#input\_mysql01\_mysql\_db\_system\_backup\_policy\_window\_start\_time) | The start of a 30-minute window of time in which daily, automated backups occur. This should be in the format of the Time portion of an RFC3339-formatted timestamp. Any second or sub-second time data will be truncated to zero. At some point in the window, the system may incur a brief service disruption as the backup is performed. | `string` | `""` | no |
-| <a name="input_mysql01_mysql_db_system_data_storage_size_in_gb"></a> [mysql01\_mysql\_db\_system\_data\_storage\_size\_in\_gb](#input\_mysql01\_mysql\_db\_system\_data\_storage\_size\_in\_gb) | Initial size of the data volume in GiBs that will be created and attached. | `any` | n/a | yes |
-| <a name="input_mysql01_mysql_db_system_defined_tags"></a> [mysql01\_mysql\_db\_system\_defined\_tags](#input\_mysql01\_mysql\_db\_system\_defined\_tags) | Defined tags for this resource. Each key is predefined and scoped to a namespace. | `map` | `{}` | no |
-| <a name="input_mysql01_mysql_db_system_description"></a> [mysql01\_mysql\_db\_system\_description](#input\_mysql01\_mysql\_db\_system\_description) | User-provided data about the DB System. | `any` | n/a | yes |
-| <a name="input_mysql01_mysql_db_system_display_name"></a> [mysql01\_mysql\_db\_system\_display\_name](#input\_mysql01\_mysql\_db\_system\_display\_name) | The user-friendly name for the DB System. It does not have to be unique. | `any` | n/a | yes |
-| <a name="input_mysql01_mysql_db_system_fault_domain"></a> [mysql01\_mysql\_db\_system\_fault\_domain](#input\_mysql01\_mysql\_db\_system\_fault\_domain) | The fault domain on which to deploy the Read/Write endpoint. This defines the preferred primary instance. | `any` | n/a | yes |
-| <a name="input_mysql01_mysql_db_system_freeform_tags"></a> [mysql01\_mysql\_db\_system\_freeform\_tags](#input\_mysql01\_mysql\_db\_system\_freeform\_tags) | Free-form tags for this resource. Each tag is a simple key-value pair with no predefined name, type, or namespace. | `map` | `{}` | no |
-| <a name="input_mysql01_mysql_db_system_hostname_label"></a> [mysql01\_mysql\_db\_system\_hostname\_label](#input\_mysql01\_mysql\_db\_system\_hostname\_label) | The hostname for the primary endpoint of the DB System. Used for DNS. The value is the hostname portion of the primary private IP's fully qualified domain name (FQDN) (for example, dbsystem-1 in FQDN dbsystem-1.subnet123.vcn1.oraclevcn.com). Must be unique across all VNICs in the subnet and comply with RFC 952 and RFC 1123. | `any` | n/a | yes |
-| <a name="input_mysql01_mysql_db_system_is_highly_available"></a> [mysql01\_mysql\_db\_system\_is\_highly\_available](#input\_mysql01\_mysql\_db\_system\_is\_highly\_available) | Boolean that describes if either HA is enabled or not | `bool` | `false` | no |
-| <a name="input_mysql01_mysql_db_system_maintenance_window_start_time"></a> [mysql01\_mysql\_db\_system\_maintenance\_window\_start\_time](#input\_mysql01\_mysql\_db\_system\_maintenance\_window\_start\_time) | (Required) (Updatable) The start of the 2 hour maintenance window. This string is of the format: {day-of-week} {time-of-day}. {day-of-week} is a case-insensitive string like mon, tue, etc. {time-of-day} is the Time portion of an RFC3339-formatted timestamp. Any second or sub-second time data will be truncated to zero. | `any` | n/a | yes |
-| <a name="input_mysql01_mysql_db_system_port"></a> [mysql01\_mysql\_db\_system\_port](#input\_mysql01\_mysql\_db\_system\_port) | (Optional) The port for primary endpoint of the DB System to listen on. | `string` | `"3306"` | no |
-| <a name="input_mysql01_mysql_db_system_port_x"></a> [mysql01\_mysql\_db\_system\_port\_x](#input\_mysql01\_mysql\_db\_system\_port\_x) | (Optional) The TCP network port on which X Plugin listens for connections. This is the X Plugin equivalent of port. | `string` | `"33060"` | no |
-| <a name="input_mysql01_mysql_heatwave_cluster_size"></a> [mysql01\_mysql\_heatwave\_cluster\_size](#input\_mysql01\_mysql\_heatwave\_cluster\_size) | Number of MySQL HeatWave nodes to be created | `number` | `2` | no |
-| <a name="input_mysql01_mysql_heatwave_enabled"></a> [mysql01\_mysql\_heatwave\_enabled](#input\_mysql01\_mysql\_heatwave\_enabled) | Defines whether a MySQL HeatWave cluster is enabled | `bool` | `false` | no |
-| <a name="input_mysql01_mysql_heatwave_shape"></a> [mysql01\_mysql\_heatwave\_shape](#input\_mysql01\_mysql\_heatwave\_shape) | The shape to be used instead of mysql01\_mysql\_shape\_name when mysql01\_mysql\_heatwave\_enabled = true. | `string` | `"MySQL.HeatWave.VM.Standard.E3"` | no |
-| <a name="input_mysql01_mysql_instance_compartment_name"></a> [mysql01\_mysql\_instance\_compartment\_name](#input\_mysql01\_mysql\_instance\_compartment\_name) | Compartment where MySQL Instance will be created | `string` | `""` | no |
-| <a name="input_mysql01_mysql_instance_compartment_ocid"></a> [mysql01\_mysql\_instance\_compartment\_ocid](#input\_mysql01\_mysql\_instance\_compartment\_ocid) | OCID of the compartment where MySQL Instance will be created. Use alternatively to mysql01\_mysql\_instance\_compartment\_name | `string` | `""` | no |
-| <a name="input_mysql01_mysql_network_compartment_name"></a> [mysql01\_mysql\_network\_compartment\_name](#input\_mysql01\_mysql\_network\_compartment\_name) | Compartment where the network of MySQL artifact is | `string` | `""` | no |
-| <a name="input_mysql01_mysql_network_compartment_ocid"></a> [mysql01\_mysql\_network\_compartment\_ocid](#input\_mysql01\_mysql\_network\_compartment\_ocid) | OCID of the compartment where the network of MySQL artifact is. Use alternatively to mysql01\_mysql\_network\_compartment\_name | `string` | `""` | no |
-| <a name="input_mysql01_mysql_shape_name"></a> [mysql01\_mysql\_shape\_name](#input\_mysql01\_mysql\_shape\_name) | (Required) The name of the shape. The shape determines the resources allocated. CPU cores and memory for VM shapes; CPU cores, memory and storage for non-VM (or bare metal) shapes. To get a list of shapes, use the ListShapes operation. | `string` | `"MySQL.VM.Standard.E3.1.8GB"` | no |
-| <a name="input_mysql01_network_subnet_name"></a> [mysql01\_network\_subnet\_name](#input\_mysql01\_network\_subnet\_name) | Defines the subnet display name where this resource will be created at | `string` | `""` | no |
-| <a name="input_mysql01_subnet_id"></a> [mysql01\_subnet\_id](#input\_mysql01\_subnet\_id) | Subnet OCID. Use alternatively to network\_subnet\_name | `string` | `""` | no |
-| <a name="input_mysql01_vcn_display_name"></a> [mysql01\_vcn\_display\_name](#input\_mysql01\_vcn\_display\_name) | VCN Display name to execute lookup | `string` | `""` | no |
+| <a name="input_postgre01_compute_nsg_name"></a> [postgre01\_compute\_nsg\_name](#input\_postgre01\_compute\_nsg\_name) | Name of the NSG associated to the compute | `string` | `""` | no |
+| <a name="input_postgre01_database_backup_policy_level"></a> [postgre01\_database\_backup\_policy\_level](#input\_postgre01\_database\_backup\_policy\_level) | Backup policy level for Database ISCSI disks | `any` | n/a | yes |
+| <a name="input_postgre01_database_size_in_gb"></a> [postgre01\_database\_size\_in\_gb](#input\_postgre01\_database\_size\_in\_gb) | Disk Capacity for Database | `any` | n/a | yes |
+| <a name="input_postgre01_database_vpus_per_gb"></a> [postgre01\_database\_vpus\_per\_gb](#input\_postgre01\_database\_vpus\_per\_gb) | Disk VPUS for the Database | `any` | n/a | yes |
+| <a name="input_postgre01_instance_backup_policy_level"></a> [postgre01\_instance\_backup\_policy\_level](#input\_postgre01\_instance\_backup\_policy\_level) | Backup policy level for instance boot volume disks | `any` | n/a | yes |
+| <a name="input_postgre01_instance_os"></a> [postgre01\_instance\_os](#input\_postgre01\_instance\_os) | Operating system for compute instances | `string` | `"Oracle Linux"` | no |
+| <a name="input_postgre01_linux_compute_instance_compartment_name"></a> [postgre01\_linux\_compute\_instance\_compartment\_name](#input\_postgre01\_linux\_compute\_instance\_compartment\_name) | Defines the compartment name where the infrastructure will be created | `any` | n/a | yes |
+| <a name="input_postgre01_linux_compute_network_compartment_name"></a> [postgre01\_linux\_compute\_network\_compartment\_name](#input\_postgre01\_linux\_compute\_network\_compartment\_name) | Defines the compartment where the Network is currently located | `any` | n/a | yes |
+| <a name="input_postgre01_linux_os_version"></a> [postgre01\_linux\_os\_version](#input\_postgre01\_linux\_os\_version) | Operating system version for all Linux instances | `string` | `"7.9"` | no |
+| <a name="input_postgre01_postgresql_deploy_hotstandby1"></a> [postgre01\_postgresql\_deploy\_hotstandby1](#input\_postgre01\_postgresql\_deploy\_hotstandby1) | Boolean to determine if to provision hotstandby1 | `bool` | `false` | no |
+| <a name="input_postgre01_postgresql_deploy_hotstandby2"></a> [postgre01\_postgresql\_deploy\_hotstandby2](#input\_postgre01\_postgresql\_deploy\_hotstandby2) | Boolean to determine if to provision hotstandby2 | `bool` | `false` | no |
+| <a name="input_postgre01_postgresql_hotstandby1_ad"></a> [postgre01\_postgresql\_hotstandby1\_ad](#input\_postgre01\_postgresql\_hotstandby1\_ad) | The availability domain to provision the hoststandby1 instance in | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_hotstandby1_fd"></a> [postgre01\_postgresql\_hotstandby1\_fd](#input\_postgre01\_postgresql\_hotstandby1\_fd) | The fault domain to provision the hoststandby1 instance in | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_hotstandby2_ad"></a> [postgre01\_postgresql\_hotstandby2\_ad](#input\_postgre01\_postgresql\_hotstandby2\_ad) | The availability domain to provision the hoststandby2 instance in | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_hotstandby2_fd"></a> [postgre01\_postgresql\_hotstandby2\_fd](#input\_postgre01\_postgresql\_hotstandby2\_fd) | The fault domain to provision the hoststandby2 instance in | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_hotstandby_is_flex_shape"></a> [postgre01\_postgresql\_hotstandby\_is\_flex\_shape](#input\_postgre01\_postgresql\_hotstandby\_is\_flex\_shape) | Boolean to determine if the standy instances are flex or not | `bool` | `false` | no |
+| <a name="input_postgre01_postgresql_hotstandby_memory_in_gb"></a> [postgre01\_postgresql\_hotstandby\_memory\_in\_gb](#input\_postgre01\_postgresql\_hotstandby\_memory\_in\_gb) | The amount of memory in GB for the standby instances to use when flex shape is enabled | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_hotstandby_ocpus"></a> [postgre01\_postgresql\_hotstandby\_ocpus](#input\_postgre01\_postgresql\_hotstandby\_ocpus) | The number of OCPUS for the flex instances to use when flex shape is enabled | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_hotstandby_shape"></a> [postgre01\_postgresql\_hotstandby\_shape](#input\_postgre01\_postgresql\_hotstandby\_shape) | The shape for the hotstandby instances to use | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_master_ad"></a> [postgre01\_postgresql\_master\_ad](#input\_postgre01\_postgresql\_master\_ad) | The availability domain to provision the master instance in | `any` | n/a | yes |
+| <a name="input_postgre01_postgresql_master_fd"></a> [postgre01\_postgresql\_master\_fd](#input\_postgre01\_postgresql\_master\_fd) | The fault domain to provision the master instance in | `any` | n/a | yes |
+| <a name="input_postgre01_postgresql_master_is_flex_shape"></a> [postgre01\_postgresql\_master\_is\_flex\_shape](#input\_postgre01\_postgresql\_master\_is\_flex\_shape) | Boolean to determine if the master instance is flex or not | `bool` | `false` | no |
+| <a name="input_postgre01_postgresql_master_memory_in_gb"></a> [postgre01\_postgresql\_master\_memory\_in\_gb](#input\_postgre01\_postgresql\_master\_memory\_in\_gb) | The amount of memory in GB for the master instance to use when flex shape is enabled | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_master_name"></a> [postgre01\_postgresql\_master\_name](#input\_postgre01\_postgresql\_master\_name) | The name given to the master instance | `any` | n/a | yes |
+| <a name="input_postgre01_postgresql_master_ocpus"></a> [postgre01\_postgresql\_master\_ocpus](#input\_postgre01\_postgresql\_master\_ocpus) | The number of OCPUS for the master instance to use when flex shape is enabled | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_master_shape"></a> [postgre01\_postgresql\_master\_shape](#input\_postgre01\_postgresql\_master\_shape) | The shape for the master instance to use | `any` | n/a | yes |
+| <a name="input_postgre01_postgresql_password"></a> [postgre01\_postgresql\_password](#input\_postgre01\_postgresql\_password) | The password used in setup of the PostgreSQL database | `any` | n/a | yes |
+| <a name="input_postgre01_postgresql_replicat_username"></a> [postgre01\_postgresql\_replicat\_username](#input\_postgre01\_postgresql\_replicat\_username) | The username used in setup of PostgreSQL replication | `string` | `"replicator"` | no |
+| <a name="input_postgre01_postgresql_standyby1_name"></a> [postgre01\_postgresql\_standyby1\_name](#input\_postgre01\_postgresql\_standyby1\_name) | The name given to the standby1 instance | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_standyby2_name"></a> [postgre01\_postgresql\_standyby2\_name](#input\_postgre01\_postgresql\_standyby2\_name) | The name given to the standby2 instance | `string` | `""` | no |
+| <a name="input_postgre01_postgresql_version"></a> [postgre01\_postgresql\_version](#input\_postgre01\_postgresql\_version) | The version of PostgreSQL used in the setup | `any` | n/a | yes |
+| <a name="input_postgre01_private_network_subnet_name"></a> [postgre01\_private\_network\_subnet\_name](#input\_postgre01\_private\_network\_subnet\_name) | Defines the subnet display name where this resource will be created at | `any` | n/a | yes |
+| <a name="input_postgre01_ssh_private_key"></a> [postgre01\_ssh\_private\_key](#input\_postgre01\_ssh\_private\_key) | Defines SSH Private Key to be used in order to remotely connect to compute instances | `any` | n/a | yes |
+| <a name="input_postgre01_ssh_public_key"></a> [postgre01\_ssh\_public\_key](#input\_postgre01\_ssh\_public\_key) | Defines SSH Public Key to be used in order to remotely connect to compute instances | `any` | n/a | yes |
+| <a name="input_postgre01_vcn_display_name"></a> [postgre01\_vcn\_display\_name](#input\_postgre01\_vcn\_display\_name) | VCN Display name to execute lookup | `any` | n/a | yes |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | Private Key Absolute path location where terraform is executed | `any` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Target region where artifacts are going to be created | `any` | n/a | yes |
 | <a name="input_tenancy_ocid"></a> [tenancy\_ocid](#input\_tenancy\_ocid) | OCID of tenancy | `any` | n/a | yes |
@@ -311,11 +318,12 @@ The following file defines all the variables used in this system. For details on
 
 | Name | Description |
 |------|-------------|
+| <a name="output_MasterNode"></a> [MasterNode](#output\_MasterNode) | Master Node Information |
+| <a name="output_Username"></a> [Username](#output\_Username) | Username for PostgreSQL |
 | <a name="output_backendset01"></a> [backendset01](#output\_backendset01) | backendset01 data |
 | <a name="output_fssdisk01"></a> [fssdisk01](#output\_fssdisk01) | File Storage System |
 | <a name="output_instance01"></a> [instance01](#output\_instance01) | Compute Instances |
 | <a name="output_loadbalancer01"></a> [loadbalancer01](#output\_loadbalancer01) | loadbalancer01 data |
-| <a name="output_mysql"></a> [mysql](#output\_mysql) | Instance of MySQL database |
 ---
 
 ## Known issues
