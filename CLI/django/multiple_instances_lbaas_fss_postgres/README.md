@@ -3,7 +3,7 @@
 [![License: UPL](https://img.shields.io/badge/license-UPL-green)](https://img.shields.io/badge/license-UPL-green) [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=oracle-devrel_terraform-oci-cloudbricks-examples)](https://sonarcloud.io/dashboard?id=oracle-devrel_terraform-oci-cloudbricks-examples)
 
 ## Introduction
-The following system builds multiple Sample linux computes with a File Storage System, Load Balancer and a postgreSQL Database with the following reference architecture. Please note that a pre-set mount target is expected for this example to work. 
+The following system builds multiple Sample Django linux computes with a File Storage System, Load Balancer and a postgreSQL Database with the following reference architecture. Please note that a pre-set mount target is expected for this example to work. 
 
 ![ReferenceArchitecture](./images/Bricks_Architectures-2instances_lbaas_fss_postgreSQL.jpg)
 
